@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ramoira.com/schema/SPEC.schema.json",
+  "title": "Ramoira Brand Schema (Full)",
+  "type": "object",
+  "required": ["meta", "identity", "narrative", "voice", "commercial", "governance"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["brandId", "brandName", "schemaVersion"],
+      "properties": {
+        "brandId": { "type": "string", "minLength": 1 },
+        "brandName": { "type": "string", "minLength": 1 },
+        "schemaVersion": { "type": "string", "minLength": 1 },
+        "effectiveDate": { "type": "string" },
+        "previousVersion": { "type": "string" },
+        "changelog": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "identity": { "$ref": "#/$defs/IdentityComponent" },
+    "narrative": { "$ref": "#/$defs/NarrativeComponent" },
+    "voice": { "$ref": "#/$defs/VoiceComponent" },
+    "commercial": { "$ref": "#/$defs/CommercialComponent" },
+    "governance": { "$ref": "#/$defs/GovernanceComponent" }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "ConstraintSeverity": {
+      "type": "string",
+      "enum": ["absolute", "strong", "contextual"]
+    },
+    "FallbackBehaviour": {
+      "type": "string",
+      "enum": ["refuse_to_generate", "escalate_to_human", "use_brand_default", "use_minimal_safe"]
+    },
+    "HexColor": {
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{6}$"
+    },
+    "Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "URL": {
+      "type": "string"
+    },
+    "ConstrainedString": {
+      "type": "object",
+      "required": ["value", "severity"],
+      "properties": {
+        "value": { "type": "string" },
+        "severity": { "$ref": "#/$defs/ConstraintSeverity" },
+        "rationale": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "ConstrainedHexColor": {
+      "type": "object",
+      "required": ["value", "severity"],
+      "properties": {
+        "value": { "$ref": "#/$defs/HexColor" },
+        "severity": { "$ref": "#/$defs/ConstraintSeverity" },
+        "rationale": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "Rail": {
+      "type": "object",
+      "required": ["context", "instruction"],
+      "properties": {
+        "context": { "type": "string" },
+        "instruction": { "type": "string" },
+        "example": { "type": "string" },
+        "antiExample": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+
+    "RelationshipMode": {
+      "type": "string",
+      "enum": [
+        "peer",
+        "kind_friend",
+        "coach",
+        "mentor",
+        "servant_to_exceptional",
+        "fellow_activist",
+        "entertainer",
+        "challenger"
+      ]
+    },
+
+    "IdentityComponent": {
+      "type": "object",
+      "properties": {
+        "_component": { "const": "identity" },
+        "_version": { "type": "string" },
+        "prism": { "type": "object", "additionalProperties": true },
+        "distinctiveAssets": { "type": "object", "additionalProperties": true },
+        "summary": {
+          "type": "object",
+          "properties": {
+            "oneLineBrief": { "type": "string" },
+            "threeAdjectives": { "type": "array", "items": { "type": "string" } },
+            "neverDo": { "type": "array", "items": { "type": "string" } }
+          },
+          "required": ["oneLineBrief", "threeAdjectives", "neverDo"],
+          "additionalProperties": true
+        }
+      },
+      "required": ["summary"],
+      "additionalProperties": true
+    },
+
+    "NarrativeComponent": {
+      "type": "object",
+      "properties": {
+        "_component": { "const": "narrative" },
+        "_version": { "type": "string" },
+        "semiotic": { "type": "object", "additionalProperties": true },
+        "myth": { "type": "object", "additionalProperties": true },
+        "mythEvolution": { "type": "object", "additionalProperties": true },
+        "pillars": { "type": "array" },
+        "editorial": { "type": "object", "additionalProperties": true },
+        "contentTest": { "type": "object", "additionalProperties": true }
+      },
+      "required": ["semiotic"],
+      "additionalProperties": true
+    },
+
+    "VoiceComponent": {
+      "type": "object",
+      "properties": {
+        "_component": { "const": "voice" },
+        "_version": { "type": "string" },
+        "base": { "type": "object", "additionalProperties": true },
+        "forbiddenTones": { "type": "array", "items": { "type": "string" } },
+        "approvedTones": { "type": "array", "items": { "type": "string" } },
+        "examples": { "type": "array" },
+        "contextVariants": { "type": "array" },
+        "rails": { "type": "object", "additionalProperties": true }
+      },
+      "required": ["base"],
+      "additionalProperties": true
+    },
+
+    "CommercialComponent": {
+      "type": "object",
+      "properties": {
+        "_component": { "const": "commercial" },
+        "_version": { "type": "string" },
+        "pricing": { "type": "object", "additionalProperties": true },
+        "claims": { "type": "object", "additionalProperties": true },
+        "offers": { "type": "object", "additionalProperties": true },
+        "socialProof": { "type": "object", "additionalProperties": true },
+        "surfaceRules": { "type": "array" },
+        "globalForbiddenTerms": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ConstrainedString" }
+        }
+      },
+      "required": ["pricing", "claims"],
+      "additionalProperties": true
+    },
+
+    "GovernanceComponent": {
+      "type": "object",
+      "properties": {
+        "_component": { "const": "governance" },
+        "_version": { "type": "string" },
+        "severity": { "type": "object", "additionalProperties": true },
+        "conflictResolution": { "type": "object", "additionalProperties": true },
+        "surfaceRules": { "type": "array" },
+        "overrideProtocol": { "type": "object", "additionalProperties": true },
+        "compliance": {
+          "type": "object",
+          "properties": {
+            "zeroToleranceTerms": { "type": "array", "items": { "type": "string" } }
+          },
+          "additionalProperties": true
+        },
+        "preflight": { "type": "object", "additionalProperties": true }
+      },
+      "required": ["severity", "preflight"],
+      "additionalProperties": true
+    }
+  }
+}

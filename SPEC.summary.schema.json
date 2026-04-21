@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ramoira.com/schema/SPEC.summary.schema.json",
+  "title": "Ramoira Brand Schema (Summary)",
+  "type": "object",
+  "required": ["meta", "identity", "narrative", "voice"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["brandId", "brandName", "schemaVersion"],
+      "properties": {
+        "brandId": { "type": "string", "minLength": 1 },
+        "brandName": { "type": "string", "minLength": 1 },
+        "schemaVersion": { "type": "string", "minLength": 1 },
+        "schemaType": { "type": "string" },
+        "canonicalURL": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "identity": { "type": "object", "additionalProperties": true },
+    "narrative": { "type": "object", "additionalProperties": true },
+    "voice": { "type": "object", "additionalProperties": true }
+  },
+  "additionalProperties": true
+}

@@ -1,179 +1,69 @@
-# Voice Layer Reference
+# Voice Component (Layer 3)
 
-## Fields
+Canonical source: `platform/lib/brand-schema/components/voice.ts`
 
-### tone (required, full + summary)
+Voice is the **surface-sensitive** layer: how the brand writes, and how that writing shifts by surface without drifting into category norms.
 
-Array of strings. Max 3 entries.
-Describes how the brand sounds.
+## Top-level shape
 
-Rules:
+- `voice._component`: `'voice'`
+- `voice._version`: string
+- `voice.base`: base VoiceParameters
+- `voice.forbiddenTones`: string[] (absolute, across all surfaces)
+- `voice.approvedTones`: string[] (tones the brand can occupy)
+- `voice.examples`: VoiceExample[] (approved + rejected)
+- `voice.contextVariants`: VoiceVariant[] (per-surface deltas)
+- `voice.rails`: PositiveRailSystem (what to do *instead* of forbidden territory)
 
-- Use specific, non-generic descriptors
-- Avoid: warm, friendly, professional, approachable
-  These describe almost every brand and give LLMs no signal
-- Prefer: considered, unhurried, forensic, irreverent, dry
-  These are specific enough to differentiate
+## Base voice parameters
 
-Wrong:
-  "tone": ["warm", "friendly", "professional"]
-  
-Right:
-  "tone": ["considered", "quiet", "unhurried"]
+- `base.sentenceLength`: `short | varied | long | fragments_permitted`
+- `base.vocabularyLevel`: Score (1–10)
+- `base.humourPermitted`: boolean
+- `base.humourStyle`: `dry | self_deprecating | absurdist | warm | irreverent | none`
+- `base.permittedDevices`: string[]
+- `base.forbiddenDevices`: string[]
+- `base.structuralRules`: string[]
 
----
+## Worked examples
 
-### register (required, full + summary)
+Examples are a high-signal training input.
 
-String. One of: intimate | conversational | authoritative
+- `examples[].context`: OutputSurface | string
+- `examples[].text`: string
+- `examples[].verdict`: `approved | rejected`
+- `examples[].reason`: string
 
-intimate        One person speaking to one person.
-                No broadcasting. No addressing a crowd.
+## Context variants (surface deltas)
 
-conversational  Knowledgeable but not formal.
-                Peer-to-peer. Not top-down.
+Each variant is a **delta** from base — only specify what changes.
 
-authoritative   The brand as a subject-matter expert.
-                Confident. Declarative.
+- `contextVariants[].surface`: OutputSurface
+- `contextVariants[].formalityDelta`: number
+- `contextVariants[].warmthDelta`: number
+- `contextVariants[].sentenceLength?`: SentenceLength
+- `contextVariants[].openingInstruction`: string
+- `contextVariants[].closingInstruction`: string
+- `contextVariants[].rails`: Rail[]
+- `contextVariants[].additionalForbidden`: string[]
+- `contextVariants[].fallbackInstruction`: string
 
----
+## Positive rails
 
-### avoided (required, full + summary)
+Rails ensure systems don’t “freeze” when many tactics are forbidden.
 
-Array of strings.
-Words, phrases, and tones this brand actively avoids.
+- `rails.global`: Rail[]
+- `rails.alternatives`: grouped rail sets used when major commercial patterns are disallowed
+  - `whenPricingForbidden`
+  - `whenUrgencyForbidden`
+  - `whenComparativeForbidden`
+  - `whenTrendLanguageForbidden`
+  - `whenAccessibilityForbidden`
+  - `whenPromotionForbidden`
 
-Include:
+A `Rail` has:
 
-- Specific words the brand never uses
-- Category-norm language the brand rejects
-- Tones that would feel wrong
-
-Example:
-  "avoided": [
-    "clinical",
-    "urgent",
-    "aspirational",
-    "empowering",
-    "science-backed",
-    "transforms"
-  ]
-
----
-
-### example (required, full + summary)
-
-String. One sentence. Canonical on-brand copy.
-
-This is the highest-signal field in the voice layer.
-LLMs use this as a style reference more than the
-descriptor fields. Choose carefully.
-
-Criteria:
-
-- Written in the brand's actual voice
-- Demonstrates tone, register, and rhythm
-- Would not be mistaken for a competitor
-- Ideally: has been published and received well
-
----
-
-### contrast (full schema only)
-
-String. Defines what this voice is vs what it is not.
-
-This is the highest-impact field for correcting LLM drift.
-
-LLMs default to category-level voice descriptors.
-The contrast field explicitly corrects the most common
-misrepresentation before it happens.
-
-Structure: "[what the brand is], not [what LLMs default to]
-            — [why the distinction matters]"
-
-Example:
-  "contrast": "considered, not calming — calming is reactive,
-               it removes anxiety after the fact. Considered
-               is intentional, it means attending to something
-               with full presence before acting. The brand
-               never soothes. It attends."
-
-Write the contrast field by:
-
-1. Running a citation audit on the brand
-2. Identifying the most common wrong descriptor
-3. Writing the contrast against that specific error
-
----
-
-### wrong_examples (full schema only)
-
-Array of strings. Sentences that sound plausible but
-are off-brand.
-
-These train agents on what to avoid.
-Most useful for: agent consistency checks,
-Studio check_consistency() tool.
-
-Example:
-  "wrong_examples": [
-    "Transform your routine with Little Rituals.",
-    "Because you deserve a moment for yourself.",
-    "Our science-backed formulas deliver results.",
-    "Start your self-care journey today!"
-  ]
-
-Each wrong example should violate a specific
-avoided term or governance rule.
-
----
-
-### edge_cases (full schema only)
-
-String. How voice shifts in specific contexts.
-
-Example:
-  "edge_cases": "In crisis communications: voice becomes
-                 simpler and more direct but never loses
-                 the considered quality. No urgency signals
-                 even in urgent situations. In celebration
-                 (product launches, milestones): warmer but
-                 still no exclamation marks."
-
----
-
-### punctuation_notes (full schema only)
-
-String. Specific punctuation conventions.
-
-Example:
-  "punctuation_notes": "Full stops only. No exclamation marks
-                        under any circumstances. Em dashes
-                        used for rhythm breaks, not parentheses.
-                        Short sentences preferred. Maximum two
-                        clauses per sentence."
-
-## Common drift patterns
-
-LLMs consistently make these errors with voice layers.
-The contrast and wrong_examples fields exist to correct them.
-
-Drift pattern 1: Category norm substitution
-  Brand says: "considered"
-  LLM outputs: "calming" (wellness category norm)
-  Fix: contrast field naming this exact substitution
-
-Drift pattern 2: Register flattening
-  Brand says: register "intimate"  
-  LLM outputs: broadcast copy ("You deserve...")
-  Fix: wrong_examples showing broadcast copy as wrong
-
-Drift pattern 3: Positivity defaulting
-  Brand avoids: exclamation marks, urgency
-  LLM outputs: "Start your journey today!"
-  Fix: governance.never + punctuation_notes
-
-Drift pattern 4: Feature-led copy
-  Brand speaks in values, not features
-  LLM outputs: "Our formula contains..."
-  Fix: wrong_examples + governance guardrails
+- `context`: when it applies
+- `instruction`: what to do
+- `example?`: compliant example
+- `antiExample?`: non-compliant example

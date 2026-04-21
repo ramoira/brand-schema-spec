@@ -46,6 +46,7 @@ brand.schema.summary.json  Summary schema. Public.
 ## Worked example
 
 → examples/little-rituals/
+→ examples/rolex/
 
 ## Blank templates
 
@@ -69,3 +70,4 @@ ramoira publish
 
 MIT. The schema format is open.
 Schemas you generate are yours entirely.
+

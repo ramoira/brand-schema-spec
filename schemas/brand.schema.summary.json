@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "brandId": "",
+    "brandName": "",
+    "schemaVersion": "2.0.0",
+    "schemaType": "summary",
+    "canonicalURL": ""
+  },
+  "identity": {
+    "summary": {
+      "oneLineBrief": "",
+      "threeAdjectives": [],
+      "neverDo": []
+    },
+    "distinctiveAssets": {
+      "visual": {
+        "primaryColor": {
+          "value": "#000000",
+          "severity": "contextual",
+          "rationale": ""
+        },
+        "secondaryColors": [],
+        "iconography": [],
+        "photographyStyle": {
+          "permitted": [],
+          "forbidden": [],
+          "lightingMood": ""
+        }
+      },
+      "linguistic": {
+        "ownedWords": [],
+        "typographicVoice": {
+          "sentenceStructure": "",
+          "punctuationStyle": "",
+          "numeralStyle": ""
+        }
+      }
+    }
+  },
+  "narrative": {
+    "semiotic": {
+      "denotative": {
+        "categoryDescriptor": "",
+        "functionalClaims": [],
+        "specifications": []
+      },
+      "connotative": {
+        "meaningClusters": [],
+        "emotionalRegister": "",
+        "minimumConnotativeTest": ""
+      },
+      "layerHierarchy": "balanced"
+    },
+    "myth": {
+      "mythStatement": "",
+      "mythTest": ""
+    },
+    "contentTest": {
+      "mythTest": "",
+      "connotativeTest": "",
+      "toneTest": ""
+    }
+  },
+  "voice": {
+    "base": {
+      "sentenceLength": "varied",
+      "vocabularyLevel": 0,
+      "humourPermitted": false,
+      "humourStyle": "none",
+      "permittedDevices": [],
+      "forbiddenDevices": [],
+      "structuralRules": []
+    },
+    "approvedTones": [],
+    "forbiddenTones": [],
+    "examples": []
+  }
+}

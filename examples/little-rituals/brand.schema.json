@@ -1,0 +1,1132 @@
+{
+  "meta": {
+    "brandId": "little-rituals",
+    "brandName": "Little Rituals",
+    "website": "https://littlerituals.in",
+    "category": "Premium Baby Skincare · India",
+    "schemaVersion": "1.0.0",
+    "baseArchetype": "peer",
+    "archetypeDivergences": [
+      "expert (formulation credibility)",
+      "optimist (ritual as daily delight)"
+    ],
+    "market": "India · D2C · mid-to-premium"
+  },
+  "identity": {
+    "_component": "identity",
+    "prism": {
+      "physique": {
+        "permitted": [
+          "soft",
+          "warm",
+          "natural-material forward",
+          "considered",
+          "clean",
+          "gentle",
+          "Indian-heritage-adjacent",
+          "intimate",
+          "tactile"
+        ],
+        "forbidden": [
+          "clinical",
+          "sterile",
+          "overtly Western-luxury",
+          "cold",
+          "generic-natural",
+          "loud",
+          "mass-market cheap",
+          "artificially scented",
+          "aspirational-lifestyle staging"
+        ],
+        "posture": "Something made with the same care you give to the person it is for."
+      },
+      "personality": {
+        "sincerity": 9,
+        "excitement": 5,
+        "competence": 8,
+        "sophistication": 5,
+        "ruggedness": 1,
+        "characterBrief": "The friend who spent six months researching baby skincare because their own child had eczema — and now shares everything they found, honestly, including the things that did not work."
+      },
+      "culture": {
+        "coreValues": [
+          "the ritual matters as much as the product — daily care is an act of love, not a task",
+          "science should explain tradition, not replace it — ancient Indian practices and modern formulation are not in conflict",
+          "honesty about ingredients — if we would not put it on our own child, we do not make it"
+        ],
+        "originNarrative": "Built by parents who wanted to do the tel malish their grandmothers taught them, but could not find oils they trusted not to have chemicals in them. So they made their own.",
+        "forbidden": [
+          "fear-based marketing — \"don't use X or your baby will be harmed\"",
+          "false universality — not every product is right for every baby",
+          "greenwashing — \"natural\" without evidence",
+          "parent guilt — implying the parent is doing it wrong",
+          "tradition as nostalgia — using heritage as aesthetic, not substance"
+        ],
+        "sacredBoundary": "The moment Little Rituals makes a parent feel inadequate rather than informed, it has become the problem it was built to solve."
+      },
+      "relationship": {
+        "mode": "peer",
+        "formality": 3,
+        "pronoun": "we",
+        "warmth": 9,
+        "powerDynamic": "equal"
+      },
+      "reflection": {
+        "depictedArchetype": "The new parent who takes the massage ritual seriously — who makes time for it not because they read it was important but because they remember it from their own childhood and want to pass it on, done properly",
+        "aspirationalDelta": 1,
+        "forbiddenArchetypes": [
+          "the Instagram-perfect parent",
+          "the anxious parent who reads every ingredient label in fear",
+          "the parent who has outsourced care decisions to a brand",
+          "the parent who has abandoned tradition entirely"
+        ],
+        "ageSignal": "Someone navigating the specific newness of first parenthood, or the deliberate tenderness of caring again for a second or third child"
+      },
+      "selfImage": {
+        "feelingDescriptors": [
+          "I know what I am putting on my child's skin and why",
+          "I am continuing a practice that has meaning — I did not just buy a product",
+          "I found the version of the thing my mother used that I can trust",
+          "This moment — the massage, the wash, the routine — is ours"
+        ],
+        "identityStatement": "I am someone who makes this time count.",
+        "forbidden": [
+          "I am a good parent because I buy premium products",
+          "This brand validated my parenting choices",
+          "I found the safest brand so I can stop worrying"
+        ]
+      }
+    },
+    "distinctiveAssets": {
+      "visual": {
+        "primaryColor": {
+          "value": "#C8A87A",
+          "severity": "strong",
+          "rationale": "The brand sits at the intersection of Indian tradition and modern formulation. The palette should feel warm, earthy, and considered — not the clinical white of pharma, not the aggressive green of greenwashing brands."
+        },
+        "secondaryColors": [
+          "#F5EDE0",
+          "#8A7A62",
+          "#2A2018"
+        ],
+        "forbiddenColors": [
+          "#FF0000",
+          "#0066FF"
+        ],
+        "logoUsage": {
+          "minimumClearSpace": "0.5× logo height",
+          "forbiddenBackgrounds": [
+            "busy pattern backgrounds",
+            "clinical white that reads as medical"
+          ],
+          "forbiddenModifications": [
+            "never use in contexts that feel transactional or rushed"
+          ]
+        },
+        "iconography": [
+          "hand-drawn botanical",
+          "oil-texture",
+          "gentle illustration",
+          "material-close-up"
+        ],
+        "characterAssets": [],
+        "photographyStyle": {
+          "permitted": [
+            "real hands holding real babies — not stock imagery",
+            "the oil catch the light — texture and warmth visible",
+            "the massage gesture — hands, touch, connection",
+            "Indian home contexts — natural light, warm settings",
+            "product alongside the practice, not instead of it",
+            "multigenerational if possible — grandmother and parent together"
+          ],
+          "forbidden": [
+            "Western lifestyle staging with baby as accessory",
+            "clinical white backgrounds with product only",
+            "before/after imagery (never for baby skin)",
+            "fear-based imagery — rashes, distress, clinical close-ups of problem skin",
+            "overly produced perfection — real parents, real moments"
+          ],
+          "lightingMood": "Warm afternoon light. The kitchen. The bedroom. The moment before the bath."
+        }
+      },
+      "sonic": {
+        "permittedGenres": [
+          "soft Indian classical",
+          "gentle acoustic",
+          "ambient with warmth",
+          "minimal folk"
+        ],
+        "forbiddenGenres": [
+          "corporate pop",
+          "generic spa music",
+          "anxious electronic",
+          "loud anything"
+        ],
+        "tempoRange": [
+          55,
+          85
+        ],
+        "instrumentalMood": "The sound of a quiet house when a baby has just fallen asleep."
+      },
+      "linguistic": {
+        "ownedPhrases": [
+          {
+            "value": "Little Rituals",
+            "severity": "absolute"
+          },
+          {
+            "value": "Every little ritual matters",
+            "severity": "strong"
+          }
+        ],
+        "ownedWords": [
+          "ritual",
+          "gentle",
+          "nourish",
+          "massage",
+          "wood-pressed",
+          "postbiotic"
+        ],
+        "forbiddenWords": [
+          {
+            "value": "toxic-free",
+            "severity": "absolute"
+          },
+          {
+            "value": "chemical-free",
+            "severity": "absolute"
+          },
+          {
+            "value": "harm-free",
+            "severity": "absolute"
+          },
+          {
+            "value": "only the best for your baby",
+            "severity": "strong"
+          },
+          {
+            "value": "gentle enough",
+            "severity": "contextual"
+          },
+          {
+            "value": "dermatologically tested",
+            "severity": "contextual"
+          }
+        ],
+        "typographicVoice": {
+          "sentenceStructure": "Warm and conversational. Short to medium sentences. Never clinical lists as primary communication. \"We spent six months getting this right\" not \"Formulated with key ingredients.\"",
+          "punctuationStyle": "Natural. Em dashes for warmth and parenthetical thought. No exclamation marks except in genuinely celebratory contexts. Never clinical.",
+          "numeralStyle": "Words for small numbers in prose. Numerals for specific formulation data. \"Six months of testing\" not \"6 months\". \"0.1% fragrance\" when specificity matters."
+        }
+      }
+    },
+    "summary": {
+      "oneLineBrief": "Little Rituals: the science behind why your grandmother was right, made into products you can trust.",
+      "threeAdjectives": [
+        "warm",
+        "informed",
+        "specific"
+      ],
+      "neverDo": [
+        "Make a parent feel guilty or inadequate",
+        "Use fear-based language about ingredients (\"chemical-free\", \"toxic-free\")",
+        "Use tradition as aesthetic without substance",
+        "Claim benefits without specific formulation evidence",
+        "Position against Indian traditional practices — the brand builds on them"
+      ]
+    }
+  },
+  "narrative": {
+    "_component": "narrative",
+    "semiotic": {
+      "layerHierarchy": "balanced",
+      "denotative": {
+        "categoryDescriptor": "Premium baby and child skincare — wood cold-pressed organic oils, science-formulated skin and hair care, made for Indian babies and Indian parents",
+        "functionalClaims": [
+          "Wood cold-pressed at ambient temperature — no heat applied, nutritional profile preserved",
+          "Organic certification on oil range — [certification body to be specified]",
+          "Postbiotic formulation in face cream — supports baby skin microbiome barrier",
+          "Plant protein in shampoo and conditioner — nourishes without sulphates",
+          "Mineral sunscreen — physical UV block, no chemical UV filters",
+          "No parabens, no sulphates, no artificial fragrance in core range"
+        ],
+        "specifications": [
+          "Wood pressing preserves tocopherols (Vitamin E) and essential fatty acids that heat-pressing degrades",
+          "Baby skin is 20–30% thinner than adult skin — formulation absorbs and affects differently",
+          "Indian climate (humidity, UV index) creates specific skincare requirements not addressed by Western baby brands"
+        ],
+        "forbiddenClaims": [
+          "chemical-free — all matter is chemicals",
+          "toxic-free — implies competitor products are toxic (legally and ethically problematic)",
+          "clinically proven to [outcome] — use specific study data or remove claim",
+          "best baby skincare in India — unprovable superlative",
+          "paediatrician recommended — only with specific, named evidence"
+        ]
+      },
+      "connotative": {
+        "meaningClusters": [
+          "the ritual as relationship — the daily massage, wash, and care routine is how connection is built",
+          "trust through knowledge — knowing what you are using and why, not just that a brand is reputable",
+          "tradition validated — the practices your mother and grandmother trusted, now evidence-backed",
+          "specificity for India — made for Indian babies, Indian skin, Indian climate, Indian parents"
+        ],
+        "forbiddenMeanings": [
+          "guilt avoidance — \"safe products so you can stop worrying\"",
+          "premium as status — \"show your baby you care with Little Rituals\"",
+          "fear resolution — \"the only brand you can trust\"",
+          "expert authority — \"trust us, we know best\""
+        ],
+        "emotionalRegister": "The warmth of a practice that has been passed down, now made with materials you have verified yourself.",
+        "minimumConnotativeTest": "Does this content feel like it belongs in the quiet of the morning routine, or does it feel like an ad?"
+      }
+    },
+    "myth": {
+      "culturalTension": "Indian parents navigating between the wisdom of ancestral baby care practices — tel malish, herbal washes, natural oils — and the modern anxiety about safety, ingredients, and a market flooded with \"natural\" products that are not. The tension between trusting what your mother taught you and not being able to verify whether the product in front of you is what it claims.",
+      "mythStatement": "Your grandmother was right. The science now explains why. You do not have to choose between wisdom and evidence — Little Rituals is both.",
+      "protagonistRole": "The parent who takes the ritual seriously — who makes time for the massage not because a brand told them to but because they remember it from their own childhood, and now wants to do it with ingredients they have actually verified",
+      "antagonist": "The gap between traditional practice and trustworthy modern product — and the market of brands that exploit anxious parents with \"natural\" claims that do not hold up",
+      "mythTest": "Does this content honour the ritual as much as the product? Does it treat the parent as informed and capable, not anxious and needing reassurance?",
+      "constraints": [
+        {
+          "constraint": "Never make the ritual feel like a task to be optimised",
+          "severity": "absolute",
+          "rationale": "The ritual is the point. Efficiency language destroys the myth.",
+          "example": "VIOLATION: \"Quick and easy baby massage oil\" — COMPLIANT: \"For the massage that takes as long as it takes.\""
+        },
+        {
+          "constraint": "Never use fear to sell product",
+          "severity": "absolute",
+          "rationale": "Fear marketing in baby care is endemic and is exactly what the brand's informed-parent positioning opposes.",
+          "example": "VIOLATION: \"Most baby products contain harmful chemicals — not ours\" — COMPLIANT: State specific ingredients and why they are chosen, without referencing unnamed harmful alternatives."
+        },
+        {
+          "constraint": "Never claim tradition as aesthetic without substance",
+          "severity": "absolute",
+          "rationale": "The wood-pressed oils earn the heritage claim through the process. Every traditional signal must be grounded in actual traditional practice or formulation.",
+          "example": "VIOLATION: \"Inspired by ancient Indian wisdom\" with a generic product — COMPLIANT: \"Wood cold-pressed using the same ambient-temperature method that preserves the oil's nutritional profile, as traditional pressing always did before industrial heat-pressing became standard.\""
+        },
+        {
+          "constraint": "Never position against Indian traditional practices",
+          "severity": "strong",
+          "rationale": "The brand builds on tradition — it does not replace or correct it. Grandmothers are allies, not outdated authorities.",
+          "example": "VIOLATION: \"Modern science, better than old methods\" — COMPLIANT: \"What your grandmother used, now with the evidence to explain why it worked.\""
+        },
+        {
+          "constraint": "Never use fear-vocabulary: toxic-free, chemical-free, harmful ingredients, dangerous",
+          "severity": "absolute",
+          "rationale": "This language is scientifically illiterate, legally risky, and is the tactic of the brands Little Rituals was created to be an alternative to.",
+          "example": "VIOLATION: \"Chemical-free formula your baby deserves\" — COMPLIANT: \"No parabens, no sulphates, no artificial fragrance. Here is what is in it instead.\""
+        }
+      ]
+    },
+    "mythEvolution": {
+      "principle": "The myth evolves as the parent evolves — from newborn care to toddler care to early childhood. The brand grows with the ritual, not away from it.",
+      "immutableCore": "The ritual is the relationship. The product enables the ritual. This never changes.",
+      "modernTensions": [
+        {
+          "tension": "The \"clean beauty\" movement has made parents afraid of all synthetic ingredients — including evidence-based safe ones. Does Little Rituals join this trend or resist it?",
+          "mythResolution": "The brand is evidence-led, not fear-led. Some synthetic ingredients are safe and effective. Some natural ingredients are harmful. The question is always: what does the evidence say about this specific ingredient at this concentration for baby skin?",
+          "permittedFraming": [
+            "We explain every ingredient and why it is there",
+            "Natural does not automatically mean safe. Evidence does.",
+            "\"Free from\" lists are marketing. Ingredient explanations are information."
+          ],
+          "forbiddenFraming": [
+            "chemical-free",
+            "toxic-free",
+            "all-natural is always better",
+            "synthetic ingredients are always harmful"
+          ],
+          "rails": [
+            {
+              "context": "When asked about \"clean\" credentials",
+              "instruction": "Lead with specific ingredients and evidence, not category claims. \"Clean\" as a label means nothing. What the ingredients are and why they are chosen means everything.",
+              "example": "We do not use parabens because [specific evidence about baby skin absorption]. We do use [specific ingredient] because [specific evidence for benefit and safety at this concentration].",
+              "antiExample": "Little Rituals is 100% clean, free from all harmful chemicals."
+            }
+          ]
+        },
+        {
+          "tension": "International premium baby brands entering India — positioning as aspirational, Western, superior to Indian traditional practices.",
+          "mythResolution": "International brands do not know Indian climate, Indian skin tones, Indian caregiving practices, or Indian parents. Little Rituals is built for exactly this context. Being Indian is not a limitation — it is the qualification.",
+          "permittedFraming": [
+            "Formulated for Indian babies — Indian climate, Indian skin, Indian caregiving practices",
+            "The massages your mother taught you, with ingredients you can trust"
+          ],
+          "forbiddenFraming": [
+            "as good as international brands",
+            "world-class quality (as comparison to Western brands)",
+            "Indian parents deserve better — implies Indian practices were inferior"
+          ],
+          "rails": [
+            {
+              "context": "When international competitors are referenced",
+              "instruction": "Never position against international brands directly. Position through specificity — what Little Rituals knows about India that others cannot.",
+              "example": "Indian babies are different. Indian summers are different. Indian rituals are different. We know this because we are from here.",
+              "antiExample": "Unlike international brands, Little Rituals understands Indian skin."
+            }
+          ]
+        }
+      ]
+    },
+    "pillars": [
+      {
+        "name": "The Ritual",
+        "description": "The daily practice of care — massage, wash, moisturise — as an act of relationship, not task completion",
+        "coreClaim": "The ten minutes of the massage are not about the oil. They are about the ten minutes.",
+        "approvedArcs": [
+          "the parent who makes time for the massage even on hard days",
+          "the ritual that is passed from grandmother to mother to child",
+          "the product that disappears into the practice — the oil that smells right, the wash that lathers gently"
+        ],
+        "forbiddenInversions": [
+          "the ritual as product demonstration",
+          "the routine as productivity — \"quick and easy baby care\"",
+          "the ritual as guilt trigger — \"are you doing this right?\""
+        ],
+        "surfaces": [
+          "brand_narrative",
+          "editorial",
+          "email_retention",
+          "social_organic",
+          "out_of_home"
+        ],
+        "rails": [
+          {
+            "context": "Any content about the product in use",
+            "instruction": "The product is always in service of the moment. Never the other way round. Lead with the moment, end with the product enabling it.",
+            "example": "The massage that takes as long as it takes. The oil that makes it worth taking that long.",
+            "antiExample": "Our almond oil is perfect for baby massage — gentle, nourishing, and quick-absorbing."
+          }
+        ]
+      },
+      {
+        "name": "The Evidence",
+        "description": "The science that explains why what your grandmother knew was right — and the specific formulation choices that follow from it",
+        "coreClaim": "We explain every ingredient. If we cannot explain why it is there, it is not there.",
+        "approvedArcs": [
+          "wood pressing and what ambient temperature preserves versus heat",
+          "what postbiotic means for baby skin microbiome",
+          "what Indian climate specifically requires that Western formulations do not account for"
+        ],
+        "forbiddenInversions": [
+          "evidence as authority claim — \"trust us, the science says\"",
+          "evidence as fear — \"most products contain X that damages baby skin\"",
+          "evidence without specificity — \"scientifically formulated\""
+        ],
+        "surfaces": [
+          "product_detail_page",
+          "editorial",
+          "email_acquisition",
+          "press_release"
+        ],
+        "rails": [
+          {
+            "context": "Formulation claims",
+            "instruction": "State the specific ingredient, the specific mechanism, and the specific benefit. Never category claims.",
+            "example": "Wood cold-pressed at below 40°C. Above that temperature, tocopherols — the Vitamin E compounds that protect and nourish skin — begin to degrade. We press below it.",
+            "antiExample": "Our cold-pressed oils are scientifically formulated to nourish your baby's delicate skin."
+          }
+        ]
+      },
+      {
+        "name": "Made for India",
+        "description": "Specific to Indian babies, Indian parents, Indian climate, and Indian caregiving traditions — not adapted from somewhere else",
+        "coreClaim": "Most baby skincare is made for a European or American baby in a temperate climate. Indian babies live in India. We do too.",
+        "approvedArcs": [
+          "the specific formulation choices that Indian humidity and UV index require",
+          "the oils that Indian tradition has always known — sesame, coconut, almond — now made to a standard you can verify",
+          "the gifting context — baby showers and new-arrival gifts as a cultural institution"
+        ],
+        "forbiddenInversions": [
+          "Indian-ness as nostalgic aesthetic — brass vessels, old photographs, generic \"heritage\" visual language",
+          "positioning Indian practice as inferior to international alternatives",
+          "using \"Indian\" as a marketing claim without grounding it in specific formulation or practice"
+        ],
+        "surfaces": [
+          "brand_narrative",
+          "editorial",
+          "paid_landing_page",
+          "out_of_home"
+        ],
+        "rails": [
+          {
+            "context": "Cultural or heritage content",
+            "instruction": "Ground every cultural reference in a specific practice, ingredient, or formulation decision. Heritage without evidence is aesthetics.",
+            "example": "Sesame oil has been used in Indian baby massage for centuries. Black sesame specifically is highest in sesamol — the antioxidant that makes the oil stable and nourishing in India's climate.",
+            "antiExample": "Inspired by centuries of Indian tradition, Little Rituals brings ancient wisdom to modern parents."
+          }
+        ]
+      },
+      {
+        "name": "Gifting as Love Language",
+        "description": "The new-baby gift as one of India's most significant cultural rituals — and what it means to give something you have actually researched",
+        "coreClaim": "The gift of products you trust for your own child is a different kind of gift.",
+        "approvedArcs": [
+          "the friend who researched this so you do not have to",
+          "giving something with meaning, not just premium packaging",
+          "the curated box as \"this is what I would want for my baby\""
+        ],
+        "forbiddenInversions": [
+          "gifting as status — the expensive box as demonstration of how much you care",
+          "gifting as convenience — \"something easy to give\"",
+          "gifting without substance — beautiful packaging with generic contents"
+        ],
+        "surfaces": [
+          "email_acquisition",
+          "email_retention",
+          "social_organic",
+          "paid_landing_page"
+        ],
+        "rails": [
+          {
+            "context": "Gifting content",
+            "instruction": "Lead with the knowledge embedded in the gift. The research is the gift. The products are the expression of it.",
+            "example": "You have already done the research. The gift box is just how you share what you found.",
+            "antiExample": "The perfect gift for the new parents in your life — beautifully packaged and ready to give."
+          }
+        ]
+      }
+    ],
+    "editorial": {
+      "openingPrinciple": "Start with the moment — the massage, the bath, the routine — not the product. The product earns its way into the narrative through what it enables.",
+      "structuralApproach": "Moment → Why this moment matters → How the product serves it → The science that makes the product worthy of the moment.",
+      "forbiddenStructures": [
+        "ingredient-list as primary communication",
+        "fear-based problem → solution framing",
+        "aspirational parent lifestyle without the actual ritual",
+        "\"did you know?\" format with scary statistics about other products"
+      ],
+      "referencePool": [
+        "the tel malish and what it actually does neurologically for infant bonding",
+        "traditional Ayurvedic baby care and specific validated mechanisms",
+        "the specific nutritional chemistry of wood-pressed vs heat-pressed oils",
+        "Indian climate data — UV index, humidity — and formulation implications"
+      ],
+      "forbiddenReferences": [
+        "Western baby care as the standard against which Indian products are measured",
+        "celebrity parenting without substance",
+        "fear references to \"chemicals\" or \"toxins\" in other products"
+      ],
+      "timeScaleLanguage": "Generational and daily simultaneously. \"What your grandmother did every morning\" and \"the first thing you do after the bath\". Not seasonal."
+    },
+    "contentTest": {
+      "mythTest": "Does this content honour the ritual as much as the product? Would a grandmother recognise this as belonging to the practice she taught?",
+      "connotativeTest": "Does this content make the parent feel trusted and informed, or managed and reassured?",
+      "toneTest": "Is this warm and specific? Does it treat the parent as an adult who can handle actual evidence?"
+    }
+  },
+  "voice": {
+    "_component": "voice",
+    "base": {
+      "sentenceLength": "varied",
+      "vocabularyLevel": 6,
+      "humourPermitted": true,
+      "humourStyle": "warm",
+      "permittedDevices": [
+        "direct address — \"you\", \"your baby\"",
+        "warm aside — the parenthetical that acknowledges how hard this actually is",
+        "specific evidence delivered conversationally — \"here is why\"",
+        "generational reference — \"what your mother did\", \"what your grandmother knew\""
+      ],
+      "forbiddenDevices": [
+        "fear language",
+        "superlatives without evidence",
+        "clinical ingredient-listing as primary communication",
+        "urgency language in product contexts"
+      ],
+      "structuralRules": [
+        "We are alongside the parent, not above them",
+        "Evidence is shared, not wielded",
+        "The ritual is always more important than the product",
+        "Specific over general — always"
+      ]
+    },
+    "forbiddenTones": [
+      "authoritative expert dispensing wisdom",
+      "fear-inducing",
+      "guilt-inducing",
+      "preachy about clean/natural",
+      "generic warm-Indian-brand (vague tradition, soft music, generic mother-child imagery)",
+      "Western D2C millennial (too casual, too self-aware, not Indian enough)"
+    ],
+    "approvedTones": [
+      "warm and informed — the brilliant friend who researched this",
+      "specific and honest — explains what it knows and admits what it does not",
+      "culturally grounded — Indian without being folksy or nostalgic",
+      "gentle confidence — not anxious, not loud"
+    ],
+    "examples": [
+      {
+        "context": "product_detail_page — almond oil",
+        "text": "Wood-pressed at below 40°C. Above that temperature, the tocopherols — the Vitamin E that makes almond oil actually work on skin — start to degrade. We press below it. That is the only difference between our oil and most of what is available. It is also the difference between the oil your grandmother used and the one in most bottles on the shelf today.",
+        "verdict": "approved",
+        "reason": "Specific mechanism. Connects to tradition without romanticising it. Treats the parent as someone who can understand \"tocopherol\" once it is explained."
+      },
+      {
+        "context": "social_organic",
+        "text": "The massage takes as long as it takes. The oil should not be the limiting factor.",
+        "verdict": "approved",
+        "reason": "Ritual-first. Product implied, not pushed. Short. Specific to the actual experience of the practice."
+      },
+      {
+        "context": "email_acquisition",
+        "text": "You are going to do the massage anyway. You learnt it from your mother, and she learnt it from hers. We just want to make sure the oil is worth the time you give it.",
+        "verdict": "approved",
+        "reason": "Generational framing. Peer relationship — we are not teaching them to massage, they already know. Positions the product in service of the practice."
+      },
+      {
+        "context": "brand_narrative",
+        "text": "Most baby skincare is designed for a baby in London or Los Angeles. Indian babies live in India — in its heat, its humidity, its particular quality of summer light. They also get the oil massage that Indian babies have always had. We made something that knows all of this.",
+        "verdict": "approved",
+        "reason": "Specific cultural positioning without putting down international brands directly. \"Knows all of this\" — personalisation claim grounded in specificity."
+      },
+      {
+        "context": "paid_landing_page",
+        "text": "Our products are completely toxic-free and chemical-free! Protect your baby from harmful ingredients! 🌿",
+        "verdict": "rejected",
+        "reason": "Fear-based. Scientifically illiterate (\"chemical-free\"). Emoji in a context that requires substance. Screaming where calm confidence was needed."
+      },
+      {
+        "context": "social_organic",
+        "text": "Give your baby the gift of nature's purest ingredients, inspired by ancient Indian wisdom. 🍃✨",
+        "verdict": "rejected",
+        "reason": "Vague. \"Nature's purest\" is meaningless. \"Ancient wisdom\" without specificity is heritage-as-aesthetic. Emoji undermine the cultural grounding."
+      },
+      {
+        "context": "gifting — email",
+        "text": "You have already done the research. The gift is just how you share what you found.",
+        "verdict": "approved",
+        "reason": "Positions the giver as informed. The research is the value. Short. Warm."
+      }
+    ],
+    "contextVariants": [
+      {
+        "surface": "social_organic",
+        "formalityDelta": -1,
+        "warmthDelta": 1,
+        "sentenceLength": "short",
+        "openingInstruction": "Start with the moment, not the product. Four to twelve words. The product earns its way in.",
+        "closingInstruction": "No purchase CTA on organic social. The post is the relationship.",
+        "rails": [
+          {
+            "context": "Social post about a product",
+            "instruction": "The ritual comes first. The product is mentioned as an enabler, not the subject.",
+            "example": "The ten minutes of the massage. Not one minute less. The oil should make them worth it.",
+            "antiExample": "Our Wood Pressed Almond Oil is perfect for baby massage! Rich in Vitamin E and gentle on delicate skin. Shop now! 🌿"
+          }
+        ],
+        "additionalForbidden": [
+          "purchase CTAs on organic posts",
+          "emoji used as substitutes for substance",
+          "product-first copy"
+        ],
+        "fallbackInstruction": "If the post cannot avoid being product-first, do not post it. Post the moment instead."
+      },
+      {
+        "surface": "customer_service",
+        "formalityDelta": 0,
+        "warmthDelta": 1,
+        "sentenceLength": "short",
+        "openingInstruction": "Warm, specific, and parent-to-parent in register. Not a support script. Not a brand talking to a customer.",
+        "closingInstruction": "Offer the specific answer, then genuinely ask if there is anything else — not as a script.",
+        "rails": [
+          {
+            "context": "Ingredient question",
+            "instruction": "Answer the specific question with the specific evidence. If we do not have the answer, say so and find it.",
+            "example": "The shampoo contains [specific ingredient] at [specific concentration]. We use it because [specific evidence for safety and benefit at this level for baby skin]. If your baby has [specific concern], here is what we would suggest.",
+            "antiExample": "Thank you for reaching out! Our products are completely safe and gentle for all babies. We hope this helps!"
+          },
+          {
+            "context": "Skin reaction concern",
+            "instruction": "Take it seriously. Ask specific questions. Recommend pausing use and consulting a paediatrician if there is any doubt. Do not defend the product over the baby.",
+            "example": "That sounds uncomfortable — can you describe what you are seeing? In the meantime, please pause the product and check with your paediatrician. The baby comes before the product, always.",
+            "antiExample": "Our products are dermatologically tested and safe for all skin types. You may want to do a patch test next time."
+          }
+        ],
+        "additionalForbidden": [
+          "scripted empathy",
+          "defensive product defence over baby welfare",
+          "generic safety assurances"
+        ],
+        "fallbackInstruction": "When uncertain: take it seriously, be specific about what we do not know, always prioritise the baby over the product."
+      },
+      {
+        "surface": "email_retention",
+        "formalityDelta": -1,
+        "warmthDelta": 2,
+        "sentenceLength": "varied",
+        "openingInstruction": "Write to the parent who is already in the practice. They know the products. Lead with what they are doing, not what they should buy next.",
+        "closingInstruction": "Close with the ritual, not the CTA. The CTA can be secondary.",
+        "rails": [
+          {
+            "context": "Reorder reminder",
+            "instruction": "Never frame reorder as urgency or scarcity. Frame it as continuity of the ritual.",
+            "example": "Your almond oil is probably running low. The massage should not have to wait.",
+            "antiExample": "Running low? Reorder now before you run out! Stock is limited."
+          }
+        ],
+        "additionalForbidden": [
+          "scarcity language",
+          "urgency language",
+          "discount framing as primary message"
+        ],
+        "fallbackInstruction": "If the email cannot honour the ritual, it is a transaction email. Send it plainly rather than wrapping it in brand voice."
+      },
+      {
+        "surface": "editorial",
+        "formalityDelta": 0,
+        "warmthDelta": 0,
+        "sentenceLength": "varied",
+        "openingInstruction": "Start with a moment — specific, parental, Indian. Not a product. Not a statistic. A moment.",
+        "closingInstruction": "End with the practice continuing, not with a product recommendation.",
+        "rails": [
+          {
+            "context": "Science editorial",
+            "instruction": "The science explains the tradition. Never the other way round — science does not replace tradition, it validates it.",
+            "example": "Your grandmother pressed the sesame seeds in the wood press herself. She did not know that ambient temperature preserves the sesamol content. She knew the oil made the baby's skin glow. She was right about the outcome. The mechanism is just the explanation.",
+            "antiExample": "Modern science has proven that cold-pressed oils are superior to traditional extraction methods for baby skincare."
+          }
+        ],
+        "additionalForbidden": [
+          "product-first editorial",
+          "fear-based content about other products",
+          "science as authority"
+        ],
+        "fallbackInstruction": "If the editorial cannot honour both the tradition and the evidence equally, it belongs on the product page, not in editorial."
+      }
+    ],
+    "rails": {
+      "global": [
+        {
+          "context": "Any surface",
+          "instruction": "Read it aloud as if you are a parent talking to another parent. If it sounds like a brand, rewrite it. If it sounds like a grandmother disapproving of modern parents, rewrite it. If it sounds like a scientist talking down to a layperson, rewrite it. If it sounds like a friend who has done their research and is happy to share it — keep it.",
+          "example": "The oil you press below 40°C is the oil that still has what you need in it. It is also the oil that feels right.",
+          "antiExample": "Our scientifically formulated cold-pressed organic almond oil is the perfect choice for your baby's delicate skin needs."
+        }
+      ],
+      "alternatives": {
+        "whenPricingForbidden": [
+          {
+            "context": "N/A — Little Rituals shows price transparently",
+            "instruction": "Price is shown plainly. No anchoring. No \"just ₹X.\" Context about why it costs what it costs is welcomed when it references the formulation or process.",
+            "example": "₹1,150 for 200ml. Wood-pressed below 40°C. It costs more than heat-pressed oil because the process is slower and the yield is lower. The nutritional profile is the reason for both.",
+            "antiExample": "Was ₹1,500 — now just ₹1,150! Limited offer!"
+          }
+        ],
+        "whenUrgencyForbidden": [
+          {
+            "context": "When urgency is tempting",
+            "instruction": "The ritual does not have urgency. The baby's oil running out has continuity. Frame reorder as continuity, not urgency.",
+            "example": "The massage should not have to wait.",
+            "antiExample": "Order now before stock runs out! Your baby's skincare routine depends on it!"
+          }
+        ],
+        "whenComparativeForbidden": [
+          {
+            "context": "When comparison with \"mainstream\" brands is tempting",
+            "instruction": "Never name competitors. Reference the category problem (fear-based claims, unverified \"natural\" labels) without naming brands.",
+            "example": "Most bottles that say \"natural\" on the label do not explain what that means. We explain every ingredient and why it is there.",
+            "antiExample": "Unlike Mamaearth or Johnson's Baby, our products are genuinely natural and chemical-free."
+          }
+        ],
+        "whenTrendLanguageForbidden": [
+          {
+            "context": "When \"clean beauty\" trend language is tempting",
+            "instruction": "Do not use the trend vocabulary (\"clean\", \"green\", \"non-toxic\"). Use specific evidence instead.",
+            "example": "No parabens. No sulphates. No artificial fragrance. Here is what is in it instead, and why.",
+            "antiExample": "Join the clean beauty revolution! Little Rituals is proudly toxin-free. 🌿"
+          }
+        ],
+        "whenAccessibilityForbidden": [
+          {
+            "context": "N/A — Little Rituals should acknowledge price honestly",
+            "instruction": "The premium price reflects the process. Be honest about this.",
+            "example": "Wood-pressed oil costs more than heat-pressed oil because the process is slower and the yield is lower. That is the honest reason.",
+            "antiExample": "Premium quality at an affordable price for every parent."
+          }
+        ],
+        "whenPromotionForbidden": [
+          {
+            "context": "When a promotional mechanic is needed",
+            "instruction": "Promotions should be tied to moments — new baby, first ritual, gifting season — not to manufactured urgency.",
+            "example": "For the parent at the beginning. The first massage kit, at a price that makes starting easy.",
+            "antiExample": "LIMITED TIME: 20% off all products! Use code SAVE20 at checkout! 🎉"
+          }
+        ]
+      }
+    }
+  },
+  "commercial": {
+    "_component": "commercial",
+    "pricing": {
+      "style": "transparent",
+      "priceDisplayPermitted": true,
+      "urgencyLanguagePermitted": false,
+      "scarcityLanguagePermitted": false,
+      "discountPermitted": true,
+      "maxDiscountPercent": 25,
+      "permittedLanguage": [
+        "because the process costs more",
+        "the slower method",
+        "worth the time it takes"
+      ],
+      "forbiddenLanguage": [
+        {
+          "value": "limited time",
+          "severity": "strong"
+        },
+        {
+          "value": "selling fast",
+          "severity": "absolute"
+        },
+        {
+          "value": "don't miss out",
+          "severity": "absolute"
+        },
+        {
+          "value": "just ₹X",
+          "severity": "contextual"
+        }
+      ]
+    },
+    "claims": {
+      "approved": [
+        {
+          "claim": "Wood cold-pressed at ambient temperature (below 40°C)",
+          "evidenceRequired": false,
+          "geographicScope": [
+            "IN"
+          ],
+          "surfaces": "all"
+        },
+        {
+          "claim": "No parabens, no sulphates, no artificial fragrance",
+          "evidenceRequired": true,
+          "evidenceType": "Third-party ingredient verification or in-house testing documentation",
+          "geographicScope": [
+            "IN"
+          ],
+          "surfaces": "all"
+        },
+        {
+          "claim": "Organic [oil name]",
+          "evidenceRequired": true,
+          "evidenceType": "Organic certification from recognised Indian or international body",
+          "geographicScope": [
+            "IN"
+          ],
+          "surfaces": "all"
+        },
+        {
+          "claim": "Postbiotic formulation",
+          "evidenceRequired": true,
+          "evidenceType": "Specific postbiotic ingredients listed with mechanism",
+          "geographicScope": [
+            "IN"
+          ],
+          "surfaces": [
+            "product_detail_page",
+            "editorial",
+            "press_release"
+          ]
+        }
+      ],
+      "forbidden": [
+        {
+          "value": "chemical-free",
+          "severity": "absolute"
+        },
+        {
+          "value": "toxic-free",
+          "severity": "absolute"
+        },
+        {
+          "value": "completely safe for all babies",
+          "severity": "strong"
+        },
+        {
+          "value": "dermatologist recommended",
+          "severity": "strong"
+        },
+        {
+          "value": "clinically proven",
+          "severity": "strong"
+        },
+        {
+          "value": "best baby skincare in India",
+          "severity": "absolute"
+        }
+      ],
+      "comparative": {
+        "competitorMentionPermitted": false,
+        "comparativeClaimsPermitted": false,
+        "forbiddenFramings": [
+          "unlike other brands",
+          "better than [competitor]",
+          "the only brand that"
+        ]
+      },
+      "superlatives": {
+        "permitted": true,
+        "approved": [
+          "wood cold-pressed",
+          "specifically formulated for Indian babies"
+        ],
+        "forbidden": [
+          "best",
+          "safest",
+          "most trusted",
+          "India's number one",
+          "purest"
+        ]
+      }
+    },
+    "offers": {
+      "permittedTypes": [
+        "percentage_discount",
+        "bundle",
+        "gift_with_purchase",
+        "loyalty_reward"
+      ],
+      "forbiddenTypes": [
+        {
+          "value": "financing",
+          "severity": "contextual"
+        }
+      ],
+      "communicationRules": {
+        "urgencyPermitted": false,
+        "scarcityPermitted": false,
+        "valueFraming": "Promotions framed around moments (first ritual, gifting, new baby) not around urgency or manufactured scarcity. The discount is a welcome, not a deadline."
+      }
+    },
+    "socialProof": {
+      "starRatingsPermitted": true,
+      "reviewCountsPermitted": true,
+      "customerTestimonialsPermitted": true,
+      "permittedAuthoritySignals": [
+        "specific paediatrician endorsement (named, with context)",
+        "specific certification (organic, dermatologically tested with body named)"
+      ],
+      "forbiddenSocialProof": [
+        "before/after skin imagery",
+        "testimonials making medical claims (\"cured my baby's eczema\")",
+        "unnamed \"dermatologist recommended\""
+      ]
+    },
+    "surfaceRules": [
+      {
+        "surface": "comparison_page",
+        "fallback": "use_minimal_safe",
+        "alternativeApproach": "State specific ingredients and processes. No comparative language. Let the specificity speak.",
+        "rails": [
+          {
+            "context": "Third-party comparison listing",
+            "instruction": "Provide specific process claims (wood-pressed at below 40°C), specific ingredient-free claims (no parabens, no sulphates, no artificial fragrance), and specific certifications. No comparative language.",
+            "example": "Little Rituals Almond Oil — wood cold-pressed below 40°C — organic certified — no parabens, no sulphates, no artificial fragrance — ₹1,150 for 200ml",
+            "antiExample": "Little Rituals — better than chemical-laden alternatives — India's safest baby oil"
+          }
+        ]
+      },
+      {
+        "surface": "gifting",
+        "fallback": "use_brand_default",
+        "alternativeApproach": "The gift is the research. Frame the gift box as \"what I would choose for my own baby, curated for yours.\"",
+        "rails": [
+          {
+            "context": "Gift box content and landing pages",
+            "instruction": "Lead with what the gift communicates: informed care, specific products chosen with knowledge. Not beautiful packaging. Not convenience.",
+            "example": "Each product in this box was chosen for the same reason: we would use it for our own children. That is the curation.",
+            "antiExample": "The perfect gift box for the new parents in your life — beautifully packaged and ready to give!"
+          }
+        ]
+      }
+    ],
+    "globalForbiddenTerms": [
+      {
+        "value": "chemical-free",
+        "severity": "absolute"
+      },
+      {
+        "value": "toxic-free",
+        "severity": "absolute"
+      },
+      {
+        "value": "toxin-free",
+        "severity": "absolute"
+      },
+      {
+        "value": "harm-free",
+        "severity": "absolute"
+      },
+      {
+        "value": "selling fast",
+        "severity": "absolute"
+      },
+      {
+        "value": "don't miss out",
+        "severity": "absolute"
+      },
+      {
+        "value": "limited time",
+        "severity": "strong"
+      },
+      {
+        "value": "India's number one",
+        "severity": "absolute"
+      },
+      {
+        "value": "safest baby products",
+        "severity": "absolute"
+      }
+    ]
+  },
+  "governance": {
+    "_component": "governance",
+    "severity": {
+      "absolute": {
+        "constraints": [
+          "Never use fear language: chemical-free, toxic-free, toxin-free, harmful ingredients",
+          "Never make a parent feel guilty or inadequate",
+          "Never claim tradition without specific substance behind the claim",
+          "Never use urgency or scarcity language",
+          "Never name competitor brands",
+          "Never make medical claims without specific cited evidence"
+        ],
+        "violationResponse": "block_output"
+      },
+      "strong": {
+        "constraints": [
+          "No comparative claims against competitors or \"other brands\"",
+          "No superlatives without evidence (best, safest, purest, India's number one)",
+          "No paediatrician / dermatologist claim without specifically named evidence",
+          "No before/after imagery for baby skin"
+        ],
+        "overrideProcess": "Founder approval. Evidence must exist and be documented before claim is made. 60-day maximum.",
+        "violationResponse": "flag_for_review"
+      },
+      "contextual": {
+        "constraints": [
+          "Discount codes are permitted in acquisition contexts — not as primary value proposition",
+          "\"Gentle\" and \"delicate\" are permitted when accurate — not as category claims",
+          "Urgency is permitted only for genuine stock situations — stated as fact, not tactic"
+        ],
+        "judgmentBounds": "If a parent read this and felt managed rather than informed, it fails.",
+        "violationResponse": "log_for_audit"
+      }
+    },
+    "conflictResolution": {
+      "componentPriority": [
+        "governance",
+        "narrative",
+        "identity",
+        "voice",
+        "commercial"
+      ],
+      "knownConflicts": [
+        {
+          "scenario": "Performance marketing wants fear-based ingredient copy for conversion",
+          "components": [
+            "commercial",
+            "governance"
+          ],
+          "resolution": "Governance wins absolutely. Fear language is the tactic of the brands Little Rituals was built as an alternative to. Rewrite with specific evidence instead.",
+          "example": "\"No parabens. No sulphates. No artificial fragrance. Here is what is in it instead.\" outperforms \"chemical-free\" without the scientific illiteracy or legal risk."
+        },
+        {
+          "scenario": "Product runs low — temptation to use scarcity language",
+          "components": [
+            "commercial",
+            "voice"
+          ],
+          "resolution": "Frame as continuity of ritual. \"The massage should not have to wait\" outperforms \"stock running low\" without the manipulative framing.",
+          "example": "\"Your oil is probably running low. The massage should not wait.\" — factual, ritual-grounded."
+        },
+        {
+          "scenario": "International competitor enters market with aggressive \"safe\" positioning",
+          "components": [
+            "narrative",
+            "commercial"
+          ],
+          "resolution": "Never respond by claiming equivalent safety superiority. Respond with specificity: Indian climate, Indian practices, Indian skin — and the specific formulation decisions that follow.",
+          "example": "\"We know what Indian babies need because we are Indian. Here is what that means for our formulations.\""
+        }
+      ],
+      "defaultResolution": "escalate_to_human"
+    },
+    "surfaceRules": [
+      {
+        "surface": "social_organic",
+        "applicableConstraints": "all",
+        "objective": "Honour the ritual. Build the relationship. Not conversion.",
+        "primaryRail": "Start with the moment. End with the practice. The product is incidental.",
+        "rails": [],
+        "fallback": "use_brand_default",
+        "fallbackContent": "[Post the moment without the product. A parent and a baby. The ritual itself.]"
+      },
+      {
+        "surface": "customer_service",
+        "applicableConstraints": "all",
+        "objective": "Be the brilliant friend. Answer specifically. Prioritise the baby over the product, always.",
+        "primaryRail": "If there is any concern about a baby's skin reaction: pause use, consult paediatrician, the product is secondary.",
+        "rails": [],
+        "fallback": "use_brand_default",
+        "fallbackContent": "Please pause use and check with your paediatrician. Your baby's skin comes before anything else. We are here if you want to discuss what you observed."
+      },
+      {
+        "surface": "paid_landing_page",
+        "applicableConstraints": "all",
+        "objective": "Convert through knowledge and warmth, never through fear or urgency.",
+        "primaryRail": "Lead with what the product enables (the ritual), then the specific formulation evidence. Never the reverse.",
+        "rails": [],
+        "fallback": "use_minimal_safe"
+      }
+    ],
+    "overrideProtocol": {
+      "authorisedRoles": [
+        "Founder",
+        "Head of Brand",
+        "Head of Formulation"
+      ],
+      "requiredFields": [
+        "specific claim",
+        "specific evidence",
+        "surface and context",
+        "duration",
+        "approver"
+      ],
+      "maxDurationDays": 60,
+      "auditLogEndpoint": "/api/brand-schema/overrides"
+    },
+    "compliance": {
+      "violationWebhook": "/api/brand-schema/violations",
+      "routing": {
+        "absolute": "founder@littlerituals.in",
+        "strong": "brand@littlerituals.in",
+        "contextual": "content@littlerituals.in"
+      },
+      "humanReviewTopics": [
+        "any content addressing skin reactions or medical conditions",
+        "any content making health claims about babies",
+        "any content naming or implying comparison with specific competitors",
+        "any content using \"natural\", \"organic\", \"clean\" without specific evidence citation"
+      ],
+      "zeroToleranceTerms": [
+        "chemical-free",
+        "toxic-free",
+        "toxin-free",
+        "harm-free",
+        "safest baby products",
+        "India's number one baby brand",
+        "selling fast",
+        "don't miss out"
+      ]
+    },
+    "preflight": {
+      "question1": "Does this content honour the ritual as much as the product — would a grandmother recognise this as belonging to the practice?",
+      "question2": "Does this content contain any zero-tolerance terms or fear-based language?",
+      "question3": "Does this content treat the parent as an informed adult, or manage them as an anxious consumer?"
+    }
+  }
+}

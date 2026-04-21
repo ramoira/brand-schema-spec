@@ -1,0 +1,223 @@
+{
+  "meta": {
+    "brandId": "rolex",
+    "brandName": "Rolex SA",
+    "schemaVersion": "2.0.0",
+    "schemaType": "summary",
+    "canonicalURL": "https://ramoira.com/brands/rolex/schema.summary.json"
+  },
+  "identity": {
+    "summary": {
+      "oneLineBrief": "Rolex: time mastered. Excellence made physical. Built to outlast everything.",
+      "threeAdjectives": [
+        "certain",
+        "enduring",
+        "precise"
+      ],
+      "neverDo": [
+        "Show or reference price in any format",
+        "Use urgency, scarcity, or promotional language",
+        "Reference trends, seasons, or fashion",
+        "Describe Rolex as accessible or democratic",
+        "Use the word \"luxury\" — Rolex never categorises itself"
+      ]
+    },
+    "distinctiveAssets": {
+      "visual": {
+        "primaryColor": {
+          "value": "#006039",
+          "severity": "absolute",
+          "rationale": "The Rolex green is a registered trademark. Approximations dilute distinctiveness."
+        },
+        "secondaryColors": [
+          "#B8964A",
+          "#FAF0E6",
+          "#1C1C1C"
+        ],
+        "iconography": [
+          "engraved",
+          "mechanical detail",
+          "close-up",
+          "materials-focused"
+        ],
+        "photographyStyle": {
+          "permitted": [
+            "extreme close-up of mechanical components",
+            "wrist in purposeful motion — climbing, navigating, diving",
+            "single watch on neutral material surface — stone, metal, leather",
+            "dramatic single-source lighting revealing form",
+            "environmental photography where watch is secondary to the achievement context"
+          ],
+          "forbidden": [
+            "flat lay product photography",
+            "lifestyle group shots",
+            "watch next to aspirational consumer goods",
+            "selfie aesthetic or vertical mobile framing for hero shots",
+            "stock photography of generic \"success\" imagery"
+          ],
+          "lightingMood": "Single dramatic source. Shadows that reveal form. Never fill-lit. Never cheerful."
+        }
+      },
+      "linguistic": {
+        "ownedWords": [
+          "perpetual",
+          "superlative",
+          "oyster",
+          "submariner"
+        ],
+        "typographicVoice": {
+          "sentenceStructure": "Short declarative statements. Subject. Verb. Object. No questions to the reader — Rolex does not ask, it states.",
+          "punctuationStyle": "Full stops. En dashes for subordinate clauses. Never exclamation marks. Never ellipsis.",
+          "numeralStyle": "Words for ordinal references (the first watch). Numerals for specifications (300 metres). Years always as numerals."
+        }
+      }
+    }
+  },
+  "narrative": {
+    "semiotic": {
+      "layerHierarchy": "connotative_first",
+      "denotative": {
+        "categoryDescriptor": "Swiss mechanical timepiece — Oyster case, Perpetual self-winding movement, COSC-certified Superlative Chronometer",
+        "functionalClaims": [
+          "Swiss-made mechanical movement",
+          "COSC-certified chronometer precision",
+          "Waterproof Oyster case to 100–3,900 metres depending on model",
+          "Perpetual self-winding rotor — never requires manual winding in regular use",
+          "Scratch-resistant sapphire crystal",
+          "Five-year international guarantee"
+        ],
+        "specifications": [
+          "Manufactured in-house — Rolex produces its own movements, cases, bracelets, and dials",
+          "Each movement individually tested and certified before assembly"
+        ],
+        "forbiddenClaims": [
+          "best watch in the world — Rolex does not make comparative superlatives",
+          "most accurate — accuracy is certified, not marketed",
+          "investment piece — Rolex does not encourage purchase for resale value"
+        ]
+      },
+      "connotative": {
+        "meaningClusters": [
+          "permanence — this object outlasts everything around it",
+          "earned achievement — the watch as the physical record of a life well-lived",
+          "mastered time — not enslaved to it, not racing against it — commanding it",
+          "quiet membership — belonging to a lineage of exceptional people without announcement"
+        ],
+        "forbiddenMeanings": [
+          "status display — Rolex is not a signal, it is a record",
+          "fashion accessory — Rolex is not seasonal",
+          "aspiration shortcut — Rolex cannot be acquired before it is earned",
+          "celebrity association — Rolex does not trade on the fame of those who wear it",
+          "democratised luxury — Rolex has never sought to be available to everyone"
+        ],
+        "emotionalRegister": "Quiet gravity. The feeling of holding something that existed before you and will exist after you. Never loud. Never urgent. Never warm in the way of comfort — warm in the way of certainty.",
+        "minimumConnotativeTest": "Could this content have been written in 1980 and still feel exactly right in 2050?"
+      }
+    },
+    "myth": {
+      "mythStatement": "Some things are made to outlast everything — including the people who made them. Rolex is proof that permanence is still possible.",
+      "mythTest": "Does this content feel like it could endure for a generation? Or does it belong to this quarter?"
+    },
+    "contentTest": {
+      "mythTest": "Could this content have been written in 1980 and still feel exactly right in 2050?",
+      "connotativeTest": "Does this content make the reader feel the weight of permanence, or the lightness of fashion?",
+      "toneTest": "Is this content certain? Does it state, rather than suggest? Does it earn its assertions?"
+    }
+  },
+  "voice": {
+    "base": {
+      "sentenceLength": "short",
+      "vocabularyLevel": 8,
+      "humourPermitted": false,
+      "humourStyle": "none",
+      "permittedDevices": [
+        "declarative statement",
+        "rule of three (sparsely)",
+        "juxtaposition of time scales",
+        "understatement"
+      ],
+      "forbiddenDevices": [
+        "rhetorical questions",
+        "exclamation marks",
+        "hyperbole",
+        "superlatives not in the approved claims list",
+        "colloquialism",
+        "emoji or visual punctuation"
+      ],
+      "structuralRules": [
+        "Rolex never refers to itself as \"we\" — always \"Rolex\"",
+        "The brand speaks in third person, not first",
+        "Short sentences. White space. Certainty.",
+        "Numbers below one hundred are written as words in prose; numerals in specification contexts"
+      ]
+    },
+    "approvedTones": [
+      "declarative",
+      "certain",
+      "quiet authority",
+      "understated",
+      "assured",
+      "architectural"
+    ],
+    "forbiddenTones": [
+      "casual",
+      "warm",
+      "urgent",
+      "promotional",
+      "conversational",
+      "humorous",
+      "apologetic",
+      "defensive",
+      "self-deprecating",
+      "ironic",
+      "playful",
+      "enthusiastic",
+      "exclamatory",
+      "intimate"
+    ],
+    "examples": [
+      {
+        "context": "product_detail_page",
+        "text": "The Submariner has been to the bottom of the world and back. It was not designed for that. It was designed for everything.",
+        "verdict": "approved",
+        "reason": "Declarative. Mythic without being hyperbolic. Uses understatement. No price, no urgency, no superlative."
+      },
+      {
+        "context": "out_of_home",
+        "text": "It doesn't know what year it is. That's why it works.",
+        "verdict": "approved",
+        "reason": "Short. Certain. Reinforces permanence myth. Works without context. Could have been written in any decade."
+      },
+      {
+        "context": "brand_narrative",
+        "text": "In 1953, two Rolex watches reached the summit of Everest. Rolex did not announce it. Hillary and Tenzing did.",
+        "verdict": "approved",
+        "reason": "Achievement-first structure. Rolex as evidence, not protagonist. Declarative. Uses understatement to magnify the achievement."
+      },
+      {
+        "context": "search_result_page",
+        "text": "Discover the iconic Rolex Submariner - starting from £7,250. Free shipping. Experience Swiss precision.",
+        "verdict": "rejected",
+        "reason": "Price shown (absolute violation). Promotional language (free shipping). \"Iconic\" is a fashion term. \"Experience\" is a soft marketing verb."
+      },
+      {
+        "context": "social_organic",
+        "text": "Your wrist game just got an upgrade! 🔥 This vintage Rolex is giving serious retro vibes.",
+        "verdict": "rejected",
+        "reason": "Catastrophic voice failure. Casual social vernacular. Positions Rolex as fashion accessory. Trend language (retro vibes). Exclamatory."
+      },
+      {
+        "context": "customer_service",
+        "text": "Thank you for your interest. Rolex timepieces are available exclusively through authorised dealers. You can find your nearest dealer at rolex.com.",
+        "verdict": "approved",
+        "reason": "Formal but not cold. Provides a resolution path. No pricing discussion. No apology for the authorised dealer model."
+      },
+      {
+        "context": "email_acquisition",
+        "text": "Some watches tell time. A Rolex records it.",
+        "verdict": "approved",
+        "reason": "Six words. Juxtaposes denotative (tells time) with connotative (records it). Reinforces the achievement/permanence myth."
+      }
+    ]
+  }
+}
