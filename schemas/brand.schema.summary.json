@@ -4,52 +4,33 @@
     "brandName": "",
     "schemaVersion": "2.0.0",
     "schemaType": "summary",
-    "canonicalURL": ""
+    "canonicalURL": "",
+    "certified": false,
+    "confidence": 0
   },
   "identity": {
     "summary": {
       "oneLineBrief": "",
-      "threeAdjectives": [],
+      "threeAdjectives": ["", "", ""],
       "neverDo": []
     },
-    "distinctiveAssets": {
-      "visual": {
-        "primaryColor": {
-          "value": "#000000",
-          "severity": "contextual",
-          "rationale": ""
-        },
-        "secondaryColors": [],
-        "iconography": [],
-        "photographyStyle": {
-          "permitted": [],
-          "forbidden": [],
-          "lightingMood": ""
-        }
-      },
-      "linguistic": {
-        "ownedWords": [],
-        "typographicVoice": {
-          "sentenceStructure": "",
-          "punctuationStyle": "",
-          "numeralStyle": ""
-        }
+    "prism": {
+      "relationship": {
+        "mode": "peer",
+        "formality": 0,
+        "warmth": 0
       }
     }
   },
   "narrative": {
     "semiotic": {
       "denotative": {
-        "categoryDescriptor": "",
-        "functionalClaims": [],
-        "specifications": []
+        "categoryDescriptor": ""
       },
       "connotative": {
         "meaningClusters": [],
-        "emotionalRegister": "",
-        "minimumConnotativeTest": ""
-      },
-      "layerHierarchy": "balanced"
+        "emotionalRegister": ""
+      }
     },
     "myth": {
       "mythStatement": "",
@@ -66,10 +47,7 @@
       "sentenceLength": "varied",
       "vocabularyLevel": 0,
       "humourPermitted": false,
-      "humourStyle": "none",
-      "permittedDevices": [],
-      "forbiddenDevices": [],
-      "structuralRules": []
+      "humourStyle": "none"
     },
     "approvedTones": [],
     "forbiddenTones": [],

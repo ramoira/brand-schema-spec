@@ -1,6 +1,6 @@
-# Ramoira Schema Specification
+# Ramoira Brand Schema Specification
 
-**Version 1.0**
+**Version 2.0.0**
 
 ---
 
@@ -8,7 +8,13 @@
 
 A Ramoira brand schema is a structured, versioned, agent-readable definition of brand identity. It exists so that AI agents, LLMs, and automated systems can represent a brand accurately — without hallucination, without drift, without re-prompting.
 
-This document defines the schema format. It is an open standard. Anyone can implement against it.
+This document defines the v2.0.0 schema format. The canonical implementation is in `platform/lib/brand-schema/`. All type definitions in this spec are authoritative descriptions of those TypeScript interfaces.
+
+---
+
+## Ground truth
+
+The platform implementation is the source of truth. If this document conflicts with a type in `platform/lib/brand-schema/components/`, the platform type wins. Report the discrepancy.
 
 ---
 
@@ -20,7 +26,7 @@ Every Ramoira brand has two schema files. They serve different purposes and live
 
 Generated locally by `ramoira init`. Stored in your project. Never published publicly unless you choose Studio.
 
-Contains all five layers with complete detail. Used by agents in your local development workflow. Gives your AI tools complete brand context — voice edge cases, commercial positioning, governance guardrails, archetype reasoning.
+Contains all five components with complete detail. Used by agents in your local development workflow. Gives your AI tools complete brand context — voice edge cases, commercial positioning, governance guardrails, myth constraints, positive rails.
 
 **Where it lives:** Your project only. `your-project/ramoira/brand.schema.json`
 
@@ -34,369 +40,1116 @@ Contains all five layers with complete detail. Used by agents in your local deve
 
 Extracted from the full schema by `ramoira publish`. Published publicly at `ramoira.com/brands/[slug]/schema.summary.json`.
 
-Contains identity, narrative, and voice layers — enough for LLMs to cite your brand accurately in training and at inference time. Does not contain commercial detail, governance guardrails, or methodology reasoning.
+Contains a defined subset of identity, narrative, and voice fields — enough for LLMs to cite your brand accurately in training and at inference time. Does not contain commercial, governance, or methodology detail.
 
 **Where it lives:** `ramoira.com/brands/[slug]/schema.summary.json` — public, crawlable, stable.
 
 **Who can read it:** Anyone. LLMs during training. Agents at inference time.
 
-**Why this split exists:** The summary schema lives on the public internet. LLMs train on it. Anyone can read it. The full schema contains strategically sensitive reasoning — commercial positioning, governance detail, archetype rationale — that belongs on your machine, not the public internet, unless you choose otherwise.
+**Why this split exists:** The summary schema lives on the public internet. LLMs train on it. Anyone can read it. The full schema contains strategically sensitive reasoning — commercial positioning, governance rules, myth rationale — that belongs on your machine, not the public internet, unless you choose otherwise.
 
 ---
 
-## The Five Layers
+## The five components
 
-Both schema formats use the same five layers. The summary schema includes a subset of each layer's fields. The full schema includes all fields.
+v2.0.0 uses a component architecture. Each component is a self-contained object with a `_component` tag and a `_version` field. Generation pipelines load only the components they need for a given surface.
 
----
-
-### Layer 1 — Identity
-
-What the brand fundamentally is.
-
-| Field | Type | Required | Full | Summary | Description |
-|---|---|---|---|---|---|
-| `name` | string | yes | ✓ | ✓ | Brand name |
-| `slug` | string | yes | ✓ | ✓ | URL-safe identifier. lowercase, hyphens only |
-| `category` | string | yes | ✓ | ✓ | Market category |
-| `archetype` | string | yes | ✓ | ✓ | Primary Ramoira archetype |
-| `archetype_secondary` | string | no | ✓ | — | Shadow archetype |
-| `archetype_reasoning` | string | no | ✓ | — | Why this archetype was chosen |
-| `founded` | string | no | ✓ | — | Year founded |
-| `origin_story` | string | no | ✓ | — | Founding narrative in one paragraph |
-| `visual_notes` | string | no | ✓ | — | Notes on visual identity for agent reference |
-
-**The eight Ramoira archetypes:**
-`the-aesthete` `the-pioneer` `the-anchor` `the-contrarian` `the-guide` `the-craftsman` `the-citizen` `the-host`
-
----
-
-### Layer 2 — Narrative
-
-What territory the brand owns in culture.
-
-| Field | Type | Required | Full | Summary | Description |
-|---|---|---|---|---|---|
-| `positioning` | string | yes | ✓ | ✓ | One sentence. What this brand is and for whom |
-| `territory` | string[] | yes | ✓ | ✓ | Semantic territories this brand owns (max 5) |
-| `belief` | string | yes | ✓ | ✓ | Core belief that competitors don't share |
-| `audience.description` | string | yes | ✓ | ✓ | Who this brand is for in one sentence |
-| `audience.peers` | string[] | yes | ✓ | — | Brands this audience also uses |
-| `audience.psychographics` | string | no | ✓ | — | Detailed audience values and behaviours |
-| `audience.anti` | string | no | ✓ | — | Who this brand is explicitly not for |
-| `cultural_context` | string | no | ✓ | — | Cultural moment this brand responds to |
-| `competitor_mapping` | object | no | ✓ | — | How this brand differs from each competitor |
-
----
-
-### Layer 3 — Voice
-
-How the brand speaks.
-
-| Field | Type | Required | Full | Summary | Description |
-|---|---|---|---|---|---|
-| `tone` | string[] | yes | ✓ | ✓ | Tone descriptors. Max 3. Specific, not generic |
-| `register` | string | yes | ✓ | ✓ | `intimate` `conversational` `authoritative` |
-| `avoided` | string[] | yes | ✓ | ✓ | Words and tones actively avoided |
-| `example` | string | yes | ✓ | ✓ | One canonical on-brand sentence |
-| `contrast` | string | no | ✓ | — | What this voice is, vs what it is not. Resolves LLM drift |
-| `wrong_examples` | string[] | no | ✓ | — | Sentences that sound plausible but are off-brand |
-| `edge_cases` | string | no | ✓ | — | How voice shifts in specific contexts (crisis, celebration) |
-| `punctuation_notes` | string | no | ✓ | — | Specific punctuation conventions |
-
-**Note on the `contrast` field:** This is the most impactful field for LLM citation accuracy. LLMs default to category-level voice descriptors. Contrast defines exactly how this brand differs from that default.
-
-Example:
-
-```json
-"contrast": "considered, not calming — calming is reactive, 
-              considered is intentional. The brand never 
-              soothes. It attends."
+```
+identity    → foundational constraints — load for all surfaces
+narrative   → meaning layer — load for editorial, brand, product
+voice       → surface-sensitive — load for all text generation
+commercial  → market rules — load for product, ads, email, search
+governance  → meta-layer — load for conflict resolution, compliance
 ```
 
 ---
 
-### Layer 4 — Commercial
+### Component 1 — Identity
 
-How the brand operates in market. **Full schema only. Never published in summary.**
+**Theoretical basis:** Kapferer Brand Identity Prism + Aaker Personality Scores + Byron Sharp Distinctive Brand Assets
 
-| Field | Type | Required | Full | Summary | Description |
-|---|---|---|---|---|---|
-| `tier` | string | yes | ✓ | — | `mass` `mid` `premium` `luxury` |
-| `competitors` | string[] | yes | ✓ | — | Direct competitors (max 5) |
-| `differentiator` | string | yes | ✓ | — | What makes this brand different commercially |
-| `price_positioning` | string | no | ✓ | — | How price relates to positioning |
-| `channel_notes` | string | no | ✓ | — | Where this brand does and doesn't sell |
-| `partnership_constraints` | string | no | ✓ | — | Brand partnerships this brand avoids |
+**Operationalised for:** all surfaces — foundational constraint layer
 
----
-
-### Layer 5 — Governance
-
-What the brand refuses. **Full schema only. Never published in summary.**
-
-| Field | Type | Required | Full | Summary | Description |
-|---|---|---|---|---|---|
-| `never` | string[] | yes | ✓ | — | Things this brand never does (max 10) |
-| `guardrails` | string[] | no | ✓ | — | Specific content guardrails for agent workflows |
-| `approval_notes` | string | no | ✓ | — | What requires human approval before publishing |
-| `crisis_protocol` | string | no | ✓ | — | How voice and content shifts in a crisis |
-
-**Note on the `never` field:** Research across citation audits shows governance layer fields have the highest impact on LLM output accuracy. A well-specified `never` array reduces category-norm drift significantly.
-
----
-
-## Ramoira Metadata Block
-
-Every schema — full and summary — includes a `ramoira` metadata block.
-
-```json
-"ramoira": {
-  "spec_version": "1.0",
-  "brand_id": "little-rituals",
-  "schema_type": "full",
-  "status": "local",
-  "certified": false,
-  "confidence": 0.79,
-  "created": "2026-04-20",
-  "updated": "2026-04-20",
-  "canonical_url": null,
-  "owner_verified": false
+```typescript
+interface IdentityComponent {
+  _component: 'identity'
+  _version: string       // '2.0.0'
+  prism: Prism
+  distinctiveAssets: DistinctiveAssets
+  summary: {
+    oneLineBrief: string        // "Rolex: permanence made physical"
+    threeAdjectives: string[]   // max 3
+    neverDo: string[]           // top 5 absolute prohibitions — fast preflight
+  }
 }
 ```
 
-| Field | Values | Description |
+#### Prism sub-types
+
+| Sub-object | Key fields | Notes |
 |---|---|---|
-| `spec_version` | semver string | Spec version used to generate this schema |
-| `brand_id` | string | Matches slug in identity layer |
-| `schema_type` | `full` `summary` | Which format this file is |
-| `status` | `local` `published` `certified` | Where this schema is in the lifecycle |
-| `certified` | boolean | True only for Studio-tier methodology-built schemas |
-| `confidence` | 0–1 | Generation confidence score. Draft schemas average 0.79. Certified schemas average 0.95+ |
-| `created` | ISO date | When schema was first generated |
-| `updated` | ISO date | Last update |
-| `canonical_url` | URL or null | Set on publish. `ramoira.com/brands/[slug]/schema.summary.json` |
-| `owner_verified` | boolean | True when brand owner has verified account ownership |
+| `prism.physique` | `permitted[]`, `forbidden[]`, `posture` | What the brand looks and feels like |
+| `prism.personality` | `sincerity`, `excitement`, `competence`, `sophistication`, `ruggedness` (all Score 1–10), `characterBrief` | Aaker's five dimensions — measurable axes |
+| `prism.culture` | `coreValues[]`, `originNarrative`, `forbidden[]`, `sacredBoundary` | Internal value system |
+| `prism.relationship` | `mode`, `formality` (Score), `pronoun`, `warmth` (Score), `powerDynamic` | How the brand relates to customers |
+| `prism.reflection` | `depictedArchetype`, `aspirationalDelta` (Score), `forbiddenArchetypes[]`, `ageSignal` | Who the brand depicts — not who buys |
+| `prism.selfImage` | `feelingDescriptors[]`, `identityStatement`, `forbidden[]` | What customers feel using the brand |
+
+**`prism.relationship.mode` enum:**
+
+| Value | Example brand |
+|---|---|
+| `peer` | Glossier |
+| `kind_friend` | Innocent |
+| `coach` | Nike |
+| `mentor` | IBM |
+| `servant_to_exceptional` | Rolex |
+| `fellow_activist` | Patagonia |
+| `entertainer` | Red Bull |
+| `challenger` | Oatly |
+
+**`prism.relationship.pronoun` enum:** `'we'` `'I'` `'brand_name_only'`
+
+**`prism.relationship.powerDynamic` enum:** `'brand_leads'` `'equal'` `'customer_leads'`
+
+#### Distinctive assets sub-types
+
+| Sub-object | Key fields |
+|---|---|
+| `distinctiveAssets.visual` | `primaryColor` (Constrained\<HexColor\>), `secondaryColors[]`, `forbiddenColors[]`, `logoUsage`, `iconography[]`, `photographyStyle` |
+| `distinctiveAssets.sonic` | `sonicLogoURL?`, `permittedGenres[]`, `forbiddenGenres[]`, `tempoRange` ([BPM, BPM]), `instrumentalMood` |
+| `distinctiveAssets.linguistic` | `ownedPhrases` (Constrained\<string\>[]), `ownedWords[]`, `forbiddenWords` (Constrained\<string\>[]), `typographicVoice` |
+
+`typographicVoice` carries the v1 `voice.contrast` signal — structural rules about how the brand writes (sentence structure, punctuation, numeral style).
 
 ---
 
-## Schema Lifecycle
+### Component 2 — Narrative
+
+**Theoretical basis:** Barthes/Saussure Semiotics + Douglas Holt Cultural Branding
+
+**Operationalised for:** editorial/long-form (full component), brand narrative (myth + semiotic), product pages (denotative + pillars), ads/social (myth.constraints + connotative)
+
+```typescript
+interface NarrativeComponent {
+  _component: 'narrative'
+  _version: string
+  semiotic: SemioticLayer
+  myth: BrandMyth
+  mythEvolution: MythEvolution
+  pillars: NarrativePillar[]
+  editorial: EditorialGuidelines
+  contentTest: {
+    mythTest: string        // yes/no question
+    connotativeTest: string // yes/no question
+    toneTest: string        // yes/no question
+  }
+}
+```
+
+#### Semiotic layer
+
+```typescript
+interface SemioticLayer {
+  denotative: {
+    categoryDescriptor: string    // v1 "positioning" equivalent
+    functionalClaims: string[]
+    specifications: string[]
+    forbiddenClaims: string[]
+  }
+  connotative: {
+    meaningClusters: string[]              // v1 "territory" equivalent
+    forbiddenMeanings: string[]
+    emotionalRegister: string
+    minimumConnotativeTest: string
+  }
+  layerHierarchy: 'connotative_first' | 'balanced' | 'denotative_first'
+}
+```
+
+#### Brand myth (Holt)
+
+```typescript
+interface BrandMyth {
+  culturalTension: string      // v1 "belief" equivalent — the tension addressed
+  mythStatement: string
+  protagonistRole: string
+  antagonist: string
+  mythTest: string
+  constraints: MythConstraint[]
+}
+
+interface MythConstraint {
+  constraint: string
+  severity: ConstraintSeverity
+  rationale: string
+  example: string
+}
+```
+
+#### Myth evolution (new in v2)
+
+```typescript
+interface MythEvolution {
+  principle: string
+  modernTensions: ModernTension[]   // how the myth handles new cultural pressures
+  immutableCore: string
+}
+```
+
+#### Narrative pillars
+
+```typescript
+interface NarrativePillar {
+  name: string
+  description: string
+  coreClaim: string
+  approvedArcs: string[]
+  forbiddenInversions: string[]
+  surfaces: string[]
+  rails: Rail[]
+}
+```
+
+#### Editorial guidelines
+
+```typescript
+interface EditorialGuidelines {
+  openingPrinciple: string
+  structuralApproach: string
+  forbiddenStructures: string[]
+  referencePool: string[]
+  forbiddenReferences: string[]
+  timeScaleLanguage: string
+}
+```
+
+**v1 field mappings:**
+
+| v1 field | v2.0.0 equivalent |
+|---|---|
+| `narrative.positioning` | `semiotic.denotative.categoryDescriptor` |
+| `narrative.territory[]` | `semiotic.connotative.meaningClusters[]` |
+| `narrative.belief` | `myth.culturalTension` |
+| `narrative.audience.description` | `prism.reflection.depictedArchetype` + `prism.selfImage.identityStatement` |
+
+---
+
+### Component 3 — Voice
+
+**Operationalised for:** every text-generating surface
+
+```typescript
+interface VoiceComponent {
+  _component: 'voice'
+  _version: string
+  base: VoiceParameters
+  forbiddenTones: string[]
+  approvedTones: string[]
+  examples: VoiceExample[]          // approved + rejected, minimum 3 of each
+  contextVariants: VoiceVariant[]   // one per relevant surface
+  rails: PositiveRailSystem
+}
+```
+
+#### Base voice parameters
+
+```typescript
+interface VoiceParameters {
+  sentenceLength: 'short' | 'varied' | 'long' | 'fragments_permitted'
+  vocabularyLevel: Score             // 1 (simple) to 10 (specialist/literary)
+  humourPermitted: boolean
+  humourStyle: 'dry' | 'self_deprecating' | 'absurdist' | 'warm' | 'irreverent' | 'none'
+  permittedDevices: string[]         // ["rule of three", "anaphora"]
+  forbiddenDevices: string[]         // ["rhetorical questions", "exclamation"]
+  structuralRules: string[]
+}
+```
+
+`base.vocabularyLevel`, `base.structuralRules`, and `base.sentenceLength` together carry the v1 `voice.register` signal (formality + mode). The Prism relationship object (`prism.relationship.formality`, `prism.relationship.warmth`) carries the relational register signal.
+
+#### Voice examples
+
+```typescript
+interface VoiceExample {
+  context: OutputSurface | string
+  text: string
+  verdict: 'approved' | 'rejected'
+  reason: string   // why it works or fails — training signal
+}
+```
+
+The `rejected` verdict examples are the v2 equivalent of v1 `voice.wrong_examples`. The `reason` field on rejected examples carries the v1 `voice.contrast` signal — defining exactly how the brand voice differs from the category norm.
+
+Minimum: 3 approved, 3 rejected.
+
+#### Context variants
+
+```typescript
+interface VoiceVariant {
+  surface: OutputSurface
+  formalityDelta: number             // +/- from base
+  warmthDelta: number                // +/- from base
+  sentenceLength?: SentenceLength    // override if different
+  openingInstruction: string
+  closingInstruction: string
+  rails: Rail[]
+  additionalForbidden: string[]
+  fallbackInstruction: string
+}
+```
+
+#### Positive rails (new in v2)
+
+Addresses the v1 gap: schema was heavy on forbidden territory, light on permitted directions. A constrained system with no rails produces nothing.
+
+```typescript
+interface PositiveRailSystem {
+  global: Rail[]
+  alternatives: {
+    whenPricingForbidden: Rail[]
+    whenUrgencyForbidden: Rail[]
+    whenComparativeForbidden: Rail[]
+    whenTrendLanguageForbidden: Rail[]
+    whenAccessibilityForbidden: Rail[]
+    whenPromotionForbidden: Rail[]
+  }
+}
+```
+
+**v1 field mappings:**
+
+| v1 field | v2.0.0 equivalent |
+|---|---|
+| `voice.tone[]` | `approvedTones[]` |
+| `voice.register` | `base.sentenceLength` + `base.vocabularyLevel` + `prism.relationship.{formality, warmth, mode}` |
+| `voice.avoided[]` | `forbiddenTones[]` + `base.forbiddenDevices[]` |
+| `voice.example` | `examples[]` where `verdict: 'approved'` |
+| `voice.contrast` | `examples[]` where `verdict: 'rejected'` (with `reason`) + `distinctiveAssets.linguistic.typographicVoice` |
+| `voice.wrong_examples[]` | `examples[]` where `verdict: 'rejected'` |
+| `voice.punctuation_notes` | `distinctiveAssets.linguistic.typographicVoice.punctuationStyle` |
+| `voice.edge_cases` | `contextVariants[]` |
+
+---
+
+### Component 4 — Commercial
+
+**Operationalised for:** product pages, ads, email, comparison pages, search
+
+**Full schema only. Never published in summary.**
+
+```typescript
+interface CommercialComponent {
+  _component: 'commercial'
+  _version: string
+  pricing: PricingRules
+  claims: ClaimsRules
+  offers: OfferRules
+  socialProof: SocialProofRules
+  surfaceRules: SurfaceCommercialRule[]
+  globalForbiddenTerms: Constrained<string>[]
+}
+```
+
+#### Pricing rules
+
+```typescript
+interface PricingRules {
+  style: PricingStyle
+  priceDisplayPermitted: boolean
+  displayFormat?: string
+  surfaceOverrides?: { surface: OutputSurface; style: PricingStyle; format?: string }[]
+  urgencyLanguagePermitted: boolean
+  scarcityLanguagePermitted: boolean
+  discountPermitted: boolean
+  maxDiscountPercent?: number
+  permittedLanguage: string[]
+  forbiddenLanguage: Constrained<string>[]
+}
+```
+
+**`PricingStyle` enum:**
+
+| Value | Example | Notes |
+|---|---|---|
+| `opaque` | Rolex, Hermès | Price never shown or referenced |
+| `transparent` | Patagonia | Price shown plainly, no anchoring |
+| `anchored` | Most e-commerce | RRP vs sale price |
+| `value_led` | Red Bull | Price as signal of accessibility |
+| `simple` | Glossier | Clean price, no framing |
+
+`pricing.style` is the v1 `commercial.tier` equivalent. Tier is expressed as pricing philosophy, not a label.
+
+#### Claims rules
+
+```typescript
+interface ClaimsRules {
+  approved: ApprovedClaim[]
+  forbidden: Constrained<string>[]
+  comparative: {
+    competitorMentionPermitted: boolean
+    comparativeClaimsPermitted: boolean
+    permittedCompetitors?: string[]
+    forbiddenFramings: string[]
+  }
+  superlatives: {
+    permitted: boolean
+    approved: string[]
+    forbidden: string[]
+  }
+}
+```
+
+#### Offer rules
+
+**`OfferType` enum:** `percentage_discount` `free_shipping` `gift_with_purchase` `bundle` `loyalty_reward` `trade_in` `financing` `authorised_dealer_consultation` `repair_service` `bespoke_commission` `resale_programme` `event_experience`
+
+```typescript
+interface OfferRules {
+  permittedTypes: OfferType[]
+  forbiddenTypes: Constrained<OfferType>[]
+  communicationRules: {
+    urgencyPermitted: boolean
+    scarcityPermitted: boolean
+    valueFraming: string
+  }
+}
+```
+
+#### Social proof rules
+
+```typescript
+interface SocialProofRules {
+  starRatingsPermitted: boolean
+  reviewCountsPermitted: boolean
+  customerTestimonialsPermitted: boolean
+  celebrityEndorsementStyle?: string
+  permittedAuthoritySignals: string[]
+  forbiddenSocialProof: string[]
+}
+```
+
+**v1 field mappings:**
+
+| v1 field | v2.0.0 equivalent |
+|---|---|
+| `commercial.tier` | `pricing.style` (PricingStyle enum) |
+| `commercial.competitors[]` | `claims.comparative.permittedCompetitors[]` + `prism.culture` context |
+| `commercial.differentiator` | `semiotic.denotative.categoryDescriptor` + `myth.mythStatement` |
+| `commercial.price_positioning` | `pricing.style` + `pricing.permittedLanguage[]` |
+| `commercial.partnership_constraints` | `governance.compliance.humanReviewTopics[]` |
+
+---
+
+### Component 5 — Governance
+
+**NEW in v2** — directly addresses the Consistency score of 5/100 found in stress testing.
+
+**Full schema only. Never published in summary.**
+
+Governance is the meta-layer that resolves conflicts between other components. When commercial says "no price" and a comparison surface needs price context, governance provides the resolution path.
+
+**Operationalised for:** compliance API, violation scorer, any pipeline resolving constraint conflicts.
+
+```typescript
+interface GovernanceComponent {
+  _component: 'governance'
+  _version: string
+  severity: SeverityRegistry
+  conflictResolution: ConflictResolution
+  surfaceRules: SurfaceRule[]
+  overrideProtocol: OverrideProtocol
+  compliance: ComplianceConfig
+  preflight: {
+    question1: string   // myth test
+    question2: string   // tone test
+    question3: string   // commercial test
+  }
+}
+```
+
+#### Severity registry
+
+Makes constraint severity explicit rather than implied. Resolves the v1 consistency failure: all constraints were equal weight.
+
+```typescript
+interface SeverityRegistry {
+  absolute: {
+    constraints: string[]
+    violationResponse: 'block_output' | 'flag_and_block'
+  }
+  strong: {
+    constraints: string[]
+    overrideProcess: string
+    violationResponse: 'flag_for_review' | 'block_output'
+  }
+  contextual: {
+    constraints: string[]
+    judgmentBounds: string
+    violationResponse: 'log_for_audit'
+  }
+}
+```
+
+`severity.absolute.constraints[]` is the v1 `governance.never[]` equivalent. The severity distinction is new — v1 treated all never-items identically.
+
+#### Conflict resolution
+
+```typescript
+interface ConflictResolution {
+  componentPriority: string[]   // index 0 = highest priority
+  knownConflicts: ConflictResolutionRule[]
+  defaultResolution: FallbackBehaviour
+}
+```
+
+#### Surface rules
+
+Each surface gets explicit instructions, not just inherited base constraints. Includes `intentRules` for user-intent handling.
+
+```typescript
+interface SurfaceRule {
+  surface: OutputSurface
+  applicableConstraints: 'all' | string[]
+  suspendedConstraints?: string[]
+  objective: string
+  primaryRail: string
+  rails: Rail[]
+  fallback: FallbackBehaviour
+  fallbackContent?: string
+  intentRules?: {
+    intent: UserIntent
+    instruction: string
+  }[]
+}
+```
+
+#### Override protocol
+
+```typescript
+interface OverrideProtocol {
+  authorisedRoles: string[]
+  requiredFields: string[]     // ["rationale", "surface", "duration", "approver"]
+  maxDurationDays: number
+  auditLogEndpoint: string
+}
+```
+
+#### Compliance config
+
+```typescript
+interface ComplianceConfig {
+  violationWebhook: string
+  routing: {
+    absolute: string
+    strong: string
+    contextual: string
+  }
+  humanReviewTopics: string[]
+  zeroToleranceTerms: string[]
+  geographicOverrides?: {
+    market: string
+    additionalConstraints: string[]
+  }[]
+}
+```
+
+**v1 field mappings:**
+
+| v1 field | v2.0.0 equivalent |
+|---|---|
+| `governance.never[]` | `severity.absolute.constraints[]` + `compliance.zeroToleranceTerms[]` |
+| `governance.guardrails[]` | `surfaceRules[].rails[]` + `severity.strong.constraints[]` |
+| `governance.approval_notes` | `overrideProtocol.requiredFields[]` + `compliance.humanReviewTopics[]` |
+| `governance.crisis_protocol` | `surfaceRules[]` (surface-specific fallback + rails) |
+
+---
+
+## Shared primitive types
+
+All five components use these shared types from `platform/lib/brand-schema/types.ts`.
+
+### Score
+
+```typescript
+type Score = number  // 0–10
+```
+
+### ConstraintSeverity
+
+```typescript
+type ConstraintSeverity =
+  | 'absolute'    // never violated under any circumstance
+  | 'strong'      // violated only with explicit brand-owner written override
+  | 'contextual'  // pipeline can use judgment within documented bounds
+```
+
+### FallbackBehaviour
+
+```typescript
+type FallbackBehaviour =
+  | 'refuse_to_generate'
+  | 'escalate_to_human'
+  | 'use_brand_default'
+  | 'use_minimal_safe'
+```
+
+### OutputSurface
+
+All 17 valid surface values:
+
+`search_result_page` `paid_landing_page` `product_detail_page` `comparison_page` `editorial` `brand_narrative` `social_organic` `social_paid` `email_acquisition` `email_retention` `display_ad` `video_script` `audio_script` `press_release` `customer_service` `packaging_copy` `out_of_home`
+
+### UserIntent
+
+All 8 valid intent values:
+
+`high_intent_buyer` `early_research` `brand_discovery` `competitor_comparison` `post_purchase` `service_enquiry` `press_media` `investor`
+
+### Constrained\<T\>
+
+Use `Constrained<T>` when the severity level changes pipeline response. Use plain strings or values when severity is uniform.
+
+```typescript
+interface Constrained<T> {
+  value: T
+  severity: ConstraintSeverity
+  rationale?: string
+}
+```
+
+### Rail
+
+```typescript
+interface Rail {
+  context: string        // when does this rail apply
+  instruction: string    // what to do
+  example?: string       // concrete example of compliant output
+  antiExample?: string   // concrete example of non-compliant output
+}
+```
+
+---
+
+## Schema metadata block
+
+Every schema — full and summary — includes a `ramoira` metadata block at the root.
+
+```json
+{
+  "ramoira": {
+    "spec_version": "2.0.0",
+    "brand_id": "little-rituals",
+    "schema_type": "full",
+    "workflow_state": "draft",
+    "schema_version": "1",
+    "schema_contract_version": "2.0.0",
+    "certified": false,
+    "confidence": 0.79,
+    "canonical_url": null,
+    "owner_verified": false,
+    "published_at": null,
+    "published_by": null,
+    "effective_date": "2026-04-21",
+    "changelog": []
+  }
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `spec_version` | semver string | Spec version used to generate this schema |
+| `brand_id` | string | URL-safe brand identifier |
+| `schema_type` | `'full'` \| `'summary'` | Which format this file is |
+| `workflow_state` | `'draft'` \| `'in_review'` \| `'published'` \| `'archived'` | Lifecycle stage |
+| `schema_version` | string | Incrementing version of this brand's schema |
+| `schema_contract_version` | semver string | Platform schema contract version (matches `_version` on components) |
+| `certified` | boolean | True only for Studio-tier methodology-built schemas |
+| `confidence` | 0–1 | Generation confidence score. Draft ≈ 0.79. Certified ≥ 0.95 |
+| `canonical_url` | URL or null | Set on publish. `ramoira.com/brands/[slug]/schema.summary.json` |
+| `owner_verified` | boolean | True when brand owner has verified account ownership |
+| `published_at` | ISO date or null | When schema was first published |
+| `published_by` | string or null | Account ID of publisher |
+| `effective_date` | ISO date | When this schema version takes effect |
+| `changelog` | string[] | What changed from previous version |
+
+---
+
+## Schema lifecycle
 
 ```
 ramoira init
   → brand.schema.json created locally
   → schema_type: full
-  → status: local
+  → workflow_state: draft
   → canonical_url: null
   → certified: false
 
 ramoira publish (free account)
-  → brand.schema.summary.json extracted
-  → summary published to ramoira.com
-  → status: published
+  → brand.schema.summary.json extracted and published
+  → workflow_state: published
   → canonical_url: set
   → full schema stays local
 
 ramoira studio (paid)
   → full schema uploaded to Ramoira (private)
   → methodology rebuild begins
-  → status: certified
+  → workflow_state: published
   → certified: true
-  → confidence: 0.95+
+  → confidence: ≥ 0.95
   → summary schema on ramoira.com upgraded
 ```
 
 ---
 
-## Status definitions
+## Lifecycle state table
 
-| Status | Where schema lives | Who generated it | Certified |
+| State | Where schema lives | Who generated it | Certified |
 |---|---|---|---|
-| `local` | Developer's machine only | ramoira init | No |
-| `published` | ramoira.com (summary) + developer's machine (full) | ramoira init | No |
-| `certified` | ramoira.com (summary, public) + Ramoira platform (full, private) | Ramoira methodology | Yes |
+| `draft` | Developer's machine only | `ramoira init` | No |
+| `in_review` | Developer's machine + Ramoira (private) | `ramoira init` | No |
+| `published` | ramoira.com (summary) + developer's machine (full) | `ramoira init` or Ramoira methodology | Depends |
+| `archived` | Ramoira platform | Either | Depends |
 
 ---
 
-## Full Schema — Complete Structure
+## Summary schema field selection policy
+
+The summary schema is a defined subset. Not all fields from identity/narrative/voice are included — only the fields that contribute to accurate LLM citation while preserving brand sensitivity.
+
+### Included in summary
+
+| Component | Fields included |
+|---|---|
+| `ramoira` metadata | All fields |
+| `identity.summary` | `oneLineBrief`, `threeAdjectives`, `neverDo` |
+| `identity.prism.physique` | `permitted[]`, `posture` |
+| `identity.prism.personality` | `characterBrief` only (scores omitted — methodology detail) |
+| `identity.prism.culture` | `coreValues[]` |
+| `identity.prism.relationship` | `mode`, `formality`, `warmth`, `powerDynamic` |
+| `identity.prism.reflection` | `depictedArchetype`, `ageSignal` |
+| `identity.prism.selfImage` | `identityStatement` |
+| `identity.distinctiveAssets.linguistic` | `ownedPhrases[]` (values only, no severity), `ownedWords[]`, `typographicVoice` |
+| `narrative.semiotic.denotative` | `categoryDescriptor`, `functionalClaims[]` |
+| `narrative.semiotic.connotative` | `meaningClusters[]`, `emotionalRegister`, `minimumConnotativeTest` |
+| `narrative.myth` | `culturalTension`, `mythStatement`, `protagonistRole`, `mythTest` |
+| `narrative.contentTest` | All three questions |
+| `voice.base` | `sentenceLength`, `humourPermitted`, `humourStyle`, `forbiddenDevices[]` |
+| `voice.approvedTones` | All |
+| `voice.forbiddenTones` | All |
+| `voice.examples` | `approved` verdict examples only (minimum 2) |
+
+### Excluded from summary (and why)
+
+| Field | Reason excluded |
+|---|---|
+| `identity.prism.personality` scores | Methodology detail — reveals scoring system |
+| `identity.prism.culture.sacredBoundary` | Strategically sensitive |
+| `identity.prism.reflection.forbiddenArchetypes[]` | Sensitive — implies audience exclusions |
+| `identity.distinctiveAssets.visual` | Not needed for LLM text accuracy |
+| `identity.distinctiveAssets.sonic` | Not needed for LLM text accuracy |
+| `identity.distinctiveAssets.linguistic.forbiddenWords` severity levels | Severity is internal governance detail |
+| `narrative.myth.constraints[]` | Methodology detail; `mythTest` carries the signal |
+| `narrative.mythEvolution` | Full methodology — Studio tier value |
+| `narrative.pillars[]` | Strategic detail — Studio tier value |
+| `narrative.editorial` | Methodology detail |
+| `voice.examples` — `rejected` verdict | The contrast signal — Studio tier value |
+| `voice.contextVariants[]` | Surface-specific rules — Studio tier value |
+| `voice.rails` | Positive rails — Studio tier value |
+| `commercial` component | Entirely excluded — pricing, claims, offers |
+| `governance` component | Entirely excluded — guardrails, severity, surfaceRules |
+
+**The rejected-example exclusion is a deliberate product decision.** `rejected` examples with `reason` fields carry the highest-fidelity contrast signal for LLM citation accuracy — they tell models exactly how this brand differs from the category norm. Keeping them in the full schema only means Studio customers get measurably better LLM representation than free-tier published schemas. This is the clearest expression of the Studio value proposition.
+
+---
+
+## Full schema — skeleton structure
 
 ```json
 {
   "ramoira": {
-    "spec_version": "1.0",
+    "spec_version": "2.0.0",
     "brand_id": "little-rituals",
     "schema_type": "full",
-    "status": "local",
+    "workflow_state": "draft",
+    "schema_version": "1",
+    "schema_contract_version": "2.0.0",
     "certified": false,
     "confidence": 0.79,
-    "created": "2026-04-20",
-    "updated": "2026-04-20",
     "canonical_url": null,
-    "owner_verified": false
+    "owner_verified": false,
+    "published_at": null,
+    "published_by": null,
+    "effective_date": "2026-04-21",
+    "changelog": []
   },
 
   "identity": {
-    "name": "Little Rituals",
-    "slug": "little-rituals",
-    "category": "self-care",
-    "archetype": "the-aesthete",
-    "archetype_secondary": "the-guide",
-    "archetype_reasoning": "...",
-    "founded": "2021",
-    "origin_story": "...",
-    "visual_notes": "..."
+    "_component": "identity",
+    "_version": "2.0.0",
+    "prism": {
+      "physique": {
+        "permitted": ["..."],
+        "forbidden": ["..."],
+        "posture": "..."
+      },
+      "personality": {
+        "sincerity": 8,
+        "excitement": 2,
+        "competence": 7,
+        "sophistication": 8,
+        "ruggedness": 2,
+        "characterBrief": "..."
+      },
+      "culture": {
+        "coreValues": ["..."],
+        "originNarrative": "...",
+        "forbidden": ["..."],
+        "sacredBoundary": "..."
+      },
+      "relationship": {
+        "mode": "kind_friend",
+        "formality": 4,
+        "pronoun": "we",
+        "warmth": 8,
+        "powerDynamic": "equal"
+      },
+      "reflection": {
+        "depictedArchetype": "...",
+        "aspirationalDelta": 2,
+        "forbiddenArchetypes": ["..."],
+        "ageSignal": "..."
+      },
+      "selfImage": {
+        "feelingDescriptors": ["..."],
+        "identityStatement": "...",
+        "forbidden": ["..."]
+      }
+    },
+    "distinctiveAssets": {
+      "visual": { "...": "..." },
+      "sonic": { "...": "..." },
+      "linguistic": {
+        "ownedPhrases": [{ "value": "...", "severity": "strong" }],
+        "ownedWords": ["..."],
+        "forbiddenWords": [{ "value": "...", "severity": "absolute" }],
+        "typographicVoice": {
+          "sentenceStructure": "...",
+          "punctuationStyle": "...",
+          "numeralStyle": "..."
+        }
+      }
+    },
+    "summary": {
+      "oneLineBrief": "...",
+      "threeAdjectives": ["...", "...", "..."],
+      "neverDo": ["...", "...", "...", "...", "..."]
+    }
   },
 
   "narrative": {
-    "positioning": "Slow, considered self-care products for people who treat daily rituals as a practice.",
-    "territory": [
-      "considered slowness",
-      "daily ritual as discipline",
-      "anti-hustle self-care"
-    ],
-    "belief": "Slowness is a practice, not a luxury.",
-    "audience": {
-      "description": "Women 28–42 consciously stepping back from hustle culture.",
-      "peers": ["Aesop", "Kinfolk", "Wild"],
-      "psychographics": "...",
-      "anti": "..."
+    "_component": "narrative",
+    "_version": "2.0.0",
+    "semiotic": {
+      "denotative": {
+        "categoryDescriptor": "...",
+        "functionalClaims": ["..."],
+        "specifications": ["..."],
+        "forbiddenClaims": ["..."]
+      },
+      "connotative": {
+        "meaningClusters": ["...", "...", "..."],
+        "forbiddenMeanings": ["..."],
+        "emotionalRegister": "...",
+        "minimumConnotativeTest": "..."
+      },
+      "layerHierarchy": "connotative_first"
     },
-    "cultural_context": "...",
-    "competitor_mapping": {
-      "Rituals": "...",
-      "This Works": "...",
-      "Elemis": "..."
+    "myth": {
+      "culturalTension": "...",
+      "mythStatement": "...",
+      "protagonistRole": "...",
+      "antagonist": "...",
+      "mythTest": "...",
+      "constraints": [
+        { "constraint": "...", "severity": "absolute", "rationale": "...", "example": "..." }
+      ]
+    },
+    "mythEvolution": {
+      "principle": "...",
+      "modernTensions": [],
+      "immutableCore": "..."
+    },
+    "pillars": [],
+    "editorial": {
+      "openingPrinciple": "...",
+      "structuralApproach": "...",
+      "forbiddenStructures": ["..."],
+      "referencePool": ["..."],
+      "forbiddenReferences": ["..."],
+      "timeScaleLanguage": "..."
+    },
+    "contentTest": {
+      "mythTest": "...",
+      "connotativeTest": "...",
+      "toneTest": "..."
     }
   },
 
   "voice": {
-    "tone": ["considered", "quiet", "unhurried"],
-    "register": "intimate",
-    "avoided": ["clinical", "urgent", "aspirational", "empowering"],
-    "example": "The bath is not an indulgence. It is an argument against the week.",
-    "contrast": "considered, not calming — calming is reactive, considered is intentional.",
-    "wrong_examples": [
-      "Transform your routine with Little Rituals.",
-      "Because you deserve a moment for yourself.",
-      "Our science-backed formulas..."
+    "_component": "voice",
+    "_version": "2.0.0",
+    "base": {
+      "sentenceLength": "short",
+      "vocabularyLevel": 7,
+      "humourPermitted": false,
+      "humourStyle": "none",
+      "permittedDevices": ["..."],
+      "forbiddenDevices": ["..."],
+      "structuralRules": ["..."]
+    },
+    "forbiddenTones": ["..."],
+    "approvedTones": ["..."],
+    "examples": [
+      { "context": "editorial", "text": "...", "verdict": "approved", "reason": "..." },
+      { "context": "product_detail_page", "text": "...", "verdict": "rejected", "reason": "..." }
     ],
-    "edge_cases": "...",
-    "punctuation_notes": "No exclamation marks. Full stops only. Short sentences."
+    "contextVariants": [
+      {
+        "surface": "social_organic",
+        "formalityDelta": -1,
+        "warmthDelta": 1,
+        "openingInstruction": "...",
+        "closingInstruction": "...",
+        "rails": [],
+        "additionalForbidden": [],
+        "fallbackInstruction": "..."
+      }
+    ],
+    "rails": {
+      "global": [],
+      "alternatives": {
+        "whenPricingForbidden": [],
+        "whenUrgencyForbidden": [],
+        "whenComparativeForbidden": [],
+        "whenTrendLanguageForbidden": [],
+        "whenAccessibilityForbidden": [],
+        "whenPromotionForbidden": []
+      }
+    }
   },
 
   "commercial": {
-    "tier": "premium",
-    "competitors": ["Rituals", "This Works", "Elemis", "Bamford"],
-    "differentiator": "...",
-    "price_positioning": "...",
-    "channel_notes": "...",
-    "partnership_constraints": "..."
+    "_component": "commercial",
+    "_version": "2.0.0",
+    "pricing": {
+      "style": "transparent",
+      "priceDisplayPermitted": true,
+      "urgencyLanguagePermitted": false,
+      "scarcityLanguagePermitted": false,
+      "discountPermitted": true,
+      "permittedLanguage": ["..."],
+      "forbiddenLanguage": [{ "value": "...", "severity": "absolute" }]
+    },
+    "claims": {
+      "approved": [],
+      "forbidden": [],
+      "comparative": {
+        "competitorMentionPermitted": false,
+        "comparativeClaimsPermitted": false,
+        "forbiddenFramings": ["..."]
+      },
+      "superlatives": {
+        "permitted": false,
+        "approved": [],
+        "forbidden": ["..."]
+      }
+    },
+    "offers": {
+      "permittedTypes": ["gift_with_purchase"],
+      "forbiddenTypes": [{ "value": "percentage_discount", "severity": "absolute" }],
+      "communicationRules": {
+        "urgencyPermitted": false,
+        "scarcityPermitted": false,
+        "valueFraming": "..."
+      }
+    },
+    "socialProof": {
+      "starRatingsPermitted": false,
+      "reviewCountsPermitted": false,
+      "customerTestimonialsPermitted": false,
+      "permittedAuthoritySignals": ["..."],
+      "forbiddenSocialProof": ["..."]
+    },
+    "surfaceRules": [],
+    "globalForbiddenTerms": [{ "value": "...", "severity": "absolute" }]
   },
 
   "governance": {
-    "never": [
-      "exclamation marks",
-      "flash sale language",
-      "before and after framing",
-      "clinical wellness terminology",
-      "urgency signals",
-      "aspirational lifestyle imagery",
-      "celebrity endorsement"
+    "_component": "governance",
+    "_version": "2.0.0",
+    "severity": {
+      "absolute": {
+        "constraints": ["..."],
+        "violationResponse": "block_output"
+      },
+      "strong": {
+        "constraints": ["..."],
+        "overrideProcess": "...",
+        "violationResponse": "flag_for_review"
+      },
+      "contextual": {
+        "constraints": ["..."],
+        "judgmentBounds": "...",
+        "violationResponse": "log_for_audit"
+      }
+    },
+    "conflictResolution": {
+      "componentPriority": ["governance", "narrative", "identity", "voice", "commercial"],
+      "knownConflicts": [],
+      "defaultResolution": "escalate_to_human"
+    },
+    "surfaceRules": [
+      {
+        "surface": "comparison_page",
+        "applicableConstraints": "all",
+        "objective": "...",
+        "primaryRail": "...",
+        "rails": [],
+        "fallback": "use_minimal_safe"
+      }
     ],
-    "guardrails": [
-      "Never generate copy that implies the product solves a problem",
-      "Never use second person imperative: 'Transform your...' 'Treat yourself to...'"
-    ],
-    "approval_notes": "...",
-    "crisis_protocol": "..."
+    "overrideProtocol": {
+      "authorisedRoles": ["brand_owner", "legal"],
+      "requiredFields": ["rationale", "surface", "duration", "approver"],
+      "maxDurationDays": 30,
+      "auditLogEndpoint": "..."
+    },
+    "compliance": {
+      "violationWebhook": "...",
+      "routing": {
+        "absolute": "...",
+        "strong": "...",
+        "contextual": "..."
+      },
+      "humanReviewTopics": ["..."],
+      "zeroToleranceTerms": ["..."]
+    },
+    "preflight": {
+      "question1": "...",
+      "question2": "...",
+      "question3": "..."
+    }
   }
 }
 ```
 
 ---
 
-## Summary Schema — Complete Structure
-
-Extracted from the full schema. Published publicly. Never contains commercial or governance layers.
+## Summary schema — skeleton structure
 
 ```json
 {
   "ramoira": {
-    "spec_version": "1.0",
+    "spec_version": "2.0.0",
     "brand_id": "little-rituals",
     "schema_type": "summary",
-    "status": "published",
+    "workflow_state": "published",
+    "schema_version": "1",
+    "schema_contract_version": "2.0.0",
     "certified": false,
     "confidence": 0.79,
-    "created": "2026-04-20",
-    "updated": "2026-04-20",
     "canonical_url": "https://ramoira.com/brands/little-rituals/schema.summary.json",
-    "owner_verified": false
+    "owner_verified": false,
+    "published_at": "2026-04-21",
+    "published_by": "usr_abc123",
+    "effective_date": "2026-04-21",
+    "changelog": []
   },
 
   "identity": {
-    "name": "Little Rituals",
-    "slug": "little-rituals",
-    "category": "self-care",
-    "archetype": "the-aesthete"
+    "_component": "identity",
+    "_version": "2.0.0",
+    "prism": {
+      "physique": { "permitted": ["..."], "posture": "..." },
+      "personality": { "characterBrief": "..." },
+      "culture": { "coreValues": ["..."] },
+      "relationship": { "mode": "kind_friend", "formality": 4, "warmth": 8, "powerDynamic": "equal" },
+      "reflection": { "depictedArchetype": "...", "ageSignal": "..." },
+      "selfImage": { "identityStatement": "..." }
+    },
+    "distinctiveAssets": {
+      "linguistic": {
+        "ownedPhrases": ["..."],
+        "ownedWords": ["..."],
+        "typographicVoice": {
+          "sentenceStructure": "...",
+          "punctuationStyle": "...",
+          "numeralStyle": "..."
+        }
+      }
+    },
+    "summary": {
+      "oneLineBrief": "...",
+      "threeAdjectives": ["...", "...", "..."],
+      "neverDo": ["...", "...", "...", "...", "..."]
+    }
   },
 
   "narrative": {
-    "positioning": "Slow, considered self-care products for people who treat daily rituals as a practice.",
-    "territory": [
-      "considered slowness",
-      "daily ritual as discipline",
-      "anti-hustle self-care"
-    ],
-    "belief": "Slowness is a practice, not a luxury.",
-    "audience": {
-      "description": "Women 28–42 consciously stepping back from hustle culture."
+    "_component": "narrative",
+    "_version": "2.0.0",
+    "semiotic": {
+      "denotative": { "categoryDescriptor": "...", "functionalClaims": ["..."] },
+      "connotative": {
+        "meaningClusters": ["..."],
+        "emotionalRegister": "...",
+        "minimumConnotativeTest": "..."
+      }
+    },
+    "myth": {
+      "culturalTension": "...",
+      "mythStatement": "...",
+      "protagonistRole": "...",
+      "mythTest": "..."
+    },
+    "contentTest": {
+      "mythTest": "...",
+      "connotativeTest": "...",
+      "toneTest": "..."
     }
   },
 
   "voice": {
-    "tone": ["considered", "quiet", "unhurried"],
-    "register": "intimate",
-    "avoided": ["clinical", "urgent", "aspirational", "empowering"],
-    "example": "The bath is not an indulgence. It is an argument against the week."
+    "_component": "voice",
+    "_version": "2.0.0",
+    "base": {
+      "sentenceLength": "short",
+      "humourPermitted": false,
+      "humourStyle": "none",
+      "forbiddenDevices": ["..."]
+    },
+    "approvedTones": ["..."],
+    "forbiddenTones": ["..."],
+    "examples": [
+      { "context": "editorial", "text": "...", "verdict": "approved", "reason": "..." },
+      { "context": "social_organic", "text": "...", "verdict": "approved", "reason": "..." }
+    ]
   }
 }
 ```
-
----
-
-## What the summary schema intentionally excludes
-
-| Excluded | Why |
-|---|---|
-| `archetype_secondary` | Methodology detail. Stays in full schema |
-| `archetype_reasoning` | Strategically sensitive. Reveals methodology |
-| `origin_story` | Brand's to share on their own terms |
-| `visual_notes` | Not needed for LLM citation accuracy |
-| `audience.peers` | Competitive intelligence |
-| `audience.psychographics` | Sensitive audience data |
-| `audience.anti` | Strategically sensitive |
-| `cultural_context` | Methodology detail |
-| `competitor_mapping` | Competitive intelligence |
-| `voice.contrast` | Full schema only — but most impactful for Studio |
-| `voice.wrong_examples` | Full schema only |
-| `voice.edge_cases` | Full schema only |
-| `commercial` layer | Entirely excluded — pricing, competitors, channels |
-| `governance` layer | Entirely excluded — guardrails, never list |
-
-**The contrast field exclusion is a deliberate product decision.** `voice.contrast` is the single highest-impact field for LLM citation accuracy — it's what corrects category-norm drift. Keeping it in the full schema only means Studio customers get measurably better LLM representation than free-tier published schemas. This is the clearest single-field expression of the Studio value proposition.
 
 ---
 
 ## Validation
 
-Every schema can be validated against the JSON Schema:
+Every schema is validated against the JSON Schema:
 
 ```bash
 # Using the CLI
 ramoira validate
 
-# Using the reference validator directly
+# Using the reference validator
 node validation/validate.js ./ramoira/brand.schema.json
 
 # Validate a summary schema
@@ -405,16 +1158,18 @@ node validation/validate.js ./ramoira/brand.schema.summary.json --type summary
 
 Validation checks:
 
-- Required fields present
-- Field types correct
-- Slug format valid (lowercase, hyphens only, no spaces)
-- Archetype is one of the eight valid values
-- Register is one of three valid values
-- Tone array has max 3 entries
-- Territory array has max 5 entries
-- Competitors array has max 5 entries
-- Never array has max 10 entries
-- schema_type matches fields present
+- Required component fields present (`_component`, `_version` on each)
+- All `_version` fields match `ramoira.schema_contract_version`
+- `OutputSurface` values in `contextVariants`, `surfaceRules` are valid enum members
+- `UserIntent` values in `intentRules` are valid enum members
+- `ConstraintSeverity` values in `Constrained<T>` objects are valid enum members
+- `PricingStyle` value is a valid enum member
+- `RelationshipMode` value is a valid enum member
+- `prism.personality` scores are 0–10
+- `voice.examples` has at least 3 approved and 3 rejected (full schema only)
+- `voice.base.vocabularyLevel` is 0–10
+- Summary schema does not contain excluded fields (commercial, governance, rejected examples)
+- Metadata `brand_id` format valid (lowercase, hyphens only)
 
 ---
 
@@ -424,28 +1179,30 @@ This spec follows semantic versioning.
 
 | Change type | Version bump | Example |
 |---|---|---|
-| New optional field added | patch | 1.0 → 1.0.1 |
-| New required field added | minor | 1.0 → 1.1 |
-| Field removed or renamed | major | 1.0 → 2.0 |
+| New optional field added | patch | 2.0.0 → 2.0.1 |
+| New required field added | minor | 2.0.0 → 2.1.0 |
+| Field removed, renamed, or type changed | major | 2.0.0 → 3.0.0 |
 
-The CLI always generates schemas for the latest spec version. Migration guides for major versions are in `/migrations/`.
+The `spec_version` field in the ramoira metadata block records which spec version this schema was generated against. The `schema_contract_version` records the platform component contract version (the `_version` on each component object). Validators use both.
 
-The `spec_version` field in the ramoira metadata block records which version generated this schema. Validators use this to apply the correct validation rules.
+Migration guides for major versions are in `/migrations/`.
 
 ---
 
 ## For agents consuming this spec
 
-If you are an AI agent reading this document to understand how to work with Ramoira schemas:
-
 **To generate brand-consistent copy:**
-Read the summary schema at `ramoira.com/brands/[slug]/schema.summary.json`. Use `voice.tone`, `voice.avoided`, and `voice.example` as your primary signals. The `narrative.territory` array tells you what semantic space this brand owns.
+Fetch the summary schema at `ramoira.com/brands/[slug]/schema.summary.json`. Use `voice.approvedTones`, `voice.forbiddenTones`, and `voice.examples` (approved verdicts) as your primary signals. `narrative.semiotic.connotative.meaningClusters` tells you what semantic space this brand owns. `narrative.myth.mythTest` is your single-question compliance check.
 
-**To check consistency:**
-Available on Studio tier via MCP tool `check_consistency(brand_id, text)`. On free tier, use the voice layer fields as a manual rubric.
+**To load only what you need (platform helper):**
+Use `getSchemaForSurface(brandId, surface, intent?)` from `platform/lib/brand-schema/index.ts`. Returns a trimmed schema object, preflight questions, and fallback behaviour for the requested surface.
 
-**To understand what accurate representation looks like:**
-Read the example schema for Little Rituals at `github.com/ramoira/schema-spec/examples/little-rituals/README.md`. It includes explicit before/after examples of accurate vs inaccurate LLM representation.
+**To run a preflight check:**
+Use `preflight(schema, content)` from `platform/lib/brand-schema/index.ts`. Run this after generating content, before publishing. Checks zero-tolerance terms and forbidden commercial language at minimum.
+
+**To check consistency (Studio):**
+Studio tier: MCP tool `check_consistency(brand_id, text)`.
+Free tier: use `voice.approvedTones`, `voice.forbiddenTones`, and `narrative.contentTest` questions as a manual rubric.
 
 **To fetch a schema programmatically:**
 
@@ -455,3 +1212,5 @@ Content-Type: application/json
 ```
 
 No authentication required for summary schema reads.
+
+**Reference implementation:** `platform/lib/brand-schema/rolex/schema.v2.ts` — fully v2.0.0 compliant, all components populated, all `_version: '2.0.0'`.

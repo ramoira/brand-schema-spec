@@ -1,25 +1,206 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ramoira.com/schema/SPEC.summary.schema.json",
-  "title": "Ramoira Brand Schema (Summary)",
+  "title": "Ramoira Brand Schema (Summary) v2.0.0",
+  "description": "Validates the public summary schema — what the brand stands for. Operational fields (colors, context variants, commercial, governance) are explicitly excluded. A document containing those fields fails validation.",
   "type": "object",
   "required": ["meta", "identity", "narrative", "voice"],
+  "additionalProperties": false,
   "properties": {
+
     "meta": {
       "type": "object",
-      "required": ["brandId", "brandName", "schemaVersion"],
+      "required": ["brandId", "brandName", "schemaVersion", "schemaType"],
+      "additionalProperties": false,
       "properties": {
-        "brandId": { "type": "string", "minLength": 1 },
-        "brandName": { "type": "string", "minLength": 1 },
+        "brandId":       { "type": "string", "minLength": 1 },
+        "brandName":     { "type": "string", "minLength": 1 },
         "schemaVersion": { "type": "string", "minLength": 1 },
-        "schemaType": { "type": "string" },
-        "canonicalURL": { "type": "string" }
-      },
-      "additionalProperties": true
+        "schemaType":    { "const": "summary" },
+        "canonicalURL":  { "type": "string" },
+        "certified":     { "type": "boolean" },
+        "confidence":    { "type": "number", "minimum": 0, "maximum": 1 }
+      }
     },
-    "identity": { "type": "object", "additionalProperties": true },
-    "narrative": { "type": "object", "additionalProperties": true },
-    "voice": { "type": "object", "additionalProperties": true }
-  },
-  "additionalProperties": true
+
+    "identity": {
+      "type": "object",
+      "required": ["summary"],
+      "additionalProperties": false,
+      "properties": {
+        "summary": {
+          "type": "object",
+          "required": ["oneLineBrief", "threeAdjectives", "neverDo"],
+          "additionalProperties": false,
+          "properties": {
+            "oneLineBrief": { "type": "string", "minLength": 1 },
+            "threeAdjectives": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "neverDo": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          }
+        },
+        "prism": {
+          "type": "object",
+          "required": ["relationship"],
+          "additionalProperties": false,
+          "properties": {
+            "relationship": {
+              "type": "object",
+              "required": ["mode"],
+              "additionalProperties": false,
+              "properties": {
+                "mode": {
+                  "type": "string",
+                  "enum": [
+                    "peer",
+                    "kind_friend",
+                    "coach",
+                    "mentor",
+                    "servant_to_exceptional",
+                    "fellow_activist",
+                    "entertainer",
+                    "challenger"
+                  ]
+                },
+                "formality": { "type": "number", "minimum": 0, "maximum": 10 },
+                "warmth":    { "type": "number", "minimum": 0, "maximum": 10 }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "narrative": {
+      "type": "object",
+      "required": ["semiotic", "myth", "contentTest"],
+      "additionalProperties": false,
+      "properties": {
+        "semiotic": {
+          "type": "object",
+          "required": ["denotative", "connotative"],
+          "additionalProperties": false,
+          "properties": {
+            "denotative": {
+              "type": "object",
+              "required": ["categoryDescriptor"],
+              "additionalProperties": false,
+              "properties": {
+                "categoryDescriptor": { "type": "string", "minLength": 1 }
+              }
+            },
+            "connotative": {
+              "type": "object",
+              "required": ["meaningClusters", "emotionalRegister"],
+              "additionalProperties": false,
+              "properties": {
+                "meaningClusters": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "minItems": 1
+                },
+                "emotionalRegister": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        },
+        "myth": {
+          "type": "object",
+          "required": ["mythStatement", "mythTest"],
+          "additionalProperties": false,
+          "properties": {
+            "mythStatement": { "type": "string", "minLength": 1 },
+            "mythTest":      { "type": "string", "minLength": 1 }
+          }
+        },
+        "contentTest": {
+          "type": "object",
+          "required": ["mythTest", "connotativeTest", "toneTest"],
+          "additionalProperties": false,
+          "properties": {
+            "mythTest":        { "type": "string", "minLength": 1 },
+            "connotativeTest": { "type": "string", "minLength": 1 },
+            "toneTest":        { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+
+    "voice": {
+      "type": "object",
+      "required": ["base", "approvedTones", "forbiddenTones", "examples"],
+      "additionalProperties": false,
+      "properties": {
+        "base": {
+          "type": "object",
+          "required": ["sentenceLength", "vocabularyLevel", "humourPermitted", "humourStyle"],
+          "additionalProperties": false,
+          "properties": {
+            "sentenceLength": {
+              "type": "string",
+              "enum": ["short", "varied", "long", "fragments_permitted"]
+            },
+            "vocabularyLevel": { "type": "number", "minimum": 0, "maximum": 10 },
+            "humourPermitted": { "type": "boolean" },
+            "humourStyle": {
+              "type": "string",
+              "enum": ["dry", "self_deprecating", "absurdist", "warm", "irreverent", "none"]
+            }
+          }
+        },
+        "approvedTones": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "forbiddenTones": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "examples": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "object",
+            "required": ["text", "verdict", "reason"],
+            "additionalProperties": false,
+            "properties": {
+              "context": { "type": "string" },
+              "text":    { "type": "string", "minLength": 1 },
+              "verdict": { "type": "string", "enum": ["approved", "rejected"] },
+              "reason":  { "type": "string", "minLength": 1 }
+            }
+          },
+          "allOf": [
+            {
+              "contains": {
+                "type": "object",
+                "properties": { "verdict": { "const": "approved" } },
+                "required": ["verdict"]
+              },
+              "minContains": 2
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": { "verdict": { "const": "rejected" } },
+                "required": ["verdict"]
+              },
+              "minContains": 2
+            }
+          ]
+        }
+      }
+    }
+
+  }
 }
