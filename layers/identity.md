@@ -8,8 +8,8 @@ Identity is the **foundational constraint layer**: how the brand *is*, what it *
 
 - `identity._component`: `'identity'`
 - `identity._version`: string
-- `identity.prism`: Kapferer prism (physique/personality/culture/relationship/reflection/selfImage)
-- `identity.distinctiveAssets`: Byron Sharp distinctive assets (visual/sonic/linguistic)
+- `identity.prism`: brand character structure (physique/personality/culture/relationship/reflection/selfImage)
+- `identity.distinctiveAssets`: brand-owned assets (visual/sonic/linguistic)
 - `identity.summary`: quick-access generation summary
 
 ## Key substructures
@@ -22,7 +22,7 @@ Identity is the **foundational constraint layer**: how the brand *is*, what it *
   - `referenceURL?`: URL
   - `posture`: string
 
-- `prism.personality` (Aaker 1–10 scores)
+- `prism.personality` (five scored dimensions, 0–10)
   - `sincerity`, `excitement`, `competence`, `sophistication`, `ruggedness`: Score (0–10)
   - `characterBrief`: string
 

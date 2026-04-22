@@ -39,10 +39,8 @@ ramoira/schema-spec/
 │
 ├── examples/                          ← worked examples
 │   ├── README.md                      ← how to read examples
-│   │                                     which archetype each covers
 │   │
 │   ├── little-rituals/                ← PRIMARY EXAMPLE
-│   │   │                                 archetype: the-aesthete
 │   │   │                                 category: self-care
 │   │   │                                 most complete documentation
 │   │   │
@@ -54,7 +52,7 @@ ramoira/schema-spec/
 │   │   ├── brand.schema.json          ← full schema, all five layers
 │   │   ├── brand.schema.summary.json  ← summary schema, what gets published
 │   │   ├── METHODOLOGY.md             ← why each choice was made
-│   │   │                                 archetype selection reasoning
+│   │   │                                 brand positioning reasoning
 │   │   │                                 voice contrast explanation
 │   │   │                                 governance layer rationale
 │   │   │                                 common drift patterns for this brand

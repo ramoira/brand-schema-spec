@@ -3,19 +3,6 @@
 Why each schema choice was made.
 The reasoning behind the structured data.
 
-## Archetype: The Aesthete
-
-Little Rituals maps to the Aesthete archetype because
-the brand's central proposition is about the quality
-of attention — how you do a thing, not what the thing
-does to you. The Aesthete archetype is defined by
-considered perception over consumption.
-
-Shadow archetype: The Guide. The brand teaches a
-practice implicitly, but never positions itself as
-an authority figure. The teaching is embedded in
-the product experience, not the copy.
-
 ## Why "considered" not "calming"
 
 The most common LLM error for Little Rituals is

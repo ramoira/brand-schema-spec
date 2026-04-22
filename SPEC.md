@@ -66,8 +66,6 @@ governance  → meta-layer — load for conflict resolution, compliance
 
 ### Component 1 — Identity
 
-**Theoretical basis:** Kapferer Brand Identity Prism + Aaker Personality Scores + Byron Sharp Distinctive Brand Assets
-
 **Operationalised for:** all surfaces — foundational constraint layer
 
 ```typescript
@@ -89,7 +87,7 @@ interface IdentityComponent {
 | Sub-object | Key fields | Notes |
 |---|---|---|
 | `prism.physique` | `permitted[]`, `forbidden[]`, `posture` | What the brand looks and feels like |
-| `prism.personality` | `sincerity`, `excitement`, `competence`, `sophistication`, `ruggedness` (all Score 1–10), `characterBrief` | Aaker's five dimensions — measurable axes |
+| `prism.personality` | `sincerity`, `excitement`, `competence`, `sophistication`, `ruggedness` (all Score 1–10), `characterBrief` | Five scored personality dimensions |
 | `prism.culture` | `coreValues[]`, `originNarrative`, `forbidden[]`, `sacredBoundary` | Internal value system |
 | `prism.relationship` | `mode`, `formality` (Score), `pronoun`, `warmth` (Score), `powerDynamic` | How the brand relates to customers |
 | `prism.reflection` | `depictedArchetype`, `aspirationalDelta` (Score), `forbiddenArchetypes[]`, `ageSignal` | Who the brand depicts — not who buys |
@@ -125,8 +123,6 @@ interface IdentityComponent {
 ---
 
 ### Component 2 — Narrative
-
-**Theoretical basis:** Barthes/Saussure Semiotics + Douglas Holt Cultural Branding
 
 **Operationalised for:** editorial/long-form (full component), brand narrative (myth + semiotic), product pages (denotative + pillars), ads/social (myth.constraints + connotative)
 
@@ -167,7 +163,7 @@ interface SemioticLayer {
 }
 ```
 
-#### Brand myth (Holt)
+#### Brand story layer
 
 ```typescript
 interface BrandMyth {

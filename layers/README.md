@@ -7,8 +7,8 @@ This folder documents the **canonical Ramoira brand schema** as implemented in `
 A full schema is composed of five components plus `meta`:
 
 - `meta` — brand identity + versioning metadata
-- `identity` — Kapferer prism + distinctive assets (hard constraints)
-- `narrative` — semiotics + myth + pillars (meaning constraints)
+- `identity` — brand character structure + distinctive assets (hard constraints)
+- `narrative` — meaning layers + brand story + pillars (meaning constraints)
 - `voice` — base voice parameters + examples + surface variants + positive rails
 - `commercial` — pricing/claims/offers/social-proof rules (conversion constraints)
 - `governance` — severity registry + conflict resolution + surface rules + compliance

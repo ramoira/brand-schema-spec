@@ -2,14 +2,14 @@
 
 Canonical source: `platform/lib/brand-schema/components/narrative.ts`
 
-Narrative encodes **meaning**: what the brand literally does (denotation) and what it stands for (connotation), plus the cultural myth and the rails that protect it.
+Narrative encodes **meaning**: what the brand literally does and what it stands for, plus the brand story and the rails that protect it.
 
 ## Top-level shape
 
 - `narrative._component`: `'narrative'`
 - `narrative._version`: string
-- `narrative.semiotic`: denotative + connotative layers
-- `narrative.myth`: cultural tension → myth statement + constraints
+- `narrative.semiotic`: literal meaning + associative meaning layers
+- `narrative.myth`: brand story layer (tension → statement + constraints)
 - `narrative.mythEvolution`: how the myth absorbs modern tensions
 - `narrative.pillars`: NarrativePillar[]
 - `narrative.editorial`: long-form storytelling rules
