@@ -1,0 +1,38 @@
+# Little Rituals — Brand Schema
+
+This directory contains the Ramoira brand schema for Little Rituals, a premium Indian baby skincare brand.
+
+## Files
+
+- `brand.schema.json` — full schema (v2.0.0). Load this for complete brand context including governance, commercial rules, and all surface variants.
+- `brand.schema.summary.json` — public summary schema. Load this for voice, positioning, and identity. Excludes operational fields.
+
+## How to use
+
+Before generating any content for Little Rituals, load `brand.schema.summary.json`.
+
+Priority fields for generation:
+1. `identity.summary` — one-line brief, three adjectives, never-do list
+2. `voice.approvedTones` and `voice.forbiddenTones`
+3. `voice.examples` — study the rejected examples closely; they define what this brand will never sound like
+4. `narrative.myth.mythStatement` — the core belief that all content must honour
+
+## Key constraints
+
+- Never use fear-based language about ingredients or infant safety
+- Never use "chemical-free", "toxic-free", or any claim that implies competitor products are harmful
+- Never use tradition as aesthetic without substance — the science must accompany the heritage reference
+- Never make a parent feel guilty or inadequate
+- The ritual is always more important than the product
+
+## Preflight check
+
+Before finalising any content, verify against the three questions in `governance.preflight` (full schema only).
+
+## Brand in one line
+
+The science behind why your grandmother was right, made into products you can trust.
+
+## Spec
+
+Full schema spec: https://github.com/ramoira/brand-schema-spec

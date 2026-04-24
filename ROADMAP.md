@@ -3,7 +3,7 @@
 > Goal: the open standard reflects what the platform actually implements. Rolex schema is the reference implementation.
 > Cross-repo context: [cli/ROADMAP.md](../cli/ROADMAP.md)
 
-**Last updated:** 2026-04-22
+**Last updated:** 2026-04-24
 
 ---
 
@@ -15,10 +15,9 @@
 | 1.2 Rebuild SPEC.schema.json | ✅ Done |
 | 1.3 Rebuild SPEC.summary.schema.json | ✅ Done |
 | 1.4 Rewrite blank templates | ✅ Done |
-| 1.5 Fix Little Rituals example | ⬜ |
-| 1.6 Rebuild YMB example | ⬜ |
-| 1.7 Populate minimal example | ⬜ |
-| 1.8 Add llms.txt to each example | ⬜ |
+| 1.5 Fix Little Rituals example | ✅ Done |
+| 1.6 Populate minimal example | ✅ Done |
+| 1.7 Add llms.txt to each example | ✅ Done |
 
 ---
 
@@ -108,29 +107,7 @@ Already has good content depth. Needs:
 
 ---
 
-## 1.6 — Rebuild YMB example
-
-**File:** `examples/ymb/your-makeup-bar-brand-schema.json`
-
-Not v2.0.0 compliant. Full rebuild into the component architecture. Use platform archetype `coach` as base. Key gaps:
-
-- Wrap all prism fields under `identity.prism.*`
-- Add `identity.distinctiveAssets` (visual, sonic, linguistic)
-- Add `identity.summary`
-- Wrap myth fields under `narrative.myth.*`
-- Add `narrative.semiotic` (denotative is entirely absent)
-- Add `narrative.mythEvolution`, `narrative.pillars`, `narrative.editorial`, `narrative.contentTest`
-- Add `voice.base` wrapper; move structuralRules into it
-- Rename `positiveRails` → `rails.global`; add `rails.alternatives`
-- Add `voice.examples` (approved + rejected with verdicts)
-- Add `voice.contextVariants`
-- Add `commercial.pricing` wrapper; add `claims`, `socialProof`, `surfaceRules`
-- Add entire `governance` component
-- Remove `validationOutputs[]` — move to stress-test fixtures
-
----
-
-## 1.7 — Populate minimal example
+## 1.6 — Populate minimal example
 
 **Files:** `examples/minimal/`
 
@@ -138,8 +115,8 @@ Currently empty. Add the smallest valid v2.0.0 schema that passes SPEC.schema.js
 
 ---
 
-## 1.8 — Add llms.txt to each example
+## 1.7 — Add llms.txt to each example
 
-**Directories:** `examples/little-rituals/`, `examples/ymb/`, `examples/minimal/`, `examples/rolex/`
+**Directories:** `examples/little-rituals/`, `examples/minimal/`, `examples/rolex/`
 
 Each example directory gets an `llms.txt` describing how an LLM should load and use the schema.

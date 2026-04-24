@@ -1,0 +1,21 @@
+# Minimal — Brand Schema Template
+
+This directory contains the smallest valid Ramoira v2.0.0 brand schema. It passes SPEC.schema.json and SPEC.summary.schema.json validation with every required field present and no optional fields.
+
+## Files
+
+- `brand.schema.json` — full schema template. All required fields. Replace placeholder values with real brand content.
+- `brand.schema.summary.json` — summary schema template. Replace placeholder values before publishing.
+
+## How to use
+
+1. Copy `brand.schema.json` to your project directory
+2. Fill in all placeholder values (search for "adjective-one", "tone-one", etc.)
+3. Run `ramoira validate` to confirm the schema is valid
+4. Run `ramoira publish` to publish the summary to ramoira.com
+
+Or generate a fully populated schema from scratch: `ramoira init`
+
+## Spec
+
+Full schema spec: https://github.com/ramoira/brand-schema-spec

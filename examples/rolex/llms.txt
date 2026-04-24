@@ -1,0 +1,34 @@
+# Rolex — Brand Schema
+
+This directory contains the Ramoira brand schema for Rolex, exported from the platform reference implementation.
+
+## Files
+
+- `brand.schema.json` — full schema (v2.0.0). The reference implementation for luxury brand positioning in the Ramoira schema format.
+- `brand.schema.summary.json` — public summary schema.
+
+## How to use
+
+Before generating any content for Rolex, load `brand.schema.summary.json`.
+
+Priority fields for generation:
+1. `identity.summary` — one-line brief, three adjectives, never-do list
+2. `voice.approvedTones` and `voice.forbiddenTones`
+3. `voice.examples` — the rejected examples define the category conventions this brand refuses
+4. `commercial.pricing` — pricing rules are strict for a luxury brand; review before any commercial content
+5. `governance.severity.absolute.constraints` — hard stops; no exceptions
+
+## Key constraints
+
+- Never reference price, discount, or value in any context unless explicitly permitted by the pricing surface rules
+- Never use urgency or scarcity language
+- Never compare directly to competitors
+- The brand is defined by restraint — what it does not say is as important as what it does
+
+## Brand positioning
+
+Rolex is the reference implementation for the luxury tier in the Ramoira schema. Study it alongside the `commercial.pricing.style: "opaque"` encoding and the full `governance.severity` hierarchy.
+
+## Spec
+
+Full schema spec: https://github.com/ramoira/brand-schema-spec

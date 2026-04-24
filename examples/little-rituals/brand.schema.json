@@ -2,15 +2,12 @@
   "meta": {
     "brandId": "little-rituals",
     "brandName": "Little Rituals",
-    "website": "https://littlerituals.in",
-    "category": "Premium Baby Skincare · India",
-    "schemaVersion": "1.0.0",
-    "baseArchetype": "peer",
-    "archetypeDivergences": [
-      "expert (formulation credibility)",
-      "optimist (ritual as daily delight)"
-    ],
-    "market": "India · D2C · mid-to-premium"
+    "schemaVersion": "2.0.0",
+    "effectiveDate": "2026-01-01",
+    "previousVersion": "1.0.0",
+    "changelog": [
+      "2026-01-01 — Migrated to v2.0.0 component architecture"
+    ]
   },
   "identity": {
     "_component": "identity",
@@ -234,7 +231,8 @@
         "Claim benefits without specific formulation evidence",
         "Position against Indian traditional practices — the brand builds on them"
       ]
-    }
+    },
+    "_version": "2.0.0"
   },
   "narrative": {
     "_component": "narrative",
@@ -514,7 +512,8 @@
       "mythTest": "Does this content honour the ritual as much as the product? Would a grandmother recognise this as belonging to the practice she taught?",
       "connotativeTest": "Does this content make the parent feel trusted and informed, or managed and reassured?",
       "toneTest": "Is this warm and specific? Does it treat the parent as an adult who can handle actual evidence?"
-    }
+    },
+    "_version": "2.0.0"
   },
   "voice": {
     "_component": "voice",
@@ -694,6 +693,53 @@
           "science as authority"
         ],
         "fallbackInstruction": "If the editorial cannot honour both the tradition and the evidence equally, it belongs on the product page, not in editorial."
+      },
+      {
+        "surface": "paid_landing_page",
+        "formalityDelta": 1,
+        "warmthDelta": -1,
+        "sentenceLength": "varied",
+        "openingInstruction": "Open with the specific formulation differentiator. Lead with mechanism, not brand story. The story follows the evidence.",
+        "closingInstruction": "Close with the ritual — the product in the context of the practice. Never close with urgency.",
+        "rails": [
+          {
+            "context": "Claims",
+            "instruction": "Every claim must have a mechanism. \"Wood-pressed below 40°C\" not \"cold-pressed for purity\"."
+          },
+          {
+            "context": "Fear",
+            "instruction": "No fear language. No \"safe for\" framing. If it is safe, the formulation evidence makes that clear."
+          }
+        ],
+        "additionalForbidden": [
+          "urgency language",
+          "scarcity cues",
+          "fear-based safety claims",
+          "superlatives without evidence"
+        ]
+      },
+      {
+        "surface": "product_detail_page",
+        "formalityDelta": 0,
+        "warmthDelta": 0,
+        "sentenceLength": "varied",
+        "openingInstruction": "Start with what the product does and why the formulation makes it do that. Then the ritual context. Then usage.",
+        "closingInstruction": "End with the practice — how this fits into the daily routine. Not a call to action. An invitation.",
+        "rails": [
+          {
+            "context": "Ingredients",
+            "instruction": "Name the ingredient, state the mechanism, connect to the tradition if relevant. Never list without explaining."
+          },
+          {
+            "context": "Usage",
+            "instruction": "Describe usage in ritual language — the time, the gesture, the connection — not clinical instruction."
+          }
+        ],
+        "additionalForbidden": [
+          "clinical ingredient dumps",
+          "fear-based safety validation",
+          "comparison tables with competitors"
+        ]
       }
     ],
     "rails": {
@@ -755,7 +801,8 @@
           }
         ]
       }
-    }
+    },
+    "_version": "2.0.0"
   },
   "commercial": {
     "_component": "commercial",
@@ -930,7 +977,7 @@
         ]
       },
       {
-        "surface": "gifting",
+        "surface": "brand_narrative",
         "fallback": "use_brand_default",
         "alternativeApproach": "The gift is the research. Frame the gift box as \"what I would choose for my own baby, curated for yours.\"",
         "rails": [
@@ -980,7 +1027,8 @@
         "value": "safest baby products",
         "severity": "absolute"
       }
-    ]
+    ],
+    "_version": "2.0.0"
   },
   "governance": {
     "_component": "governance",
@@ -1063,7 +1111,17 @@
         "primaryRail": "Start with the moment. End with the practice. The product is incidental.",
         "rails": [],
         "fallback": "use_brand_default",
-        "fallbackContent": "[Post the moment without the product. A parent and a baby. The ritual itself.]"
+        "fallbackContent": "[Post the moment without the product. A parent and a baby. The ritual itself.]",
+        "intentRules": [
+          {
+            "intent": "brand_discovery",
+            "instruction": "Lead with ritual and cultural context. No product specs. No claims. Let the brand breathe."
+          },
+          {
+            "intent": "post_purchase",
+            "instruction": "Reinforce the ritual practice. Celebrate the choice without validation-seeking language."
+          }
+        ]
       },
       {
         "surface": "customer_service",
@@ -1072,7 +1130,17 @@
         "primaryRail": "If there is any concern about a baby's skin reaction: pause use, consult paediatrician, the product is secondary.",
         "rails": [],
         "fallback": "use_brand_default",
-        "fallbackContent": "Please pause use and check with your paediatrician. Your baby's skin comes before anything else. We are here if you want to discuss what you observed."
+        "fallbackContent": "Please pause use and check with your paediatrician. Your baby's skin comes before anything else. We are here if you want to discuss what you observed.",
+        "intentRules": [
+          {
+            "intent": "service_enquiry",
+            "instruction": "Warm and specific. Acknowledge the concern. Give the actual answer. Never deflect with \"consult a paediatrician\" unless genuinely warranted."
+          },
+          {
+            "intent": "post_purchase",
+            "instruction": "Treat the customer as capable. Share usage guidance without condescension."
+          }
+        ]
       },
       {
         "surface": "paid_landing_page",
@@ -1080,7 +1148,21 @@
         "objective": "Convert through knowledge and warmth, never through fear or urgency.",
         "primaryRail": "Lead with what the product enables (the ritual), then the specific formulation evidence. Never the reverse.",
         "rails": [],
-        "fallback": "use_minimal_safe"
+        "fallback": "use_minimal_safe",
+        "intentRules": [
+          {
+            "intent": "high_intent_buyer",
+            "instruction": "Lead with the specific differentiator — the mechanism, not the claim. Formulation evidence before brand story."
+          },
+          {
+            "intent": "early_research",
+            "instruction": "Educate first. The ritual context grounds the product decision. No urgency language."
+          },
+          {
+            "intent": "competitor_comparison",
+            "instruction": "Differentiate on specificity and cultural fit. Never directly name competitors. Never fear framing."
+          }
+        ]
       }
     ],
     "overrideProtocol": {
@@ -1121,12 +1203,23 @@
         "India's number one baby brand",
         "selling fast",
         "don't miss out"
+      ],
+      "geographicOverrides": [
+        {
+          "market": "IN",
+          "additionalConstraints": [
+            "Do not make Ayurvedic efficacy claims without AYUSH certification",
+            "Do not claim paediatric endorsement without named, verifiable source",
+            "Comply with ASCI guidelines on before/after imagery for skincare"
+          ]
+        }
       ]
     },
     "preflight": {
       "question1": "Does this content honour the ritual as much as the product — would a grandmother recognise this as belonging to the practice?",
       "question2": "Does this content contain any zero-tolerance terms or fear-based language?",
       "question3": "Does this content treat the parent as an informed adult, or manage them as an anxious consumer?"
-    }
+    },
+    "_version": "2.0.0"
   }
 }

@@ -2,9 +2,11 @@
   "meta": {
     "brandId": "little-rituals",
     "brandName": "Little Rituals",
-    "schemaVersion": "1.0.0",
+    "schemaVersion": "2.0.0",
     "schemaType": "summary",
-    "canonicalURL": "https://ramoira.com/brands/little-rituals/schema.summary.json"
+    "canonicalURL": "https://ramoira.com/brands/little-rituals/schema.summary.json",
+    "certified": false,
+    "confidence": 0
   },
   "identity": {
     "summary": {
@@ -22,85 +24,18 @@
         "Position against Indian traditional practices — the brand builds on them"
       ]
     },
-    "distinctiveAssets": {
-      "visual": {
-        "primaryColor": {
-          "value": "#C8A87A",
-          "severity": "strong",
-          "rationale": "The brand sits at the intersection of Indian tradition and modern formulation. The palette should feel warm, earthy, and considered — not the clinical white of pharma, not the aggressive green of greenwashing brands."
-        },
-        "secondaryColors": [
-          "#F5EDE0",
-          "#8A7A62",
-          "#2A2018"
-        ],
-        "iconography": [
-          "hand-drawn botanical",
-          "oil-texture",
-          "gentle illustration",
-          "material-close-up"
-        ],
-        "photographyStyle": {
-          "permitted": [
-            "real hands holding real babies — not stock imagery",
-            "the oil catch the light — texture and warmth visible",
-            "the massage gesture — hands, touch, connection",
-            "Indian home contexts — natural light, warm settings",
-            "product alongside the practice, not instead of it",
-            "multigenerational if possible — grandmother and parent together"
-          ],
-          "forbidden": [
-            "Western lifestyle staging with baby as accessory",
-            "clinical white backgrounds with product only",
-            "before/after imagery (never for baby skin)",
-            "fear-based imagery — rashes, distress, clinical close-ups of problem skin",
-            "overly produced perfection — real parents, real moments"
-          ],
-          "lightingMood": "Warm afternoon light. The kitchen. The bedroom. The moment before the bath."
-        }
-      },
-      "linguistic": {
-        "ownedWords": [
-          "ritual",
-          "gentle",
-          "nourish",
-          "massage",
-          "wood-pressed",
-          "postbiotic"
-        ],
-        "typographicVoice": {
-          "sentenceStructure": "Warm and conversational. Short to medium sentences. Never clinical lists as primary communication. \"We spent six months getting this right\" not \"Formulated with key ingredients.\"",
-          "punctuationStyle": "Natural. Em dashes for warmth and parenthetical thought. No exclamation marks except in genuinely celebratory contexts. Never clinical.",
-          "numeralStyle": "Words for small numbers in prose. Numerals for specific formulation data. \"Six months of testing\" not \"6 months\". \"0.1% fragrance\" when specificity matters."
-        }
+    "prism": {
+      "relationship": {
+        "mode": "peer",
+        "formality": 3,
+        "warmth": 9
       }
     }
   },
   "narrative": {
     "semiotic": {
-      "layerHierarchy": "balanced",
       "denotative": {
-        "categoryDescriptor": "Premium baby and child skincare — wood cold-pressed organic oils, science-formulated skin and hair care, made for Indian babies and Indian parents",
-        "functionalClaims": [
-          "Wood cold-pressed at ambient temperature — no heat applied, nutritional profile preserved",
-          "Organic certification on oil range — [certification body to be specified]",
-          "Postbiotic formulation in face cream — supports baby skin microbiome barrier",
-          "Plant protein in shampoo and conditioner — nourishes without sulphates",
-          "Mineral sunscreen — physical UV block, no chemical UV filters",
-          "No parabens, no sulphates, no artificial fragrance in core range"
-        ],
-        "specifications": [
-          "Wood pressing preserves tocopherols (Vitamin E) and essential fatty acids that heat-pressing degrades",
-          "Baby skin is 20–30% thinner than adult skin — formulation absorbs and affects differently",
-          "Indian climate (humidity, UV index) creates specific skincare requirements not addressed by Western baby brands"
-        ],
-        "forbiddenClaims": [
-          "chemical-free — all matter is chemicals",
-          "toxic-free — implies competitor products are toxic (legally and ethically problematic)",
-          "clinically proven to [outcome] — use specific study data or remove claim",
-          "best baby skincare in India — unprovable superlative",
-          "paediatrician recommended — only with specific, named evidence"
-        ]
+        "categoryDescriptor": "Premium baby and child skincare — wood cold-pressed organic oils, science-formulated skin and hair care, made for Indian babies and Indian parents"
       },
       "connotative": {
         "meaningClusters": [
@@ -109,14 +44,7 @@
           "tradition validated — the practices your mother and grandmother trusted, now evidence-backed",
           "specificity for India — made for Indian babies, Indian skin, Indian climate, Indian parents"
         ],
-        "forbiddenMeanings": [
-          "guilt avoidance — \"safe products so you can stop worrying\"",
-          "premium as status — \"show your baby you care with Little Rituals\"",
-          "fear resolution — \"the only brand you can trust\"",
-          "expert authority — \"trust us, we know best\""
-        ],
-        "emotionalRegister": "The warmth of a practice that has been passed down, now made with materials you have verified yourself.",
-        "minimumConnotativeTest": "Does this content feel like it belongs in the quiet of the morning routine, or does it feel like an ad?"
+        "emotionalRegister": "The warmth of a practice that has been passed down, now made with materials you have verified yourself."
       }
     },
     "myth": {
@@ -134,25 +62,7 @@
       "sentenceLength": "varied",
       "vocabularyLevel": 6,
       "humourPermitted": true,
-      "humourStyle": "warm",
-      "permittedDevices": [
-        "direct address — \"you\", \"your baby\"",
-        "warm aside — the parenthetical that acknowledges how hard this actually is",
-        "specific evidence delivered conversationally — \"here is why\"",
-        "generational reference — \"what your mother did\", \"what your grandmother knew\""
-      ],
-      "forbiddenDevices": [
-        "fear language",
-        "superlatives without evidence",
-        "clinical ingredient-listing as primary communication",
-        "urgency language in product contexts"
-      ],
-      "structuralRules": [
-        "We are alongside the parent, not above them",
-        "Evidence is shared, not wielded",
-        "The ritual is always more important than the product",
-        "Specific over general — always"
-      ]
+      "humourStyle": "warm"
     },
     "approvedTones": [
       "warm and informed — the brilliant friend who researched this",
@@ -188,10 +98,10 @@
         "reason": "Generational framing. Peer relationship — we are not teaching them to massage, they already know. Positions the product in service of the practice."
       },
       {
-        "context": "brand_narrative",
-        "text": "Most baby skincare is designed for a baby in London or Los Angeles. Indian babies live in India — in its heat, its humidity, its particular quality of summer light. They also get the oil massage that Indian babies have always had. We made something that knows all of this.",
+        "context": "gifting — email",
+        "text": "You have already done the research. The gift is just how you share what you found.",
         "verdict": "approved",
-        "reason": "Specific cultural positioning without putting down international brands directly. \"Knows all of this\" — personalisation claim grounded in specificity."
+        "reason": "Positions the giver as informed. The research is the value. Short. Warm."
       },
       {
         "context": "paid_landing_page",
@@ -204,12 +114,6 @@
         "text": "Give your baby the gift of nature's purest ingredients, inspired by ancient Indian wisdom. 🍃✨",
         "verdict": "rejected",
         "reason": "Vague. \"Nature's purest\" is meaningless. \"Ancient wisdom\" without specificity is heritage-as-aesthetic. Emoji undermine the cultural grounding."
-      },
-      {
-        "context": "gifting — email",
-        "text": "You have already done the research. The gift is just how you share what you found.",
-        "verdict": "approved",
-        "reason": "Positions the giver as informed. The research is the value. Short. Warm."
       }
     ]
   }

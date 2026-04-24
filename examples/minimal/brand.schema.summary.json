@@ -1,0 +1,77 @@
+{
+  "meta": {
+    "brandId": "example-brand",
+    "brandName": "Example Brand",
+    "schemaVersion": "2.0.0",
+    "schemaType": "summary",
+    "canonicalURL": "https://ramoira.com/brands/example-brand/schema.summary.json",
+    "certified": false,
+    "confidence": 0
+  },
+  "identity": {
+    "summary": {
+      "oneLineBrief": "One sentence that captures what this brand does and who it does it for.",
+      "threeAdjectives": ["adjective-one", "adjective-two", "adjective-three"],
+      "neverDo": ["The one thing this brand absolutely never does."]
+    },
+    "prism": {
+      "relationship": {
+        "mode": "peer",
+        "formality": 5,
+        "warmth": 6
+      }
+    }
+  },
+  "narrative": {
+    "semiotic": {
+      "denotative": {
+        "categoryDescriptor": "What this brand makes or does, plainly stated."
+      },
+      "connotative": {
+        "meaningClusters": ["primary meaning territory"],
+        "emotionalRegister": "How this brand makes people feel."
+      }
+    },
+    "myth": {
+      "mythStatement": "The belief or stance that defines this brand worldview.",
+      "mythTest": "A question to ask of any content: does it carry the myth?"
+    },
+    "contentTest": {
+      "mythTest": "Does this content carry the brand myth?",
+      "connotativeTest": "Does this content evoke the right emotional register?",
+      "toneTest": "Does this content sound like this brand?"
+    }
+  },
+  "voice": {
+    "base": {
+      "sentenceLength": "varied",
+      "vocabularyLevel": 6,
+      "humourPermitted": false,
+      "humourStyle": "none"
+    },
+    "approvedTones": ["tone-one"],
+    "forbiddenTones": ["forbidden-tone-one"],
+    "examples": [
+      {
+        "text": "An example of on-brand writing for this brand.",
+        "verdict": "approved",
+        "reason": "Why this is on-brand."
+      },
+      {
+        "text": "A second on-brand example.",
+        "verdict": "approved",
+        "reason": "Why this is also on-brand."
+      },
+      {
+        "text": "An example of off-brand writing this brand would never use.",
+        "verdict": "rejected",
+        "reason": "Why this fails the brand voice test."
+      },
+      {
+        "text": "A second off-brand example this brand would reject.",
+        "verdict": "rejected",
+        "reason": "Why this also fails."
+      }
+    ]
+  }
+}
