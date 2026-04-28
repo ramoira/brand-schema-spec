@@ -84,15 +84,15 @@ Distinctive assets are intended to be **machine-enforceable** (exact colors/phra
 - `threeAdjectives`: string[]
 - `neverDo`: string[]
 
-## RelationshipMode enum
+## relationship.mode
 
-Identity defines a relationship-mode enum used for generation posture:
+Fixed per archetype — one of eight posture statements that describe how the brand shows up for people:
 
-- `peer`
-- `kind_friend`
-- `coach`
-- `mentor`
-- `servant_to_exceptional`
-- `fellow_activist`
-- `entertainer`
-- `challenger`
+- `"We're like you. We just happen to know a bit more about this one thing."` — Peer
+- `"Things can be better. Here is a small thing that helps."` — Optimist
+- `"We believe in what you can do before you do."` — Coach
+- `"We know more. Here is the proof."` — Expert
+- `"Built to outlast everything. Excellence as philosophy, not strategy."` — Monument
+- `"Business as a force for change. Profit is the fuel, not the point."` — Activist
+- `"Limits are the starting point. Mediocrity is the only enemy."` — Provocateur
+- `"The category is broken. We are what replaces it."` — Challenger

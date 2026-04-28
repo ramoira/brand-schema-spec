@@ -93,18 +93,18 @@ interface IdentityComponent {
 | `prism.reflection` | `depictedArchetype`, `aspirationalDelta` (Score), `forbiddenArchetypes[]`, `ageSignal` | Who the brand depicts — not who buys |
 | `prism.selfImage` | `feelingDescriptors[]`, `identityStatement`, `forbidden[]` | What customers feel using the brand |
 
-**`prism.relationship.mode` enum:**
+**`prism.relationship.mode`** — one of eight posture statements:
 
-| Value | Example brand |
+| Value | Example |
 |---|---|
-| `peer` | Glossier |
-| `kind_friend` | Innocent |
-| `coach` | Nike |
-| `mentor` | IBM |
-| `servant_to_exceptional` | Rolex |
-| `fellow_activist` | Patagonia |
-| `entertainer` | Red Bull |
-| `challenger` | Oatly |
+| `"We're like you. We just happen to know a bit more about this one thing."` | Glossier, Monzo |
+| `"Things can be better. Here is a small thing that helps."` | Innocent, Who Gives A Crap |
+| `"We believe in what you can do before you do."` | Nike, Peloton |
+| `"We know more. Here is the proof."` | IBM, Dyson |
+| `"Built to outlast everything. Excellence as philosophy, not strategy."` | Rolex, Hermès |
+| `"Business as a force for change. Profit is the fuel, not the point."` | Patagonia, Tony's Chocolonely |
+| `"Limits are the starting point. Mediocrity is the only enemy."` | Red Bull, Liquid Death |
+| `"The category is broken. We are what replaces it."` | Oatly, Brewdog |
 
 **`prism.relationship.pronoun` enum:** `'we'` `'I'` `'brand_name_only'`
 
@@ -804,7 +804,7 @@ The summary schema is a defined subset. Not all fields from identity/narrative/v
         "sacredBoundary": "..."
       },
       "relationship": {
-        "mode": "kind_friend",
+        "mode": "Things can be better. Here is a small thing that helps.",
         "formality": 4,
         "pronoun": "we",
         "warmth": 8,
@@ -1070,7 +1070,7 @@ The summary schema is a defined subset. Not all fields from identity/narrative/v
       "physique": { "permitted": ["..."], "posture": "..." },
       "personality": { "characterBrief": "..." },
       "culture": { "coreValues": ["..."] },
-      "relationship": { "mode": "kind_friend", "formality": 4, "warmth": 8, "powerDynamic": "equal" },
+      "relationship": { "mode": "Things can be better. Here is a small thing that helps.", "formality": 4, "warmth": 8, "powerDynamic": "equal" },
       "reflection": { "depictedArchetype": "...", "ageSignal": "..." },
       "selfImage": { "identityStatement": "..." }
     },
@@ -1160,7 +1160,7 @@ Validation checks:
 - `UserIntent` values in `intentRules` are valid enum members
 - `ConstraintSeverity` values in `Constrained<T>` objects are valid enum members
 - `PricingStyle` value is a valid enum member
-- `RelationshipMode` value is a valid enum member
+- `prism.relationship.mode` is one of the eight archetype posture strings
 - `prism.personality` scores are 0–10
 - `voice.examples` has at least 3 approved and 3 rejected (full schema only)
 - `voice.base.vocabularyLevel` is 0–10
