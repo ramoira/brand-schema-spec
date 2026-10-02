@@ -74,12 +74,12 @@ function buildSummary(full) {
 
 const targets = [
   {
-    in: 'd:/dev-projects/ramoira/brand-schema-spec/examples/little-rituals/brand.schema.json',
-    out: 'd:/dev-projects/ramoira/brand-schema-spec/examples/little-rituals/brand.schema.summary.json'
+    in: 'd:/lab/sol_018/ramoira/brand-schema-spec/examples/little-rituals/brand.schema.json',
+    out: 'd:/lab/sol_018/ramoira/brand-schema-spec/examples/little-rituals/brand.schema.summary.json'
   },
   {
-    in: 'd:/dev-projects/ramoira/brand-schema-spec/examples/rolex/brand.schema.json',
-    out: 'd:/dev-projects/ramoira/brand-schema-spec/examples/rolex/brand.schema.summary.json'
+    in: 'd:/lab/sol_018/ramoira/brand-schema-spec/examples/rolex/brand.schema.json',
+    out: 'd:/lab/sol_018/ramoira/brand-schema-spec/examples/rolex/brand.schema.summary.json'
   }
 ];
 
