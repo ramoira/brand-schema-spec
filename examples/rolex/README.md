@@ -1,17 +1,15 @@
-# Rolex — Example Schema
+# Rolex — Unratified Illustration
 
-This example is exported from:
-
-- `platform/lib/brand-schema/rolex/schema.v2.ts`
+> **This is not Rolex's brand schema.** Ramoira wrote it to illustrate the format for a luxury brand. Rolex did not write, review or ratify it. Do not use it to produce or check content for Rolex. It is not a reference implementation. 3.0.0 replaces it with an archetype template and a fictional brand.
 
 Files:
 
-- `brand.schema.json` — exported JSON snapshot
+- `brand.schema.json` — full schema snapshot
+- `brand.schema.summary.json` — summary schema
 
-Notes:
+What it illustrates:
 
-- v2 includes:
-  - explicit severity hierarchy
-  - positive rails throughout
-  - myth evolution layer
-  - surface-specific rules (comparison, customer service, sustainability, etc.)
+- explicit severity hierarchy
+- positive rails throughout
+- myth evolution layer
+- surface-specific rules (comparison, customer service, sustainability, etc.)

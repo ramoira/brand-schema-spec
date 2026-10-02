@@ -1,8 +1,6 @@
 # Little Rituals — Example Schema
 
-This example is exported from:
-
-- `platform/lib/brand-schema/little-rituals/little-rituals-schema.v1.ts`
+An illustration of the format. It is not a ratified brand schema.
 
 Files:
 

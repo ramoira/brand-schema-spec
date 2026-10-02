@@ -2,11 +2,7 @@
 
 This folder contains a lightweight reference validator for the `brand.schema.json` (full) and `brand.schema.summary.json` (summary) formats.
 
-Canonical platform schemas are authored in TypeScript under:
-
-- `platform/lib/brand-schema/`
-
-The exported JSON examples in `brand-schema-spec/examples/` can be validated here.
+The format is defined by `SPEC.md` and the JSON Schemas in this repository. The JSON examples in `brand-schema-spec/examples/` can be validated here.
 
 ## Usage
 

@@ -4,9 +4,7 @@
     "brandName": "Example Brand",
     "schemaVersion": "2.0.0",
     "schemaType": "summary",
-    "canonicalURL": "https://ramoira.com/brands/example-brand/schema.summary.json",
-    "certified": false,
-    "confidence": 0
+    "canonicalURL": "https://ramoira.com/brands/example-brand/schema.summary.json"
   },
   "identity": {
     "summary": {

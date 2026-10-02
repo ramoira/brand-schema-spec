@@ -1,6 +1,6 @@
 # Voice Component (Layer 3)
 
-Canonical source: `platform/lib/brand-schema/components/voice.ts`
+Normative source: [`SPEC.md`](../SPEC.md) and [`SPEC.schema.json`](../SPEC.schema.json). This page is a reading guide.
 
 Voice is the **surface-sensitive** layer: how the brand writes, and how that writing shifts by surface without drifting into category norms.
 

@@ -1,6 +1,6 @@
 # Narrative Component (Layer 2)
 
-Canonical source: `platform/lib/brand-schema/components/narrative.ts`
+Normative source: [`SPEC.md`](../SPEC.md) and [`SPEC.schema.json`](../SPEC.schema.json). This page is a reading guide.
 
 Narrative encodes **meaning**: what the brand literally does and what it stands for, plus the brand story and the rails that protect it.
 

@@ -1,6 +1,6 @@
 # Governance Component (Layer 5)
 
-Canonical source: `platform/lib/brand-schema/components/governance.ts`
+Normative source: [`SPEC.md`](../SPEC.md) and [`SPEC.schema.json`](../SPEC.schema.json). This page is a reading guide.
 
 Governance is the meta-layer that makes the system operable: severity weighting, conflict resolution between components, surface-specific rules, and compliance routing.
 

@@ -1,6 +1,6 @@
 # Layer / Component Reference
 
-This folder documents the **canonical Ramoira brand schema** as implemented in `platform/lib/brand-schema`.
+This folder is a reading guide to the Ramoira brand schema, one page per component. The normative definition is [`SPEC.md`](../SPEC.md) with [`SPEC.schema.json`](../SPEC.schema.json) and [`SPEC.summary.schema.json`](../SPEC.summary.schema.json).
 
 ## Components
 
@@ -15,15 +15,7 @@ A full schema is composed of five components plus `meta`:
 
 ## How to use these docs
 
-- For **field-level types**, treat the TypeScript sources as the source of truth:
-  - `platform/lib/brand-schema/components/identity.ts`
-  - `platform/lib/brand-schema/components/narrative.ts`
-  - `platform/lib/brand-schema/components/voice.ts`
-  - `platform/lib/brand-schema/components/commercial.ts`
-  - `platform/lib/brand-schema/components/governance.ts`
-  - Shared primitives: `platform/lib/brand-schema/types.ts`
-- For **which sections to load per surface**, see the surface manifest:
-  - `platform/lib/brand-schema/surfaces/manifest.ts`
+- For **field-level types**, use `SPEC.md` (component sections and shared primitive types) and the JSON Schemas. Where a page here disagrees with them, the spec wins.
 
 ## Files
 

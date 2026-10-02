@@ -1,6 +1,6 @@
 # Identity Component (Layer 1)
 
-Canonical source: `platform/lib/brand-schema/components/identity.ts`
+Normative source: [`SPEC.md`](../SPEC.md) and [`SPEC.schema.json`](../SPEC.schema.json). This page is a reading guide.
 
 Identity is the **foundational constraint layer**: how the brand *is*, what it *looks like*, and the assets it *owns*.
 

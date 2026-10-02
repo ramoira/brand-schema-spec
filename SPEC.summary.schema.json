@@ -18,8 +18,8 @@
         "schemaVersion": { "type": "string", "minLength": 1 },
         "schemaType":    { "const": "summary" },
         "canonicalURL":  { "type": "string" },
-        "certified":     { "type": "boolean" },
-        "confidence":    { "type": "number", "minimum": 0, "maximum": 1 }
+        "certified":     { "type": "boolean", "deprecated": true, "description": "Deprecated; removed in 3.0.0. Does not mean the schema was ratified, checked or certified. Do not rely on it." },
+        "confidence":    { "type": "number", "minimum": 0, "maximum": 1, "deprecated": true, "description": "Deprecated; removed in 3.0.0. A generation heuristic, not a quality, trust or conformance score. Do not rely on it." }
       }
     },
 

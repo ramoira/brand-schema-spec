@@ -1,6 +1,6 @@
 # Commercial Component (Layer 4)
 
-Canonical source: `platform/lib/brand-schema/components/commercial.ts`
+Normative source: [`SPEC.md`](../SPEC.md) and [`SPEC.schema.json`](../SPEC.schema.json). This page is a reading guide.
 
 Commercial makes conversion constraints explicit: what pricing/claims/offers/proof patterns are allowed, and how to handle high-risk surfaces.
 
