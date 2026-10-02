@@ -38,11 +38,11 @@ Generated locally by `ramoira init`. Stored in your project. Never published pub
 
 Contains all five components with complete detail. Used by agents in your local development workflow. Gives your AI tools complete brand context — voice edge cases, commercial positioning, governance guardrails, myth constraints, positive rails.
 
-**Where it lives:** Your project only. `your-project/ramoira/brand.schema.json`
+**Where it lives:** Your project. `your-project/ramoira/brand.schema.json`
 
 **Who can read it:** You, your team, your local agents.
 
-**Ramoira never holds a copy** unless you choose to send one.
+**Ramoira holds a private copy only if you publish.** `ramoira publish` sends the full schema to Ramoira, which stores it privately and serves only the summary publicly.
 
 ---
 
@@ -692,7 +692,7 @@ ramoira publish (free account)
   → brand.schema.summary.json extracted and published
   → workflow_state: published
   → canonical_url: set
-  → full schema stays local
+  → full schema stored privately by Ramoira; never served publicly
 ```
 
 ---
