@@ -10,7 +10,12 @@
     "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
-  "include": ["validation/**/*.ts"]
+  "include": [
+    "validation/**/*.ts",
+    "checker/**/*.ts"
+  ]
 }

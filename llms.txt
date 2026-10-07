@@ -13,6 +13,11 @@ Open format for brand meaning in the agent web. Version 3.0.0. A schema carries 
 - [Summary](SPEC.summary.schema.json)
 - [Verification record](record.schema.json)
 
+## Tools
+
+- [Reference validator](validation/README.md)
+- [Open checker](checker/README.md): checks one content item against a schema and returns a verdict event; a self-check is `tooling_only`
+
 ## Reading guide
 
 - [Rule registry](layers/rules.md)

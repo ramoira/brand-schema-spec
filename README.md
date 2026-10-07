@@ -23,6 +23,7 @@ A Ramoira brand schema is a structured, versioned, agent-readable statement of a
 | [`SPEC.summary.schema.json`](SPEC.summary.schema.json) | JSON Schema: the public summary |
 | [`record.schema.json`](record.schema.json) | JSON Schema: verdict events and adoption records |
 | [`validation/`](validation/) | Reference validator, `content_hash` tool and summary extractor |
+| [`checker/`](checker/) | Open checker: one content item against one schema, as a verdict event |
 | [`layers/`](layers/) | Reading guide, one page per layer plus the rule registry |
 | [`examples/`](examples/) | Worked examples (fictional brands) |
 | [`schemas/`](schemas/) | Blank templates |
@@ -66,6 +67,16 @@ import { validateDocument } from '@ramoira/schema'
 ```
 
 See [`validation/README.md`](validation/README.md).
+
+## Check content against a schema
+
+```ts
+import { checkItem } from '@ramoira/schema/checker'
+
+const { event, notes } = await checkItem(schema, { text, surface: 'product_detail_page' })
+```
+
+Returns a verdict event in the [`record.schema.json`](record.schema.json) format. The schema decides which rules apply; nothing selects or skips them. A self-check is useful tooling (`tooling_only`), not an independent check. See [`checker/README.md`](checker/README.md).
 
 ## CLI
 
