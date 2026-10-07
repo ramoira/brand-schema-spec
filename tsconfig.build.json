@@ -8,5 +8,10 @@
     "rootDir": ".",
     "outDir": "dist"
   },
-  "include": ["validation/index.ts", "validation/lib/**/*.ts"]
+  "include": [
+    "validation/index.ts",
+    "validation/lib/**/*.ts",
+    "checker/index.ts",
+    "checker/lib/**/*.ts"
+  ]
 }

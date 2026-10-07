@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- The open checker, `@ramoira/schema/checker`: `checkItem(schema, item, context)` checks one content item against a 3.0.0 schema and returns a verdict event in the `record.schema.json` format. Exact and structural rules run deterministically; judged rules run only through a judge the caller supplies, and are `void` unless the judge quotes the item and cites the rule's own rubric. No option selects, skips or tunes rules. Results are always `tooling_only`; a candidate schema or a public summary gives `not_certifiable`. See `checker/README.md`. No change to the format.
 - The validator is installable as a package, `@ramoira/schema`, from GitHub (`npm install github:ramoira/brand-schema-spec#<commit>`): it builds to `dist/` on install and exports `validateDocument`, `computeContentHash`, `extractSummary` and the three JSON Schemas. No change to the format.
 
 ## 3.0.0

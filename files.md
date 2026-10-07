@@ -8,7 +8,7 @@ brand-schema-spec/
 ├── CHANGELOG.md
 ├── LICENSE                      MIT
 ├── llms.txt
-├── package.json                 validator dependencies and scripts
+├── package.json                 @ramoira/schema: validator and checker
 │
 ├── layers/                      reading guide: the rule registry and the five layers
 ├── validation/                  reference validator (TypeScript, Node.js 22.18+)
@@ -17,6 +17,10 @@ brand-schema-spec/
 │   ├── summarize.ts             npm run summarize -- <full> [out]
 │   ├── index.ts                 library entry: validateDocument, computeContentHash, extractSummary
 │   ├── lib/                     JCS, hashing, pointer resolution, invariants, record checks
+│   └── test/                    npm test
+├── checker/                     open checker: one item against one schema → verdict event
+│   ├── index.ts                 library entry: checkItem (@ramoira/schema/checker)
+│   ├── lib/                     normalization, exact, structural, judged
 │   └── test/                    npm test
 ├── examples/                    fictional brands, unratified
 │   ├── corvane/
