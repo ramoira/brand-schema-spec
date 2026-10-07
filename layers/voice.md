@@ -1,69 +1,30 @@
-# Voice Component (Layer 3)
+# Voice — `voice`
 
-Normative source: [`SPEC.md`](../SPEC.md) and [`SPEC.schema.json`](../SPEC.schema.json). This page is a reading guide.
+Normative: [`SPEC.md`](../SPEC.md) section 8.3. How the brand writes.
 
-Voice is the **surface-sensitive** layer: how the brand writes, and how that writing shifts by surface without drifting into category norms.
+## Base
 
-## Top-level shape
+- `base.vocabularyLevel` (required): shared anchored scale, 0–10.
+- `base.humourStyle` (required): `{style, frequency?}`. `style: "none"` means no humour.
+- `base.permittedDevices`.
+- `approvedTones` (at least one).
 
-- `voice._component`: `'voice'`
-- `voice._version`: string
-- `voice.base`: base VoiceParameters
-- `voice.forbiddenTones`: string[] (absolute, across all surfaces)
-- `voice.approvedTones`: string[] (tones the brand can occupy)
-- `voice.examples`: VoiceExample[] (approved + rejected)
-- `voice.contextVariants`: VoiceVariant[] (per-surface deltas)
-- `voice.rails`: PositiveRailSystem (what to do *instead* of forbidden territory)
+Forbidden tones and devices, sentence length and structural rules are rules.
 
-## Base voice parameters
+## Examples — your judgment, on the record
 
-- `base.sentenceLength`: `short | varied | long | fragments_permitted`
-- `base.vocabularyLevel`: Score (1–10)
-- `base.humourPermitted`: boolean
-- `base.humourStyle`: `dry | self_deprecating | absurdist | warm | irreverent | none`
-- `base.permittedDevices`: string[]
-- `base.forbiddenDevices`: string[]
-- `base.structuralRules`: string[]
+```json
+{ "example_id": "ex_…", "surface": "social_organic", "text": "…",
+  "verdict": "approved | rejected", "reason": "…",
+  "judged_by": "brand_owner", "source": "authored", "captured_at": "2026-10-05" }
+```
 
-## Worked examples
+Examples are what judged rules cite. Write the `reason` for the writer who will read it: what makes this one right or wrong. `judged_by` records who actually made the call. Only `brand_owner` and `brand_team` examples can ground a finding once the schema is ratified; a producer's or a template's examples can guide, but not decide.
 
-Examples are a high-signal training input.
+## Context variants
 
-- `examples[].context`: OutputSurface | string
-- `examples[].text`: string
-- `examples[].verdict`: `approved | rejected`
-- `examples[].reason`: string
+One per surface, each a delta from the base: `formalityDelta`, `warmthDelta` (the result must stay within 0–10), `sentenceLength`, `openingInstruction`, `closingInstruction`, `rails`, `fallbackInstruction`.
 
-## Context variants (surface deltas)
+## Rails
 
-Each variant is a **delta** from base — only specify what changes.
-
-- `contextVariants[].surface`: OutputSurface
-- `contextVariants[].formalityDelta`: number
-- `contextVariants[].warmthDelta`: number
-- `contextVariants[].sentenceLength?`: SentenceLength
-- `contextVariants[].openingInstruction`: string
-- `contextVariants[].closingInstruction`: string
-- `contextVariants[].rails`: Rail[]
-- `contextVariants[].additionalForbidden`: string[]
-- `contextVariants[].fallbackInstruction`: string
-
-## Positive rails
-
-Rails ensure systems don’t “freeze” when many tactics are forbidden.
-
-- `rails.global`: Rail[]
-- `rails.alternatives`: grouped rail sets used when major commercial patterns are disallowed
-  - `whenPricingForbidden`
-  - `whenUrgencyForbidden`
-  - `whenComparativeForbidden`
-  - `whenTrendLanguageForbidden`
-  - `whenAccessibilityForbidden`
-  - `whenPromotionForbidden`
-
-A `Rail` has:
-
-- `context`: when it applies
-- `instruction`: what to do
-- `example?`: compliant example
-- `antiExample?`: non-compliant example
+`{rail_id, context, instruction, example?, antiExample?}`: what to do *instead* when much is forbidden. `rails.global` applies everywhere; `rails.alternatives.when…Forbidden` (e.g. `whenUrgencyForbidden`) gives the alternative when a tactic is ruled out. A rail with both an example and an anti-example is rubric material a judged rule can cite.

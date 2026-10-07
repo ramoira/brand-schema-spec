@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ramoira.com/schema/v3/record.schema.json",
+  "title": "Ramoira verification record 3.0.0 (verdict event)",
+  "description": "Open format for one verdict event in a verification record: one content item checked against one schema hash. The format is open; records themselves are kept by the verifier, append-only. A correction is a later event, never an edit. Adoption records are defined under $defs/Adoption. A verdict event carries no score of any kind: conformance is never faithfulness.",
+  "type": "object",
+  "required": [
+    "verdict_id", "brand_id", "item_id", "item_hash", "surface", "submitted_by", "submitted_at",
+    "producer", "schema", "commissioning_mode", "adoption_id", "attempt", "verdict",
+    "certification_standing", "checked_at", "checker_version", "ruleset_version", "findings", "override"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "verdict_id": { "$ref": "#/$defs/Id" },
+    "brand_id": { "$ref": "#/$defs/Id" },
+    "item_id": { "$ref": "#/$defs/Id" },
+    "item_hash": { "$ref": "#/$defs/Sha256" },
+    "surface": {
+      "$ref": "SPEC.schema.json#/$defs/OutputSurface",
+      "description": "Declared by the caller. The same surface list the schema spec uses."
+    },
+    "submitted_by": { "$ref": "#/$defs/Id" },
+    "submitted_at": { "type": "string", "format": "date-time" },
+    "producer": { "$ref": "#/$defs/Producer" },
+    "schema": {
+      "type": "object",
+      "required": ["schema_version", "schema_hash", "ratification_id"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "type": "string", "minLength": 1, "description": "Human label from the schema." },
+        "schema_hash": { "$ref": "SPEC.schema.json#/$defs/ContentHash" },
+        "ratification_id": {
+          "type": ["string", "null"],
+          "description": "null when the schema is not ratified; the result is then tooling_only."
+        }
+      }
+    },
+    "commissioning_mode": {
+      "type": "string",
+      "enum": ["principal_commissioned", "principal_adopted", "producer_self_check"]
+    },
+    "adoption_id": { "type": ["string", "null"] },
+    "attempt": { "type": "integer", "minimum": 1 },
+    "verdict": {
+      "type": "string",
+      "enum": ["pass", "fail", "review_required", "not_certifiable", "not_evaluable"]
+    },
+    "certification_standing": {
+      "type": "string",
+      "enum": ["eligible", "ineligible", "tooling_only"]
+    },
+    "checked_at": { "type": "string", "format": "date-time" },
+    "checker_version": { "type": "string", "minLength": 1 },
+    "ruleset_version": { "type": "string", "minLength": 1 },
+    "findings": { "type": "array", "items": { "$ref": "#/$defs/Finding" } },
+    "override": {
+      "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/Override" }]
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "A producer's own check is always tooling_only.",
+      "if": { "properties": { "commissioning_mode": { "const": "producer_self_check" } } },
+      "then": { "properties": { "certification_standing": { "const": "tooling_only" }, "adoption_id": { "type": "null" } } }
+    },
+    {
+      "$comment": "A principal-adopted check names the adoption it runs under.",
+      "if": { "properties": { "commissioning_mode": { "const": "principal_adopted" } } },
+      "then": { "properties": { "adoption_id": { "type": "string", "minLength": 1 } } }
+    },
+    {
+      "$comment": "Only an adopted check carries an adoption_id.",
+      "if": { "properties": { "commissioning_mode": { "const": "principal_commissioned" } } },
+      "then": { "properties": { "adoption_id": { "type": "null" } } }
+    },
+    {
+      "$comment": "A check against an unratified schema is tooling_only (RMT2).",
+      "if": { "properties": { "schema": { "properties": { "ratification_id": { "type": "null" } } } } },
+      "then": { "properties": { "certification_standing": { "const": "tooling_only" } } }
+    }
+  ],
+  "$defs": {
+    "Id": { "type": "string", "minLength": 1 },
+    "Sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "Producer": {
+      "type": "object",
+      "required": ["producer_id", "producer_class"],
+      "additionalProperties": false,
+      "properties": {
+        "producer_id": { "$ref": "#/$defs/Id" },
+        "producer_class": {
+          "type": "string",
+          "enum": ["agency", "freelancer", "internal_team", "in_house_ai", "other"],
+          "description": "Every class is checked on identical terms."
+        }
+      }
+    },
+    "Finding": {
+      "type": "object",
+      "required": ["rule_id", "check_class", "severity", "outcome", "span", "evidence", "judge"],
+      "additionalProperties": false,
+      "properties": {
+        "rule_id": { "$ref": "#/$defs/Id" },
+        "check_class": {
+          "type": "string",
+          "enum": ["deterministic_exact", "deterministic_structural", "judged_bounded", "advisory_only"]
+        },
+        "severity": { "$ref": "SPEC.schema.json#/$defs/Severity" },
+        "outcome": { "type": "string", "enum": ["pass", "violation", "void", "not_evaluable", "advisory"] },
+        "span": { "type": ["string", "null"], "description": "Quoted content span." },
+        "evidence": { "type": "string", "minLength": 1, "description": "The specific rule, field or rubric reference cited." },
+        "judge": {
+          "type": "object",
+          "required": ["type", "id"],
+          "additionalProperties": false,
+          "properties": {
+            "type": { "type": "string", "enum": ["none", "model", "human", "hybrid"] },
+            "id": { "type": ["string", "null"], "description": "Model and version, or reviewer id or role." }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "$comment": "Deterministic checks never use a judge.",
+          "if": { "properties": { "check_class": { "enum": ["deterministic_exact", "deterministic_structural"] } } },
+          "then": { "properties": { "judge": { "properties": { "type": { "const": "none" } } } } }
+        },
+        {
+          "$comment": "An exact violation reports the matched span.",
+          "if": {
+            "properties": { "check_class": { "const": "deterministic_exact" }, "outcome": { "const": "violation" } }
+          },
+          "then": { "properties": { "span": { "type": "string", "minLength": 1 } } }
+        },
+        {
+          "$comment": "A judged outcome needs a quoted span and an identified judge; otherwise it is void.",
+          "if": {
+            "properties": { "check_class": { "const": "judged_bounded" }, "outcome": { "enum": ["pass", "violation"] } }
+          },
+          "then": {
+            "properties": {
+              "span": { "type": "string", "minLength": 1 },
+              "judge": {
+                "properties": {
+                  "type": { "enum": ["model", "human", "hybrid"] },
+                  "id": { "type": "string", "minLength": 1 }
+                }
+              }
+            }
+          }
+        },
+        {
+          "$comment": "advisory_only findings never change pass or fail.",
+          "if": { "properties": { "check_class": { "const": "advisory_only" } } },
+          "then": { "properties": { "outcome": { "const": "advisory" } } },
+          "else": { "properties": { "outcome": { "not": { "const": "advisory" } } } }
+        }
+      ]
+    },
+    "Override": {
+      "type": "object",
+      "description": "A principal act clearing a strong violation, where the schema's override rules allow it. Never clears an absolute violation.",
+      "required": ["approved_by", "approved_at", "rationale", "rule_id", "expires_at", "applies_to"],
+      "additionalProperties": false,
+      "properties": {
+        "approved_by": { "type": "string", "minLength": 1, "description": "Approver identity or role." },
+        "approved_at": { "type": "string", "format": "date-time" },
+        "rationale": { "type": "string", "minLength": 1 },
+        "rule_id": { "$ref": "#/$defs/Id" },
+        "expires_at": { "type": ["string", "null"], "format": "date-time" },
+        "applies_to": { "type": "string", "enum": ["item", "schema_revision_request"] }
+      }
+    },
+    "Adoption": {
+      "type": "object",
+      "description": "A principal act: the brand adopts a producer-run stream of checks as its acceptance evidence.",
+      "required": ["adoption_id", "brand_id", "producer", "scope", "schema_hashes", "adopted_by", "adopted_at", "revoked_at"],
+      "additionalProperties": false,
+      "properties": {
+        "adoption_id": { "$ref": "#/$defs/Id" },
+        "brand_id": { "$ref": "#/$defs/Id" },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "scope": {
+          "type": "object",
+          "required": ["surfaces", "markets"],
+          "additionalProperties": false,
+          "properties": {
+            "surfaces": { "type": "array", "items": { "$ref": "SPEC.schema.json#/$defs/OutputSurface" }, "minItems": 1 },
+            "markets": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 }
+          }
+        },
+        "schema_hashes": { "type": "array", "items": { "$ref": "SPEC.schema.json#/$defs/ContentHash" }, "minItems": 1 },
+        "adopted_by": { "type": "string", "minLength": 1 },
+        "adopted_at": { "type": "string", "format": "date-time" },
+        "revoked_at": { "type": ["string", "null"], "format": "date-time" }
+      }
+    }
+  }
+}

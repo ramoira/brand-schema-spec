@@ -1,72 +1,28 @@
-# Governance Component (Layer 5)
+# Governance — `governance`
 
-Normative source: [`SPEC.md`](../SPEC.md) and [`SPEC.schema.json`](../SPEC.schema.json). This page is a reading guide.
+Normative: [`SPEC.md`](../SPEC.md) sections 8.5 and 9. How the brand operates its schema. Excluded from the public summary unless the brand opts in.
 
-Governance is the meta-layer that makes the system operable: severity weighting, conflict resolution between components, surface-specific rules, and compliance routing.
+| Field | Holds |
+|---|---|
+| `conflictResolution.{componentPriority, knownConflicts, defaultResolution}` | What wins when two layers pull apart |
+| `situations[]` | Circumstances the brand responds to (below) |
+| `surfaces[].{surface, objective, primaryRail, rails, fallback, fallbackContent, intentRules, suspended_rule_ids}` | Per-surface behaviour. `suspended_rule_ids` may name only contextual rules. |
+| `override.{authorisedRoles, requiredFields, maxDurationDays, overrideProcess, judgmentBounds}` | Who may clear a strong finding, and how. Overrides are recorded in the verification record. |
+| `reviewTopics` | Topics that always go to a human |
 
-## Top-level shape
+## Situations: when, not where
 
-- `governance._component`: `'governance'`
-- `governance._version`: string
-- `governance.severity`: SeverityRegistry
-- `governance.conflictResolution`: ConflictResolution
-- `governance.surfaceRules`: SurfaceRule[]
-- `governance.overrideProtocol`: OverrideProtocol
-- `governance.compliance`: ComplianceConfig
-- `governance.preflight`: three questions
+A surface is *where* content appears. A situation is *when*: a recall, an accusation, a competitor's claim, unexpected praise, a partner's request.
 
-## Severity registry
+```json
+{ "situation_id": "sit_…", "trigger": "…", "category": "crisis",
+  "posture": "…", "surfaces": ["press_release"],
+  "voice": { "persona": "restrained", "formalityDelta": 2 },
+  "rails": [], "suspended_rule_ids": [] }
+```
 
-`severity` makes enforcement explicit.
+Rules can be scoped to situations (`"situations": ["sit_…"]`). The brand activates a situation for a period; a producer never declares one per item.
 
-- `severity.absolute.constraints`: string[]
-- `severity.absolute.violationResponse`: `block_output | flag_and_block`
+## Not here any more
 
-- `severity.strong.constraints`: string[]
-- `severity.strong.overrideProcess`: string
-- `severity.strong.violationResponse`: `flag_for_review | block_output`
-
-- `severity.contextual.constraints`: string[]
-- `severity.contextual.judgmentBounds`: string
-- `severity.contextual.violationResponse`: `log_for_audit`
-
-## Conflict resolution
-
-- `conflictResolution.componentPriority`: string[] (index 0 wins)
-- `conflictResolution.knownConflicts`: ConflictResolutionRule[]
-- `conflictResolution.defaultResolution`: FallbackBehaviour
-
-## Surface rules
-
-Surface rules resolve edge cases like comparison pages and customer service.
-
-- `surfaceRules[].surface`: OutputSurface
-- `surfaceRules[].applicableConstraints`: `all` | string[]
-- `surfaceRules[].suspendedConstraints?`: string[]
-- `surfaceRules[].objective`: string
-- `surfaceRules[].primaryRail`: string
-- `surfaceRules[].rails`: Rail[]
-- `surfaceRules[].fallback`: FallbackBehaviour
-- `surfaceRules[].fallbackContent?`: string
-- `surfaceRules[].intentRules?`: intent-specific instructions
-
-## Override protocol
-
-- `authorisedRoles`: string[]
-- `requiredFields`: string[]
-- `maxDurationDays`: number
-- `auditLogEndpoint`: string
-
-## Compliance
-
-- `violationWebhook`: string
-- `routing.absolute|strong|contextual`: strings (emails/queues)
-- `humanReviewTopics`: string[]
-- `zeroToleranceTerms`: string[]
-- `geographicOverrides?`: per-market additions
-
-## Preflight
-
-- `preflight.question1`
-- `preflight.question2`
-- `preflight.question3`
+The severity registry (each rule carries its severity), webhooks and routing (integration configuration), preflight questions (rules or guidance), and per-component versions.

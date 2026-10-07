@@ -1,0 +1,40 @@
+{
+  "verdict_id": "verdict_0001",
+  "brand_id": "corvane",
+  "item_id": "item_pdp_28cm",
+  "item_hash": "sha256:5f1d0c3a8f2b6e4d9c7a1b3e5f7d9c1b3a5e7f9d1c3b5a7e9f1d3c5b7a9e1f3d",
+  "surface": "product_detail_page",
+  "submitted_by": "user_head_of_brand",
+  "submitted_at": "2026-10-07T10:30:00Z",
+  "producer": { "producer_id": "producer_example_agency", "producer_class": "agency" },
+  "schema": { "schema_version": "1.0.0", "schema_hash": "sha256:eaed480d372bcbef2cee6798f2d142003dfcdb71585f64da08cda7b6c486f863", "ratification_id": "rat_example" },
+  "commissioning_mode": "principal_commissioned",
+  "adoption_id": null,
+  "attempt": 1,
+  "verdict": "review_required",
+  "certification_standing": "eligible",
+  "checked_at": "2026-10-07T10:30:02Z",
+  "checker_version": "example-checker-0.1.0",
+  "ruleset_version": "schema-bound",
+  "findings": [
+    {
+      "rule_id": "r_fear_vocabulary",
+      "check_class": "deterministic_exact",
+      "severity": "absolute",
+      "outcome": "pass",
+      "span": null,
+      "evidence": "rules/r_fear_vocabulary: no term matched after casefold_nfkc",
+      "judge": { "type": "none", "id": null }
+    },
+    {
+      "rule_id": "r_not_a_gadget",
+      "check_class": "judged_bounded",
+      "severity": "strong",
+      "outcome": "violation",
+      "span": "the only pan you will ever need, no effort required",
+      "evidence": "rubric: ex_pdp_gadget (rejected) — 'Gadget framing and a promise of no effort.'",
+      "judge": { "type": "model", "id": "example-judge-model-2026-09" }
+    }
+  ],
+  "override": null
+}

@@ -1,10 +1,8 @@
-# Schema Templates
+# Schema templates
 
-This folder contains blank templates you can copy to start authoring a schema.
+Blank 3.0.0 templates to copy when writing a schema by hand.
 
-- `brand.schema.json` — full schema (identity + narrative + voice + commercial + governance)
-- `brand.schema.summary.json` — summary schema (public-safe subset)
+- `brand.schema.json`: full schema with every section present and a placeholder rule of each check class. Replace the placeholders, then `npm run hash -- brand.schema.json --write`.
+- `brand.schema.summary.json`: the summary generated from it by `npm run summarize`. Generate your own rather than editing this one.
 
-Canonical field docs:
-
-- `../layers/`
+Field reference: [`SPEC.md`](../SPEC.md) and [`layers/`](../layers/).

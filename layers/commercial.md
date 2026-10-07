@@ -1,76 +1,12 @@
-# Commercial Component (Layer 4)
+# Commercial — `commercial`
 
-Normative source: [`SPEC.md`](../SPEC.md) and [`SPEC.schema.json`](../SPEC.schema.json). This page is a reading guide.
+Normative: [`SPEC.md`](../SPEC.md) section 8.4. How the brand sells. Excluded from the public summary unless the brand opts in.
 
-Commercial makes conversion constraints explicit: what pricing/claims/offers/proof patterns are allowed, and how to handle high-risk surfaces.
+| Field | Holds |
+|---|---|
+| `pricing.{style, displayFormat, surfaceOverrides, permittedLanguage}` | How prices are shown and talked about. `style` is open vocabulary (`opaque`, `transparent`, `value_led`, …). |
+| `claims.superlatives.approved` | Superlatives the brand can stand behind |
+| `offers.{permittedTypes, communicationRules.valueFraming}` | Which offers exist and how value is framed |
+| `socialProof.{celebrityEndorsementStyle, permittedAuthoritySignals}` | Which proof the brand uses |
 
-## Top-level shape
-
-- `commercial._component`: `'commercial'`
-- `commercial._version`: string
-- `commercial.pricing`: PricingRules
-- `commercial.claims`: ClaimsRules
-- `commercial.offers`: OfferRules
-- `commercial.socialProof`: SocialProofRules
-- `commercial.surfaceRules`: SurfaceCommercialRule[]
-- `commercial.globalForbiddenTerms`: `Constrained<string>[]`
-
-## Pricing rules
-
-- `pricing.style`: `opaque | transparent | anchored | value_led | simple`
-- `pricing.priceDisplayPermitted`: boolean
-- `pricing.displayFormat?`: string
-- `pricing.surfaceOverrides?`: per-surface overrides
-- `pricing.urgencyLanguagePermitted`: boolean
-- `pricing.scarcityLanguagePermitted`: boolean
-- `pricing.discountPermitted`: boolean
-- `pricing.maxDiscountPercent?`: number
-- `pricing.permittedLanguage`: string[]
-- `pricing.forbiddenLanguage`: `Constrained<string>[]`
-
-## Claims rules
-
-- `claims.approved`: ApprovedClaim[]
-  - `claim`: string
-  - `evidenceRequired`: boolean
-  - `evidenceType?`: string
-  - `geographicScope`: string[]
-  - `surfaces`: OutputSurface[] | `all`
-
-- `claims.forbidden`: `Constrained<string>[]`
-
-- `claims.comparative`
-  - `competitorMentionPermitted`: boolean
-  - `comparativeClaimsPermitted`: boolean
-  - `permittedCompetitors?`: string[]
-  - `forbiddenFramings`: string[]
-
-- `claims.superlatives`
-  - `permitted`: boolean
-  - `approved`: string[]
-  - `forbidden`: string[]
-
-## Offer rules
-
-- `offers.permittedTypes`: OfferType[]
-- `offers.forbiddenTypes`: `Constrained<OfferType>[]`
-- `offers.communicationRules`: urgency/scarcity + value-framing
-
-## Social proof rules
-
-- `socialProof.starRatingsPermitted`: boolean
-- `socialProof.reviewCountsPermitted`: boolean
-- `socialProof.customerTestimonialsPermitted`: boolean
-- `socialProof.celebrityEndorsementStyle?`: string
-- `socialProof.permittedAuthoritySignals`: string[]
-- `socialProof.forbiddenSocialProof`: string[]
-
-## Surface commercial rules
-
-`surfaceRules[]` override base commercial settings for specific surfaces.
-
-- `surface`: OutputSurface
-- `pricing`: Partial<PricingRules>
-- `fallback`: FallbackBehaviour
-- `alternativeApproach`: string
-- `rails`: Rail[]
+This is where v2 kept most of its booleans (`discountPermitted: false`, `urgencyLanguagePermitted: false`, `maxDiscountPercent`, forbidden language, comparative rules). In 3.0.0 each is a rule: exact rules for words and competitor names, structural rules for numbers (`max_number {field: "discount_percent", max: 15}`). Approved product claims live in `narrative.semiotic.denotative.claims`.

@@ -1,98 +1,30 @@
-# Identity Component (Layer 1)
+# Identity — `identity`
 
-Normative source: [`SPEC.md`](../SPEC.md) and [`SPEC.schema.json`](../SPEC.schema.json). This page is a reading guide.
+Normative: [`SPEC.md`](../SPEC.md) section 8.1. Who the brand is.
 
-Identity is the **foundational constraint layer**: how the brand *is*, what it *looks like*, and the assets it *owns*.
+## `prism` (density)
 
-## Top-level shape
+The six facets of Kapferer's brand identity prism, used as a layout.
 
-- `identity._component`: `'identity'`
-- `identity._version`: string
-- `identity.prism`: brand character structure (physique/personality/culture/relationship/reflection/selfImage)
-- `identity.distinctiveAssets`: brand-owned assets (visual/sonic/linguistic)
-- `identity.summary`: quick-access generation summary
+| Facet | Fields |
+|---|---|
+| `physique` | `permitted`, `posture`, `referenceURL` |
+| `personality` | `characterBrief`: one sentence a writer can picture |
+| `culture` | `coreValues`, `originNarrative`, `sacredBoundary` (private unless you opt it into the summary) |
+| `relationship` | `formality`, `warmth`: integers on the shared anchored scales |
+| `reflection` | `depictedCustomer`, `ageSignal` |
+| `selfImage` | `feelingDescriptors`, `identityStatement` |
 
-## Key substructures
+Things the prism must never be or show are rules (usually `judged_bounded`), not lists here.
 
-## Prism
+## `distinctiveAssets` (facts)
 
-- `prism.physique`
-  - `permitted`: string[]
-  - `forbidden`: string[]
-  - `referenceURL?`: URL
-  - `posture`: string
+| Asset | Fields | Checked by |
+|---|---|---|
+| `visual` | `primaryColor`, `secondaryColors`, `logoUsage.minimumClearSpace`, `iconography`, `characterAssets`, `photographyStyle.{permitted, lightingMood}` | `modality: visual` rules (forbidden colours, logo misuse) |
+| `sonic` | `sonicLogoURL`, `permittedGenres`, `instrumentalMood` | `modality: audio` rules (tempo, forbidden genres) |
+| `linguistic` | `ownedPhrases`, `ownedWords`, `typographicVoice.{sentenceStructure, punctuationStyle, numeralStyle}` | exact rules on misquoted phrases; structural rules on punctuation and numerals |
 
-- `prism.personality` (five scored dimensions, 0–10)
-  - `sincerity`, `excitement`, `competence`, `sophistication`, `ruggedness`: Score (0–10)
-  - `characterBrief`: string
+## Removed in 3.0.0
 
-- `prism.culture`
-  - `coreValues`: string[]
-  - `originNarrative`: string
-  - `forbidden`: string[]
-  - `sacredBoundary`: string
-
-- `prism.relationship`
-  - `mode`: `RelationshipMode`
-  - `formality`: Score
-  - `pronoun`: `'we' | 'I' | 'brand_name_only'`
-  - `warmth`: Score
-  - `powerDynamic`: `'brand_leads' | 'equal' | 'customer_leads'`
-
-- `prism.reflection`
-  - `depictedArchetype`: string
-  - `aspirationalDelta`: Score
-  - `forbiddenArchetypes`: string[]
-  - `ageSignal`: string
-
-- `prism.selfImage`
-  - `feelingDescriptors`: string[]
-  - `identityStatement`: string
-  - `forbidden`: string[]
-
-## Distinctive assets
-
-Distinctive assets are intended to be **machine-enforceable** (exact colors/phrases, etc.).
-
-- `distinctiveAssets.visual`
-  - `primaryColor`: `Constrained<HexColor>`
-  - `secondaryColors`: HexColor[]
-  - `forbiddenColors`: HexColor[]
-  - `logoUsage`: minimum clear space + forbidden backgrounds + forbidden modifications
-  - `iconography`: string[]
-  - `characterAssets`: string[]
-  - `photographyStyle`: permitted/forbidden + lighting mood
-
-- `distinctiveAssets.sonic`
-  - `sonicLogoURL?`: URL
-  - `permittedGenres`: string[]
-  - `forbiddenGenres`: string[]
-  - `tempoRange`: `[BPM, BPM]`
-  - `instrumentalMood`: string
-
-- `distinctiveAssets.linguistic`
-  - `ownedPhrases`: `Constrained<string>[]`
-  - `ownedWords`: string[]
-  - `forbiddenWords`: `Constrained<string>[]`
-  - `typographicVoice`: sentence structure + punctuation style + numeral style
-
-## Summary
-
-`identity.summary` is the “fast path” for generation systems:
-
-- `oneLineBrief`: string
-- `threeAdjectives`: string[]
-- `neverDo`: string[]
-
-## relationship.mode
-
-Fixed per archetype — one of eight posture statements that describe how the brand shows up for people:
-
-- `"We're like you. We just happen to know a bit more about this one thing."` — Peer
-- `"Things can be better. Here is a small thing that helps."` — Optimist
-- `"We believe in what you can do before you do."` — Coach
-- `"We know more. Here is the proof."` — Expert
-- `"Built to outlast everything. Excellence as philosophy, not strategy."` — Monument
-- `"Business as a force for change. Profit is the fuel, not the point."` — Activist
-- `"Limits are the starting point. Mediocrity is the only enemy."` — Provocateur
-- `"The category is broken. We are what replaces it."` — Challenger
+Personality dimension scores, `relationship.mode`, `pronoun` (now a rule), `powerDynamic`, `aspirationalDelta`, and `identity.summary`.

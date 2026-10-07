@@ -1,271 +1,236 @@
 {
-  "meta": {
-    "brandId": "",
-    "brandName": "",
-    "schemaVersion": "2.0.0",
-    "effectiveDate": "",
-    "previousVersion": "",
-    "changelog": []
+  "ramoira": {
+    "spec_version": "3.0.0",
+    "schema_type": "full",
+    "brand_id": "your-brand",
+    "schema_version": "0.1.0",
+    "content_hash": "sha256:5002edb38d0d377f8f06662e4fec7d1a6eb3ef2423204375371163f43f5e8252",
+    "workflow_state": "draft",
+    "ratification": null,
+    "account_owner_verified": false,
+    "canonical_url": null,
+    "summary_opt_in": []
   },
+  "rules": [
+    {
+      "rule_id": "r_forbidden_terms",
+      "statement": "Never use these terms.",
+      "check_class": "deterministic_exact",
+      "severity": "absolute",
+      "topic": "identity.distinctiveAssets.linguistic",
+      "surfaces": "all",
+      "markets": "all",
+      "situations": "any",
+      "modality": "text",
+      "visibility": "public",
+      "rationale": null,
+      "match": {
+        "terms": [
+          "replace-me"
+        ],
+        "mode": "word",
+        "normalization": "casefold_nfkc"
+      },
+      "provenance": "authored",
+      "affirmed": true
+    },
+    {
+      "rule_id": "r_claims_approved",
+      "statement": "Every product claim must be one of the approved claims.",
+      "check_class": "deterministic_structural",
+      "severity": "absolute",
+      "topic": "narrative.denotative.claims",
+      "surfaces": "all",
+      "markets": "all",
+      "situations": "any",
+      "modality": "text",
+      "visibility": "public",
+      "rationale": null,
+      "predicate": {
+        "type": "claim_must_be_approved",
+        "params": {
+          "against": "/narrative/semiotic/denotative/claims"
+        }
+      },
+      "provenance": "authored",
+      "affirmed": true
+    },
+    {
+      "rule_id": "r_judged_example",
+      "statement": "A rule only judgment can check, grounded in the two examples below.",
+      "check_class": "judged_bounded",
+      "severity": "strong",
+      "topic": "voice",
+      "surfaces": "all",
+      "markets": "all",
+      "situations": "any",
+      "modality": "text",
+      "visibility": "public",
+      "rationale": null,
+      "rubric": {
+        "question": null,
+        "example_refs": [
+          "ex_approved",
+          "ex_rejected"
+        ],
+        "rail_refs": []
+      },
+      "provenance": "authored",
+      "affirmed": true
+    }
+  ],
   "identity": {
-    "_component": "identity",
-    "_version": "2.0.0",
     "prism": {
       "physique": {
         "permitted": [],
-        "forbidden": [],
-        "referenceURL": "",
         "posture": ""
       },
       "personality": {
-        "sincerity": 0,
-        "excitement": 0,
-        "competence": 0,
-        "sophistication": 0,
-        "ruggedness": 0,
         "characterBrief": ""
       },
       "culture": {
         "coreValues": [],
         "originNarrative": "",
-        "forbidden": [],
         "sacredBoundary": ""
       },
       "relationship": {
-        "mode": "We're like you. We just happen to know a bit more about this one thing.",
-        "formality": 0,
-        "pronoun": "we",
-        "warmth": 0,
-        "powerDynamic": "equal"
+        "formality": 5,
+        "warmth": 5
       },
       "reflection": {
-        "depictedArchetype": "",
-        "aspirationalDelta": 0,
-        "forbiddenArchetypes": [],
+        "depictedCustomer": "",
         "ageSignal": ""
       },
       "selfImage": {
         "feelingDescriptors": [],
-        "identityStatement": "",
-        "forbidden": []
+        "identityStatement": ""
       }
     },
     "distinctiveAssets": {
       "visual": {
-        "primaryColor": {
-          "value": "#000000",
-          "severity": "contextual",
-          "rationale": ""
-        },
         "secondaryColors": [],
-        "forbiddenColors": [],
-        "logoUsage": {
-          "minimumClearSpace": "",
-          "forbiddenBackgrounds": [],
-          "forbiddenModifications": []
-        },
         "iconography": [],
-        "characterAssets": [],
-        "photographyStyle": {
-          "permitted": [],
-          "forbidden": [],
-          "lightingMood": ""
-        }
+        "characterAssets": []
       },
       "sonic": {
-        "sonicLogoURL": "",
         "permittedGenres": [],
-        "forbiddenGenres": [],
-        "tempoRange": [0, 0],
         "instrumentalMood": ""
       },
       "linguistic": {
         "ownedPhrases": [],
-        "ownedWords": [],
-        "forbiddenWords": [],
-        "typographicVoice": {
-          "sentenceStructure": "",
-          "punctuationStyle": "",
-          "numeralStyle": ""
-        }
+        "ownedWords": []
       }
-    },
-    "summary": {
-      "oneLineBrief": "",
-      "threeAdjectives": [],
-      "neverDo": []
     }
   },
   "narrative": {
-    "_component": "narrative",
-    "_version": "2.0.0",
     "semiotic": {
       "denotative": {
-        "categoryDescriptor": "",
-        "functionalClaims": [],
+        "categoryDescriptor": "What the brand makes or does, plainly stated.",
         "specifications": [],
-        "forbiddenClaims": []
+        "claims": [
+          {
+            "claim_id": "c_example",
+            "claim": "One approved claim.",
+            "evidenceRequired": false,
+            "evidenceType": null,
+            "markets": "all",
+            "surfaces": "all"
+          }
+        ]
       },
       "connotative": {
-        "meaningClusters": [],
-        "forbiddenMeanings": [],
-        "emotionalRegister": "",
-        "minimumConnotativeTest": ""
-      },
-      "layerHierarchy": "balanced"
+        "meaningClusters": [
+          "primary meaning territory"
+        ],
+        "emotionalRegister": "How the brand makes people feel."
+      }
     },
     "myth": {
       "culturalTension": "",
-      "mythStatement": "",
+      "mythStatement": "The story the brand tells, in one sentence.",
       "protagonistRole": "",
-      "antagonist": "",
-      "mythTest": "",
-      "constraints": []
+      "antagonist": ""
     },
     "mythEvolution": {
       "principle": "",
-      "modernTensions": [],
-      "immutableCore": ""
+      "immutableCore": "",
+      "modernTensions": []
     },
     "pillars": [],
     "editorial": {
       "openingPrinciple": "",
       "structuralApproach": "",
-      "forbiddenStructures": [],
       "referencePool": [],
-      "forbiddenReferences": [],
       "timeScaleLanguage": ""
     },
-    "contentTest": {
-      "mythTest": "",
-      "connotativeTest": "",
-      "toneTest": ""
-    }
+    "guidance": []
   },
   "voice": {
-    "_component": "voice",
-    "_version": "2.0.0",
     "base": {
-      "sentenceLength": "varied",
-      "vocabularyLevel": 0,
-      "humourPermitted": false,
-      "humourStyle": "none",
-      "permittedDevices": [],
-      "forbiddenDevices": [],
-      "structuralRules": []
+      "vocabularyLevel": 5,
+      "humourStyle": {
+        "style": "none"
+      },
+      "permittedDevices": []
     },
-    "forbiddenTones": [],
-    "approvedTones": [],
-    "examples": [],
+    "approvedTones": [
+      "the tone the brand writes in"
+    ],
+    "examples": [
+      {
+        "example_id": "ex_approved",
+        "surface": "product_detail_page",
+        "text": "Copy the brand says is right.",
+        "verdict": "approved",
+        "reason": "Why it is right.",
+        "judged_by": "brand_owner",
+        "source": "authored"
+      },
+      {
+        "example_id": "ex_rejected",
+        "surface": "product_detail_page",
+        "text": "Copy the brand says is wrong.",
+        "verdict": "rejected",
+        "reason": "Why it is wrong.",
+        "judged_by": "brand_owner",
+        "source": "authored"
+      }
+    ],
     "contextVariants": [],
     "rails": {
       "global": [],
-      "alternatives": {
-        "whenPricingForbidden": [],
-        "whenUrgencyForbidden": [],
-        "whenComparativeForbidden": [],
-        "whenTrendLanguageForbidden": [],
-        "whenAccessibilityForbidden": [],
-        "whenPromotionForbidden": []
-      }
+      "alternatives": {}
     }
   },
   "commercial": {
-    "_component": "commercial",
-    "_version": "2.0.0",
     "pricing": {
-      "style": "simple",
-      "priceDisplayPermitted": true,
-      "displayFormat": "",
-      "surfaceOverrides": [],
-      "urgencyLanguagePermitted": true,
-      "scarcityLanguagePermitted": true,
-      "discountPermitted": true,
-      "maxDiscountPercent": 0,
-      "permittedLanguage": [],
-      "forbiddenLanguage": []
+      "style": "",
+      "permittedLanguage": []
     },
     "claims": {
-      "approved": [],
-      "forbidden": [],
-      "comparative": {
-        "competitorMentionPermitted": false,
-        "comparativeClaimsPermitted": false,
-        "permittedCompetitors": [],
-        "forbiddenFramings": []
-      },
       "superlatives": {
-        "permitted": false,
-        "approved": [],
-        "forbidden": []
+        "approved": []
       }
     },
     "offers": {
-      "permittedTypes": [],
-      "forbiddenTypes": [],
-      "communicationRules": {
-        "urgencyPermitted": false,
-        "scarcityPermitted": false,
-        "valueFraming": ""
-      }
+      "permittedTypes": []
     },
     "socialProof": {
-      "starRatingsPermitted": false,
-      "reviewCountsPermitted": false,
-      "customerTestimonialsPermitted": false,
-      "celebrityEndorsementStyle": "",
-      "permittedAuthoritySignals": [],
-      "forbiddenSocialProof": []
-    },
-    "surfaceRules": [],
-    "globalForbiddenTerms": []
+      "permittedAuthoritySignals": []
+    }
   },
   "governance": {
-    "_component": "governance",
-    "_version": "2.0.0",
-    "severity": {
-      "absolute": {
-        "constraints": [],
-        "violationResponse": "block_output"
-      },
-      "strong": {
-        "constraints": [],
-        "overrideProcess": "",
-        "violationResponse": "flag_for_review"
-      },
-      "contextual": {
-        "constraints": [],
-        "judgmentBounds": "",
-        "violationResponse": "log_for_audit"
-      }
-    },
     "conflictResolution": {
-      "componentPriority": ["governance", "narrative", "identity", "voice", "commercial"],
+      "componentPriority": [],
       "knownConflicts": [],
       "defaultResolution": "escalate_to_human"
     },
-    "surfaceRules": [],
-    "overrideProtocol": {
+    "situations": [],
+    "surfaces": [],
+    "override": {
       "authorisedRoles": [],
-      "requiredFields": [],
-      "maxDurationDays": 0,
-      "auditLogEndpoint": ""
+      "requiredFields": []
     },
-    "compliance": {
-      "violationWebhook": "",
-      "routing": {
-        "absolute": "",
-        "strong": "",
-        "contextual": ""
-      },
-      "humanReviewTopics": [],
-      "zeroToleranceTerms": [],
-      "geographicOverrides": []
-    },
-    "preflight": {
-      "question1": "",
-      "question2": "",
-      "question3": ""
-    }
+    "reviewTopics": []
   }
 }

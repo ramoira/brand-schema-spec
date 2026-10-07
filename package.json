@@ -1,0 +1,26 @@
+{
+  "name": "@ramoira/brand-schema-spec",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Ramoira brand schema specification 3.0.0: normative JSON Schemas and the reference validator.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "validate": "node validation/validate.ts",
+    "hash": "node validation/hash.ts",
+    "summarize": "node validation/summarize.ts",
+    "test": "node --test validation/test/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.0",
+    "typescript": "^5.9.0"
+  }
+}

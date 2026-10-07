@@ -1,0 +1,247 @@
+{
+  "ramoira": {
+    "spec_version": "3.0.0",
+    "schema_type": "archetype",
+    "brand_id": null,
+    "schema_version": "illustrative",
+    "content_hash": "sha256:e2b3772c60e782151ea49457275936786e426587911fb6b944347ad4cc2d4cfc",
+    "workflow_state": "draft",
+    "ratification": null,
+    "account_owner_verified": false,
+    "canonical_url": null
+  },
+  "archetype": {
+    "archetype_id": "workshop",
+    "name": "The Workshop (illustrative)",
+    "tagline": "Made properly, used for years.",
+    "core_insight": "The product gets better with use, and the brand says plainly what that use asks of you.",
+    "exemplars": [],
+    "not_for": [
+      "brands whose product is meant to be replaced often",
+      "brands that sell on effortlessness"
+    ],
+    "delta_zones": [
+      {
+        "zone_id": "dz_effort",
+        "label": "Effort and care",
+        "question": "When a customer says the product sounds like hard work, what do you say?",
+        "impact": "high",
+        "fields": [
+          "/narrative/mythEvolution/modernTensions"
+        ],
+        "divergence_signals": [
+          {
+            "signal": "The brand wants to minimise the effort",
+            "delta": "Replace the effort tension with a convenience tension; keep the no-gadget rule under review",
+            "fields": [
+              "/narrative/mythEvolution/modernTensions",
+              "/rules"
+            ]
+          }
+        ]
+      },
+      {
+        "zone_id": "dz_heritage",
+        "label": "Age and heritage",
+        "question": "How old is the craft you draw on, and how old are you?",
+        "impact": "medium",
+        "fields": [
+          "/identity/prism/culture/originNarrative"
+        ]
+      },
+      {
+        "zone_id": "dz_pricing",
+        "label": "Price framing",
+        "question": "Do you show prices, and how do you talk about them?",
+        "impact": "high",
+        "fields": [
+          "/commercial/pricing/style",
+          "/commercial/offers/communicationRules/valueFraming"
+        ]
+      },
+      {
+        "zone_id": "dz_competitor",
+        "label": "When a competitor makes a claim about you",
+        "question": "A competitor says their product outlasts yours. What do you do?",
+        "impact": "medium",
+        "fields": [
+          "/governance/situations"
+        ],
+        "situation_ids": [
+          "sit_competitor_claim"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "r_no_disposable_language",
+      "statement": "Never use the vocabulary of disposability about the product.",
+      "check_class": "deterministic_exact",
+      "severity": "contextual",
+      "topic": "narrative.connotative",
+      "surfaces": "all",
+      "markets": "all",
+      "situations": "any",
+      "modality": "text",
+      "visibility": "public",
+      "rationale": "The archetype's promise is longevity.",
+      "match": {
+        "terms": [
+          "disposable",
+          "throwaway",
+          "replace it every year"
+        ],
+        "mode": "phrase",
+        "normalization": "casefold_nfkc"
+      },
+      "provenance": "authored",
+      "affirmed": true
+    },
+    {
+      "rule_id": "r_not_a_gadget",
+      "statement": "Never present the product as a gadget, a hack or a shortcut.",
+      "check_class": "judged_bounded",
+      "severity": "strong",
+      "topic": "narrative.connotative",
+      "surfaces": "all",
+      "markets": "all",
+      "situations": "any",
+      "modality": "text",
+      "visibility": "public",
+      "rationale": null,
+      "rubric": {
+        "question": "Does this present the product as something you grow into, or as a trick?",
+        "example_refs": [
+          "ex_tool",
+          "ex_hack"
+        ],
+        "rail_refs": []
+      },
+      "provenance": "authored",
+      "affirmed": true
+    },
+    {
+      "rule_id": "r_no_urgency",
+      "statement": "No urgency or scarcity language.",
+      "check_class": "deterministic_exact",
+      "severity": "strong",
+      "topic": "commercial.pricing.urgency",
+      "surfaces": "all",
+      "markets": "all",
+      "situations": "any",
+      "modality": "text",
+      "visibility": "private",
+      "rationale": null,
+      "match": {
+        "terms": [
+          "ends tonight",
+          "last chance",
+          "hurry"
+        ],
+        "mode": "phrase",
+        "normalization": "casefold_nfkc"
+      },
+      "provenance": "authored",
+      "affirmed": true
+    }
+  ],
+  "identity": {
+    "prism": {
+      "physique": {
+        "posture": "Looks better after years of use than on the first day."
+      },
+      "personality": {
+        "characterBrief": "The experienced maker who tells you how to look after it."
+      },
+      "relationship": {
+        "formality": 4,
+        "warmth": 6
+      }
+    }
+  },
+  "narrative": {
+    "semiotic": {
+      "denotative": {
+        "categoryDescriptor": "Durable goods made to be used for years."
+      },
+      "connotative": {
+        "meaningClusters": [
+          "things that improve with use",
+          "competence you earn"
+        ],
+        "emotionalRegister": "Quiet pride in something well looked after."
+      }
+    },
+    "myth": {
+      "mythStatement": "The product is not finished when you buy it. Use finishes it.",
+      "antagonist": "The idea that things are consumables."
+    },
+    "mythEvolution": {
+      "immutableCore": "Use makes it better.",
+      "modernTensions": [
+        {
+          "tension": "Convenience culture says any effort is a defect.",
+          "mythResolution": "State the care plainly; do not hide it."
+        }
+      ]
+    }
+  },
+  "voice": {
+    "base": {
+      "vocabularyLevel": 5,
+      "humourStyle": {
+        "style": "dry",
+        "frequency": "sparingly"
+      }
+    },
+    "approvedTones": [
+      "plain-spoken",
+      "practical"
+    ],
+    "examples": [
+      {
+        "example_id": "ex_tool",
+        "surface": "product_detail_page",
+        "text": "Use it often and it gets better. Here is the one minute of care it needs.",
+        "verdict": "approved",
+        "reason": "Use over years; care stated plainly.",
+        "judged_by": "archetype_template",
+        "source": "authored"
+      },
+      {
+        "example_id": "ex_hack",
+        "surface": "product_detail_page",
+        "text": "The life hack that does everything for you.",
+        "verdict": "rejected",
+        "reason": "Gadget framing.",
+        "judged_by": "archetype_template",
+        "source": "authored"
+      }
+    ]
+  },
+  "commercial": {
+    "pricing": {
+      "style": "transparent"
+    },
+    "offers": {
+      "communicationRules": {
+        "valueFraming": "Cost per year of use."
+      }
+    }
+  },
+  "governance": {
+    "situations": [
+      {
+        "situation_id": "sit_competitor_claim",
+        "trigger": "A competitor publicly claims its product outlasts the brand's.",
+        "category": "competitor_action",
+        "posture": "Do not reply to the claim. Keep showing the product in long use.",
+        "voice": {
+          "persona": "normal"
+        },
+        "suspended_rule_ids": []
+      }
+    ]
+  }
+}

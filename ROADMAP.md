@@ -26,9 +26,7 @@
 ## Ground truth sources
 
 Read these, don't invent:
-- `platform/lib/brand-schema/components/` — all 5 component type definitions
-- `platform/lib/brand-schema/types.ts` — OutputSurface (17), UserIntent (8), ConstraintSeverity, FallbackBehaviour, Constrained<T>, Rail
-- `platform/lib/brand-schema/rolex/schema.v2.ts` — reference implementation
+- *(Private implementation paths removed in 3.0.0. The spec in this repository is normative.)*
 
 ---
 

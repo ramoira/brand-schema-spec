@@ -1,0 +1,10 @@
+{
+  "adoption_id": "adoption_0001",
+  "brand_id": "corvane",
+  "producer": { "producer_id": "producer_example_agency", "producer_class": "agency" },
+  "scope": { "surfaces": ["product_detail_page", "email_retention"], "markets": ["GB"] },
+  "schema_hashes": ["sha256:eaed480d372bcbef2cee6798f2d142003dfcdb71585f64da08cda7b6c486f863"],
+  "adopted_by": "head of brand",
+  "adopted_at": "2026-10-07T09:00:00Z",
+  "revoked_at": null
+}

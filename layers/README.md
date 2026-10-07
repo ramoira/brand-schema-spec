@@ -1,26 +1,14 @@
-# Layer / Component Reference
+# Reading guide
 
-This folder is a reading guide to the Ramoira brand schema, one page per component. The normative definition is [`SPEC.md`](../SPEC.md) with [`SPEC.schema.json`](../SPEC.schema.json) and [`SPEC.summary.schema.json`](../SPEC.summary.schema.json).
+One page per part of a 3.0.0 schema. The normative definition is [`SPEC.md`](../SPEC.md) with the JSON Schemas; where a page here disagrees with them, the spec wins.
 
-## Components
+| Page | Part |
+|---|---|
+| [`rules.md`](rules.md) | The rule registry: everything that can be checked |
+| [`identity.md`](identity.md) | Who the brand is: prism and distinctive assets |
+| [`narrative.md`](narrative.md) | What the brand means: facts, claims, myth, pillars |
+| [`voice.md`](voice.md) | How the brand writes: tones, judged examples, surface variants, rails |
+| [`commercial.md`](commercial.md) | How the brand sells: pricing, offers, social proof |
+| [`governance.md`](governance.md) | How the brand operates the schema: situations, surfaces, overrides |
 
-A full schema is composed of five components plus `meta`:
-
-- `meta` — brand identity + versioning metadata
-- `identity` — brand character structure + distinctive assets (hard constraints)
-- `narrative` — meaning layers + brand story + pillars (meaning constraints)
-- `voice` — base voice parameters + examples + surface variants + positive rails
-- `commercial` — pricing/claims/offers/social-proof rules (conversion constraints)
-- `governance` — severity registry + conflict resolution + surface rules + compliance
-
-## How to use these docs
-
-- For **field-level types**, use `SPEC.md` (component sections and shared primitive types) and the JSON Schemas. Where a page here disagrees with them, the spec wins.
-
-## Files
-
-- `identity.md`
-- `narrative.md`
-- `voice.md`
-- `commercial.md`
-- `governance.md`
+**One rule of thumb for every page:** if a sentence says "never", "must" or "only", it belongs in `rules`, not in a layer. Layers hold what rules check against (facts) and what producers write from (density).
