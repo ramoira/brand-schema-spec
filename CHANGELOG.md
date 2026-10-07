@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- The validator is installable as a package, `@ramoira/schema`, from GitHub (`npm install github:ramoira/brand-schema-spec#<commit>`): it builds to `dist/` on install and exports `validateDocument`, `computeContentHash`, `extractSummary` and the three JSON Schemas. No change to the format.
+
 ## 3.0.0
 
 Breaking. See `migrations/2.0.0-to-3.0.0.md`.

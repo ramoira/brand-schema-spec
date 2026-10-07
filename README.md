@@ -55,6 +55,18 @@ npm run summarize -- path/to/brand.schema.json path/to/brand.schema.summary.json
 npm test
 ```
 
+## Use the validator from code
+
+```bash
+npm install github:ramoira/brand-schema-spec#<commit>
+```
+
+```ts
+import { validateDocument } from '@ramoira/schema'
+```
+
+See [`validation/README.md`](validation/README.md).
+
 ## CLI
 
 The Ramoira CLI drafts, validates and publishes schemas: [github.com/ramoira/cli](https://github.com/ramoira/cli).

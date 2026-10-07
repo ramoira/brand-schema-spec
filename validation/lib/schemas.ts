@@ -1,22 +1,21 @@
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import AjvModule from 'ajv/dist/2020.js'
 import formatsModule from 'ajv-formats'
 import type { ErrorObject, ValidateFunction } from 'ajv'
+// JSON imports, not file reads: bundlers (tsup, Next.js) inline these, so the
+// validator keeps working when its code is bundled into another package.
+import specJson from '../../SPEC.schema.json' with { type: 'json' }
+import summaryJson from '../../SPEC.summary.schema.json' with { type: 'json' }
+import recordJson from '../../record.schema.json' with { type: 'json' }
 
-// ajv and ajv-formats are CommonJS; under Node's ESM loader the real export sits on `.default`.
-const Ajv2020 = AjvModule.default
-const addFormats = formatsModule.default
+// ajv and ajv-formats are CommonJS. Node's ESM loader puts the class on
+// `.default`; some bundlers hand back the class itself. Accept either.
+const interop = <T,>(mod: T): T => ((mod as { default?: T }).default ?? mod)
+const Ajv2020 = interop(AjvModule.default)
+const addFormats = interop(formatsModule.default)
 
-const repoRoot = new URL('../../', import.meta.url)
-
-function load(name: string): Record<string, unknown> {
-  return JSON.parse(readFileSync(fileURLToPath(new URL(name, repoRoot)), 'utf8'))
-}
-
-export const specSchema = load('SPEC.schema.json')
-export const summarySchema = load('SPEC.summary.schema.json')
-export const recordSchema = load('record.schema.json')
+export const specSchema = specJson as Record<string, unknown>
+export const summarySchema = summaryJson as Record<string, unknown>
+export const recordSchema = recordJson as Record<string, unknown>
 
 const ajv = new Ajv2020({ strict: true, strictTypes: false, strictRequired: false, allErrors: true, allowUnionTypes: true })
 addFormats(ajv)
