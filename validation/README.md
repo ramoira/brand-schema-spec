@@ -20,10 +20,21 @@ Warnings (thinness, unresolved `draft_provenance` pointers) never fail validatio
 
 ## As a library
 
+The package is `@ramoira/schema`. It is not on npm yet; install it from GitHub, pinned to a commit:
+
+```bash
+npm install github:ramoira/brand-schema-spec#<commit>
+```
+
+npm builds it on install (the `prepare` script compiles `validation/` to `dist/`). It needs Node.js 20.10 or later at runtime; developing in this repository needs 22.18 (TypeScript runs directly).
+
 ```ts
-import { validateDocument, computeContentHash, extractSummary } from './validation/index.ts'
+import { validateDocument, computeContentHash, extractSummary } from '@ramoira/schema'
+import spec from '@ramoira/schema/SPEC.schema.json' with { type: 'json' }
 
 const { kind, valid, issues } = validateDocument(doc)
 ```
+
+The JSON Schemas are imported rather than read from disk, so bundlers (tsup, Next.js) inline them and the validator keeps working inside a bundle.
 
 `content_hash` is `"sha256:" + hex(SHA-256(JCS({rules, identity, narrative, voice, commercial, governance})))`, with JCS per RFC 8785 (`lib/jcs.ts`). Other implementations must produce the same hash for the same schema.
