@@ -1,85 +1,22 @@
-# Narrative Component (Layer 2)
+# Narrative — `narrative`
 
-Normative source: [`SPEC.md`](../SPEC.md) and [`SPEC.schema.json`](../SPEC.schema.json). This page is a reading guide.
+Normative: [`SPEC.md`](../SPEC.md) section 8.2. What the brand means.
 
-Narrative encodes **meaning**: what the brand literally does and what it stands for, plus the brand story and the rails that protect it.
+## Facts: `semiotic.denotative`
 
-## Top-level shape
+- `categoryDescriptor` (required): what the brand makes or does, plainly.
+- `specifications`: checkable facts about the product.
+- `claims[]`: **the** list of approved claims, `{claim_id, claim, evidenceRequired, evidenceType, markets, surfaces}`. A `claim_must_be_approved` rule checks every product claim against it, so keep it complete and exact.
 
-- `narrative._component`: `'narrative'`
-- `narrative._version`: string
-- `narrative.semiotic`: literal meaning + associative meaning layers
-- `narrative.myth`: brand story layer (tension → statement + constraints)
-- `narrative.mythEvolution`: how the myth absorbs modern tensions
-- `narrative.pillars`: NarrativePillar[]
-- `narrative.editorial`: long-form storytelling rules
-- `narrative.contentTest`: quick pass/fail questions
+## Density
 
-## Semiotic layer
+| Field | Holds |
+|---|---|
+| `semiotic.connotative.{meaningClusters, emotionalRegister}` | The meaning territory the brand owns |
+| `myth.{culturalTension, mythStatement, protagonistRole, antagonist}` | The story the brand tells about the world (`mythStatement` required) |
+| `mythEvolution.{principle, immutableCore, modernTensions[]}` | How the story meets current tensions; each tension can carry rails |
+| `pillars[].{name, description, coreClaim, approvedArcs, surfaces, rails}` | The themes content returns to |
+| `editorial.{openingPrinciple, structuralApproach, referencePool, timeScaleLanguage}` | How a piece is built |
+| `guidance[].{question, applies_to}` | Test questions you cannot yet illustrate with examples. They guide writers and never produce a finding. |
 
-- `semiotic.denotative`
-  - `categoryDescriptor`: string
-  - `functionalClaims`: string[]
-  - `specifications`: string[]
-  - `forbiddenClaims`: string[]
-
-- `semiotic.connotative`
-  - `meaningClusters`: string[]
-  - `forbiddenMeanings`: string[]
-  - `emotionalRegister`: string
-  - `minimumConnotativeTest`: string
-
-- `semiotic.layerHierarchy`: `'connotative_first' | 'balanced' | 'denotative_first'`
-
-## Myth
-
-- `myth.culturalTension`: string
-- `myth.mythStatement`: string
-- `myth.protagonistRole`: string
-- `myth.antagonist`: string
-- `myth.mythTest`: string
-- `myth.constraints`: MythConstraint[]
-  - `constraint`: string
-  - `severity`: `ConstraintSeverity` (`absolute` | `strong` | `contextual`)
-  - `rationale`: string
-  - `example`: string
-
-## Myth evolution
-
-`mythEvolution` allows a stable myth to address new pressures without “trend-chasing”.
-
-- `mythEvolution.principle`: string
-- `mythEvolution.modernTensions`: ModernTension[]
-  - `tension`: string
-  - `mythResolution`: string
-  - `permittedFraming`: string[]
-  - `forbiddenFraming`: string[]
-  - `rails`: Rail[]
-- `mythEvolution.immutableCore`: string
-
-## Pillars
-
-Each pillar is a reusable narrative module with surface scoping.
-
-- `pillars[].name`: string
-- `pillars[].description`: string
-- `pillars[].coreClaim`: string
-- `pillars[].approvedArcs`: string[]
-- `pillars[].forbiddenInversions`: string[]
-- `pillars[].surfaces`: string[]
-- `pillars[].rails`: Rail[]
-
-## Editorial guidelines
-
-- `editorial.openingPrinciple`: string
-- `editorial.structuralApproach`: string
-- `editorial.forbiddenStructures`: string[]
-- `editorial.referencePool`: string[]
-- `editorial.forbiddenReferences`: string[]
-- `editorial.timeScaleLanguage`: string
-
-## Content test
-
-- `contentTest.mythTest`: string
-- `contentTest.connotativeTest`: string
-- `contentTest.toneTest`: string
+Forbidden claims, meanings, framings, inversions, structures and references are rules.

@@ -1,24 +1,41 @@
 {
-  "meta": {
-    "brandId": "example-brand",
-    "brandName": "Example Brand",
-    "schemaVersion": "2.0.0",
-    "schemaType": "summary",
-    "canonicalURL": "https://ramoira.com/brands/example-brand/schema.summary.json"
+  "ramoira": {
+    "spec_version": "3.0.0",
+    "schema_type": "summary",
+    "brand_id": "example-brand",
+    "schema_version": "0.1.0",
+    "content_hash": "sha256:7b0cb0c0c543ed2252832a71dc03c15014d2fc152cd2b877b2a58bde3ec0242e",
+    "workflow_state": "draft",
+    "ratification": null,
+    "account_owner_verified": false,
+    "canonical_url": null,
+    "summary_opt_in": []
   },
-  "identity": {
-    "summary": {
-      "oneLineBrief": "One sentence that captures what this brand does and who it does it for.",
-      "threeAdjectives": ["adjective-one", "adjective-two", "adjective-three"],
-      "neverDo": ["The one thing this brand absolutely never does."]
-    },
-    "prism": {
-      "relationship": {
-        "mode": "We're like you. We just happen to know a bit more about this one thing.",
-        "formality": 5,
-        "warmth": 6
-      }
+  "rules": [
+    {
+      "rule_id": "r_example_forbidden_term",
+      "statement": "Never use the one term this brand forbids.",
+      "check_class": "deterministic_exact",
+      "severity": "absolute",
+      "topic": "identity.distinctiveAssets.linguistic",
+      "surfaces": "all",
+      "markets": "all",
+      "situations": "any",
+      "modality": "text",
+      "visibility": "public",
+      "match": {
+        "terms": [
+          "forbidden-term"
+        ],
+        "mode": "word",
+        "normalization": "casefold_nfkc"
+      },
+      "provenance": "authored",
+      "affirmed": true
     }
+  ],
+  "identity": {
+    "prism": {}
   },
   "narrative": {
     "semiotic": {
@@ -26,50 +43,25 @@
         "categoryDescriptor": "What this brand makes or does, plainly stated."
       },
       "connotative": {
-        "meaningClusters": ["primary meaning territory"],
+        "meaningClusters": [
+          "primary meaning territory"
+        ],
         "emotionalRegister": "How this brand makes people feel."
       }
     },
     "myth": {
-      "mythStatement": "The belief or stance that defines this brand worldview.",
-      "mythTest": "A question to ask of any content: does it carry the myth?"
-    },
-    "contentTest": {
-      "mythTest": "Does this content carry the brand myth?",
-      "connotativeTest": "Does this content evoke the right emotional register?",
-      "toneTest": "Does this content sound like this brand?"
+      "mythStatement": "The story the brand tells about the world, in one sentence."
     }
   },
   "voice": {
     "base": {
-      "sentenceLength": "varied",
-      "vocabularyLevel": 6,
-      "humourPermitted": false,
-      "humourStyle": "none"
-    },
-    "approvedTones": ["tone-one"],
-    "forbiddenTones": ["forbidden-tone-one"],
-    "examples": [
-      {
-        "text": "An example of on-brand writing for this brand.",
-        "verdict": "approved",
-        "reason": "Why this is on-brand."
-      },
-      {
-        "text": "A second on-brand example.",
-        "verdict": "approved",
-        "reason": "Why this is also on-brand."
-      },
-      {
-        "text": "An example of off-brand writing this brand would never use.",
-        "verdict": "rejected",
-        "reason": "Why this fails the brand voice test."
-      },
-      {
-        "text": "A second off-brand example this brand would reject.",
-        "verdict": "rejected",
-        "reason": "Why this also fails."
+      "vocabularyLevel": 5,
+      "humourStyle": {
+        "style": "none"
       }
+    },
+    "approvedTones": [
+      "the tone this brand writes in"
     ]
   }
 }

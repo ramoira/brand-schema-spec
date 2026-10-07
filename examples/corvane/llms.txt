@@ -1,0 +1,7 @@
+# Corvane — Ramoira brand schema 3.0.0 example (fictional brand)
+
+Corvane is a fictional cookware maker. This schema illustrates the 3.0.0 format and is not ratified.
+
+- [Full schema](brand.schema.json): rules of every check class, situations, draft provenance
+- [Summary](brand.schema.summary.json): the public extract
+- [Specification](../../SPEC.md)

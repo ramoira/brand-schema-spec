@@ -1,815 +1,731 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ramoira.com/schema/SPEC.schema.json",
-  "title": "Ramoira Brand Schema (Full) v2.0.0",
+  "$id": "https://ramoira.com/schema/v3/SPEC.schema.json",
+  "title": "Ramoira Brand Schema 3.0.0 (full and archetype)",
+  "description": "Normative JSON Schema for a full brand schema (schema_type: full) and an archetype template (schema_type: archetype). The public summary has its own schema, SPEC.summary.schema.json. Checks that JSON Schema cannot express (unique ids, reference resolution, rubric sufficiency, ratification conditions, content_hash recomputation, scale ranges) are enforced by the reference validator in validation/. See SPEC.md section 9.",
   "type": "object",
-  "required": ["meta", "identity", "narrative", "voice", "commercial", "governance"],
-  "additionalProperties": true,
+  "required": ["ramoira", "rules", "identity", "narrative", "voice", "commercial", "governance"],
+  "additionalProperties": false,
   "properties": {
-    "meta": { "$ref": "#/$defs/Meta" },
-    "identity": { "$ref": "#/$defs/IdentityComponent" },
-    "narrative": { "$ref": "#/$defs/NarrativeComponent" },
-    "voice": { "$ref": "#/$defs/VoiceComponent" },
-    "commercial": { "$ref": "#/$defs/CommercialComponent" },
-    "governance": { "$ref": "#/$defs/GovernanceComponent" }
-  },
-
-  "$defs": {
-
-    "ConstraintSeverity": {
-      "type": "string",
-      "enum": ["absolute", "strong", "contextual"]
+    "ramoira": { "$ref": "#/$defs/Ramoira" },
+    "rules": {
+      "type": "array",
+      "description": "The rule registry. The only place a prohibition or requirement lives, and the only thing that can produce a verdict.",
+      "items": { "$ref": "#/$defs/Rule" }
     },
-
-    "FallbackBehaviour": {
+    "identity": { "$ref": "#/$defs/Identity" },
+    "narrative": { "$ref": "#/$defs/Narrative" },
+    "voice": { "$ref": "#/$defs/Voice" },
+    "commercial": { "$ref": "#/$defs/Commercial" },
+    "governance": { "$ref": "#/$defs/Governance" },
+    "draft_provenance": { "$ref": "#/$defs/DraftProvenance" },
+    "archetype": { "$ref": "#/$defs/Archetype" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "ramoira": { "properties": { "schema_type": { "const": "archetype" } } } }
+      },
+      "then": {
+        "required": ["archetype"],
+        "properties": {
+          "ramoira": {
+            "properties": {
+              "brand_id": { "type": "null" },
+              "ratification": { "type": "null" },
+              "canonical_url": { "type": "null" }
+            }
+          }
+        }
+      },
+      "else": {
+        "not": { "required": ["archetype"] }
+      }
+    }
+  ],
+  "$defs": {
+    "SpecVersion": { "const": "3.0.0" },
+    "ContentHash": {
       "type": "string",
-      "enum": [
-        "refuse_to_generate",
-        "escalate_to_human",
-        "use_brand_default",
-        "use_minimal_safe"
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "\"sha256:\" + lowercase hex SHA-256 of the RFC 8785 (JCS) canonical form of {rules, identity, narrative, voice, commercial, governance}."
+    },
+    "Id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "JsonPointer": {
+      "type": "string",
+      "pattern": "^(/([^/~]|~[01])*)+$",
+      "description": "RFC 6901 JSON pointer from the root of the schema document, e.g. /narrative/myth/culturalTension."
+    },
+    "IsoDate": {
+      "anyOf": [
+        { "type": "string", "format": "date" },
+        { "type": "string", "format": "date-time" }
       ]
     },
-
+    "NonEmptyString": { "type": "string", "minLength": 1 },
+    "StringList": { "type": "array", "items": { "$ref": "#/$defs/NonEmptyString" } },
+    "Severity": {
+      "type": "string",
+      "enum": ["absolute", "strong", "contextual"],
+      "description": "The only enforcement setting. The violation response is derived by the Verification Protocol (absolute: block_output; strong: flag_for_review; contextual: log_for_audit) and is never stored."
+    },
+    "CheckClass": {
+      "type": "string",
+      "enum": ["deterministic_exact", "deterministic_structural", "judged_bounded"],
+      "description": "There is no advisory_only rule. Advisory material is density and lives in the layers."
+    },
     "OutputSurface": {
       "type": "string",
       "enum": [
-        "search_result_page",
-        "paid_landing_page",
-        "product_detail_page",
-        "comparison_page",
-        "editorial",
-        "brand_narrative",
-        "social_organic",
-        "social_paid",
-        "email_acquisition",
-        "email_retention",
-        "display_ad",
-        "video_script",
-        "audio_script",
-        "press_release",
-        "customer_service",
-        "packaging_copy",
-        "out_of_home"
-      ]
+        "search_result_page", "paid_landing_page", "product_detail_page", "comparison_page",
+        "editorial", "brand_narrative", "social_organic", "social_paid", "email_acquisition",
+        "email_retention", "display_ad", "video_script", "audio_script", "press_release",
+        "customer_service", "packaging_copy", "out_of_home"
+      ],
+      "description": "Where content appears. The one canonical surface list; the verdict record uses the same values."
     },
-
     "UserIntent": {
       "type": "string",
       "enum": [
-        "high_intent_buyer",
-        "early_research",
-        "brand_discovery",
-        "competitor_comparison",
-        "post_purchase",
-        "service_enquiry",
-        "press_media",
-        "investor"
-      ]
+        "high_intent_buyer", "early_research", "brand_discovery", "competitor_comparison",
+        "post_purchase", "service_enquiry", "press_media", "investor"
+      ],
+      "description": "Who content is for."
     },
-
-    "RelationshipMode": {
+    "FallbackBehaviour": {
       "type": "string",
-      "enum": [
-        "We're like you. We just happen to know a bit more about this one thing.",
-        "Things can be better. Here is a small thing that helps.",
-        "We believe in what you can do before you do.",
-        "We know more. Here is the proof.",
-        "Built to outlast everything. Excellence as philosophy, not strategy.",
-        "Business as a force for change. Profit is the fuel, not the point.",
-        "Limits are the starting point. Mediocrity is the only enemy.",
-        "The category is broken. We are what replaces it."
-      ]
+      "enum": ["refuse_to_generate", "escalate_to_human", "use_brand_default", "use_minimal_safe"],
+      "description": "The brand's instruction to its own producers. Ramoira never executes it."
     },
-
-    "PricingStyle": {
-      "type": "string",
-      "enum": ["opaque", "transparent", "anchored", "value_led", "simple"]
-    },
-
     "SentenceLength": {
       "type": "string",
       "enum": ["short", "varied", "long", "fragments_permitted"]
     },
-
-    "HumourStyle": {
-      "type": "string",
-      "enum": ["dry", "self_deprecating", "absurdist", "warm", "irreverent", "none"]
-    },
-
-    "LayerHierarchy": {
-      "type": "string",
-      "enum": ["connotative_first", "balanced", "denotative_first"]
-    },
-
-    "HexColor": {
-      "type": "string",
-      "pattern": "^#[0-9A-Fa-f]{6}$"
-    },
-
-    "Score": {
-      "type": "number",
+    "HexColor": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+    "Scale": {
+      "type": "integer",
       "minimum": 0,
-      "maximum": 10
+      "maximum": 10,
+      "description": "A value on a shared anchored scale (SPEC.md section 6.6)."
+    },
+    "ScaleDelta": { "type": "integer", "minimum": -10, "maximum": 10 },
+    "SurfaceScope": {
+      "oneOf": [
+        { "const": "all" },
+        { "type": "array", "items": { "$ref": "#/$defs/OutputSurface" }, "minItems": 1, "uniqueItems": true }
+      ]
+    },
+    "MarketScope": {
+      "oneOf": [
+        { "const": "all" },
+        { "type": "array", "items": { "$ref": "#/$defs/NonEmptyString" }, "minItems": 1, "uniqueItems": true }
+      ]
+    },
+    "SituationScope": {
+      "oneOf": [
+        { "const": "any" },
+        { "type": "array", "items": { "$ref": "#/$defs/Id" }, "minItems": 1, "uniqueItems": true }
+      ]
     },
 
-    "ConstrainedString": {
+    "Ramoira": {
       "type": "object",
-      "required": ["value", "severity"],
+      "description": "Metadata. Outside content_hash. Carries no result of any kind.",
+      "required": [
+        "spec_version", "schema_type", "brand_id", "schema_version", "content_hash",
+        "workflow_state", "ratification", "account_owner_verified", "canonical_url"
+      ],
+      "additionalProperties": false,
       "properties": {
-        "value": { "type": "string" },
-        "severity": { "$ref": "#/$defs/ConstraintSeverity" },
-        "rationale": { "type": "string" }
-      },
-      "additionalProperties": true
+        "spec_version": { "$ref": "#/$defs/SpecVersion" },
+        "schema_type": {
+          "type": "string",
+          "enum": ["full", "archetype"],
+          "description": "full: the brand's own schema. archetype: a drafting-instrument template, never ratifiable. (summary: see SPEC.summary.schema.json.)"
+        },
+        "brand_id": { "type": ["string", "null"], "minLength": 1 },
+        "schema_version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A human label only. Versioning truth is content_hash."
+        },
+        "content_hash": { "$ref": "#/$defs/ContentHash" },
+        "workflow_state": {
+          "type": "string",
+          "enum": ["draft", "in_review", "published", "archived"],
+          "description": "Publication lifecycle only. Never encodes ratification or certification."
+        },
+        "ratification": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/Ratification" }]
+        },
+        "account_owner_verified": {
+          "type": "boolean",
+          "description": "The account controls this slug. Never read as ratification."
+        },
+        "canonical_url": { "type": ["string", "null"], "format": "uri" },
+        "summary_opt_in": { "$ref": "#/$defs/SummaryOptIn" }
+      }
+    },
+    "SummaryOptIn": {
+      "type": "array",
+      "description": "Default-excluded material the brand chooses to include in its public summary. Identical options at every tier. Outside content_hash: a publishing choice, not brand meaning.",
+      "items": { "type": "string", "enum": ["commercial", "governance", "sacred_boundary"] },
+      "uniqueItems": true
+    },
+    "Ratification": {
+      "type": "object",
+      "description": "A pointer only. Ramoira's record holds the authoritative copy.",
+      "required": ["ratification_id", "ratified_hash", "ratified_at", "ratifier_role"],
+      "additionalProperties": false,
+      "properties": {
+        "ratification_id": { "$ref": "#/$defs/Id" },
+        "ratified_hash": { "$ref": "#/$defs/ContentHash" },
+        "ratified_at": { "type": "string", "format": "date-time" },
+        "ratifier_role": { "$ref": "#/$defs/NonEmptyString" }
+      }
     },
 
-    "ConstrainedHexColor": {
+    "Rule": {
       "type": "object",
-      "required": ["value", "severity"],
+      "required": [
+        "rule_id", "statement", "check_class", "severity", "topic", "surfaces", "markets",
+        "situations", "modality", "visibility", "provenance", "affirmed"
+      ],
+      "additionalProperties": false,
       "properties": {
-        "value": { "$ref": "#/$defs/HexColor" },
-        "severity": { "$ref": "#/$defs/ConstraintSeverity" },
-        "rationale": { "type": "string" }
+        "rule_id": { "$ref": "#/$defs/Id" },
+        "statement": { "$ref": "#/$defs/NonEmptyString" },
+        "check_class": { "$ref": "#/$defs/CheckClass" },
+        "severity": { "$ref": "#/$defs/Severity" },
+        "topic": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$",
+          "description": "Dot path naming what the rule is about, e.g. commercial.pricing.urgency."
+        },
+        "surfaces": { "$ref": "#/$defs/SurfaceScope" },
+        "markets": { "$ref": "#/$defs/MarketScope" },
+        "situations": { "$ref": "#/$defs/SituationScope" },
+        "modality": { "type": "string", "enum": ["text", "visual", "audio"] },
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "private"],
+          "description": "Governs the public summary only. Conventionally private for commercial.* and governance.* topics, public otherwise; the brand may change either."
+        },
+        "rationale": { "type": ["string", "null"] },
+        "match": { "$ref": "#/$defs/Match" },
+        "predicate": { "$ref": "#/$defs/Predicate" },
+        "rubric": { "$ref": "#/$defs/Rubric" },
+        "provenance": { "type": "string", "enum": ["authored", "adapted", "inherited"] },
+        "affirmed": { "type": "boolean" }
       },
-      "additionalProperties": true
+      "allOf": [
+        {
+          "if": { "properties": { "check_class": { "const": "deterministic_exact" } } },
+          "then": { "required": ["match"], "not": { "anyOf": [{ "required": ["predicate"] }, { "required": ["rubric"] }] } }
+        },
+        {
+          "if": { "properties": { "check_class": { "const": "deterministic_structural" } } },
+          "then": { "required": ["predicate"], "not": { "anyOf": [{ "required": ["match"] }, { "required": ["rubric"] }] } }
+        },
+        {
+          "if": { "properties": { "check_class": { "const": "judged_bounded" } } },
+          "then": { "required": ["rubric"], "not": { "anyOf": [{ "required": ["match"] }, { "required": ["predicate"] }] } }
+        }
+      ]
+    },
+    "Match": {
+      "type": "object",
+      "required": ["terms", "mode", "normalization"],
+      "additionalProperties": false,
+      "properties": {
+        "terms": { "type": "array", "items": { "$ref": "#/$defs/NonEmptyString" }, "minItems": 1, "uniqueItems": true },
+        "mode": { "type": "string", "enum": ["substring", "word", "phrase"] },
+        "normalization": { "type": "string", "enum": ["casefold_nfkc", "exact"] }
+      }
+    },
+    "Predicate": {
+      "type": "object",
+      "required": ["type", "params"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "Named structural predicate, e.g. max_number, required_phrase_on_surface, claim_must_be_approved, self_reference_form, max_sentence_words. A verifier that does not implement a predicate returns not_evaluable for the rule."
+        },
+        "params": { "type": "object" }
+      }
+    },
+    "Rubric": {
+      "type": "object",
+      "required": ["question", "example_refs", "rail_refs"],
+      "additionalProperties": false,
+      "properties": {
+        "question": { "type": ["string", "null"] },
+        "example_refs": { "type": "array", "items": { "$ref": "#/$defs/Id" }, "uniqueItems": true },
+        "rail_refs": { "type": "array", "items": { "$ref": "#/$defs/Id" }, "uniqueItems": true }
+      },
+      "anyOf": [
+        { "properties": { "example_refs": { "minItems": 2 } } },
+        { "properties": { "rail_refs": { "minItems": 1 } } }
+      ]
     },
 
     "Rail": {
       "type": "object",
-      "required": ["context", "instruction"],
+      "required": ["rail_id", "context", "instruction"],
+      "additionalProperties": false,
       "properties": {
-        "context": { "type": "string" },
-        "instruction": { "type": "string" },
-        "example": { "type": "string" },
-        "antiExample": { "type": "string" }
-      },
-      "additionalProperties": true
+        "rail_id": { "$ref": "#/$defs/Id" },
+        "context": { "$ref": "#/$defs/NonEmptyString" },
+        "instruction": { "$ref": "#/$defs/NonEmptyString" },
+        "example": { "$ref": "#/$defs/NonEmptyString" },
+        "antiExample": { "$ref": "#/$defs/NonEmptyString" }
+      }
+    },
+    "RailList": { "type": "array", "items": { "$ref": "#/$defs/Rail" } },
+    "Example": {
+      "type": "object",
+      "description": "A brand-judged example. Rubric material for judged_bounded rules and density for producers.",
+      "required": ["example_id", "surface", "text", "verdict", "reason", "judged_by", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "example_id": { "type": "string", "pattern": "^ex_[A-Za-z0-9_.:-]{1,124}$" },
+        "surface": {
+          "anyOf": [{ "$ref": "#/$defs/OutputSurface" }, { "$ref": "#/$defs/NonEmptyString" }]
+        },
+        "text": { "$ref": "#/$defs/NonEmptyString" },
+        "verdict": { "type": "string", "enum": ["approved", "rejected"] },
+        "reason": { "$ref": "#/$defs/NonEmptyString" },
+        "judged_by": {
+          "type": "string",
+          "enum": [
+            "brand_owner", "brand_team", "agency", "freelancer", "ramoira_facilitator",
+            "archetype_template", "ramoira_draft"
+          ],
+          "description": "Only brand_owner and brand_team examples can ground a verdict in a ratified schema."
+        },
+        "source": { "type": "string", "enum": ["authored", "owner_reaction", "inherited", "imported_document"] },
+        "captured_at": { "$ref": "#/$defs/IsoDate" }
+      }
+    },
+    "Claim": {
+      "type": "object",
+      "description": "A ratified fact. claim_must_be_approved rules check against this list.",
+      "required": ["claim_id", "claim"],
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": { "$ref": "#/$defs/Id" },
+        "claim": { "$ref": "#/$defs/NonEmptyString" },
+        "evidenceRequired": { "type": "boolean" },
+        "evidenceType": { "type": ["string", "null"] },
+        "markets": { "$ref": "#/$defs/MarketScope" },
+        "surfaces": { "$ref": "#/$defs/SurfaceScope" }
+      }
     },
 
-    "Meta": {
+    "Identity": {
       "type": "object",
-      "required": ["brandId", "brandName", "schemaVersion"],
+      "required": ["prism"],
+      "additionalProperties": false,
       "properties": {
-        "brandId": { "type": "string", "minLength": 1 },
-        "brandName": { "type": "string", "minLength": 1 },
-        "schemaVersion": { "type": "string", "minLength": 1 },
-        "effectiveDate": { "type": "string" },
-        "previousVersion": { "type": "string" },
-        "changelog": {
-          "type": "array",
-          "items": { "type": "string" }
-        }
-      },
-      "additionalProperties": true
-    },
-
-    "IdentityComponent": {
-      "type": "object",
-      "required": ["summary"],
-      "properties": {
-        "_component": { "const": "identity" },
-        "_version": { "type": "string" },
         "prism": {
           "type": "object",
+          "description": "Kapferer's brand identity prism, used as a layout for density material.",
+          "additionalProperties": false,
           "properties": {
             "physique": {
               "type": "object",
+              "additionalProperties": false,
               "properties": {
-                "permitted": { "type": "array", "items": { "type": "string" } },
-                "forbidden": { "type": "array", "items": { "type": "string" } },
-                "referenceURL": { "type": "string" },
-                "posture": { "type": "string" }
-              },
-              "additionalProperties": true
+                "permitted": { "$ref": "#/$defs/StringList" },
+                "posture": { "type": "string" },
+                "referenceURL": { "type": "string", "format": "uri" }
+              }
             },
             "personality": {
               "type": "object",
+              "additionalProperties": false,
               "properties": {
-                "sincerity": { "$ref": "#/$defs/Score" },
-                "excitement": { "$ref": "#/$defs/Score" },
-                "competence": { "$ref": "#/$defs/Score" },
-                "sophistication": { "$ref": "#/$defs/Score" },
-                "ruggedness": { "$ref": "#/$defs/Score" },
                 "characterBrief": { "type": "string" }
-              },
-              "additionalProperties": true
+              }
             },
             "culture": {
               "type": "object",
+              "additionalProperties": false,
               "properties": {
-                "coreValues": { "type": "array", "items": { "type": "string" } },
+                "coreValues": { "$ref": "#/$defs/StringList" },
                 "originNarrative": { "type": "string" },
-                "forbidden": { "type": "array", "items": { "type": "string" } },
-                "sacredBoundary": { "type": "string" }
-              },
-              "additionalProperties": true
+                "sacredBoundary": {
+                  "type": "string",
+                  "description": "Excluded from the public summary unless the brand opts in."
+                }
+              }
             },
             "relationship": {
               "type": "object",
-              "required": ["mode"],
+              "additionalProperties": false,
               "properties": {
-                "mode": { "type": "string", "minLength": 1 },
-                "formality": { "$ref": "#/$defs/Score" },
-                "warmth": { "$ref": "#/$defs/Score" },
-                "pronoun": {
-                  "type": "string",
-                  "enum": ["we", "I", "brand_name_only"]
-                },
-                "powerDynamic": {
-                  "type": "string",
-                  "enum": ["brand_leads", "equal", "customer_leads"]
-                }
-              },
-              "additionalProperties": true
+                "formality": { "$ref": "#/$defs/Scale" },
+                "warmth": { "$ref": "#/$defs/Scale" }
+              }
             },
             "reflection": {
               "type": "object",
+              "additionalProperties": false,
               "properties": {
-                "depictedArchetype": { "type": "string" },
-                "aspirationalDelta": { "$ref": "#/$defs/Score" },
-                "forbiddenArchetypes": { "type": "array", "items": { "type": "string" } },
+                "depictedCustomer": { "type": "string" },
                 "ageSignal": { "type": "string" }
-              },
-              "additionalProperties": true
+              }
             },
             "selfImage": {
               "type": "object",
+              "additionalProperties": false,
               "properties": {
-                "feelingDescriptors": { "type": "array", "items": { "type": "string" } },
-                "identityStatement": { "type": "string" },
-                "forbidden": { "type": "array", "items": { "type": "string" } }
-              },
-              "additionalProperties": true
+                "feelingDescriptors": { "$ref": "#/$defs/StringList" },
+                "identityStatement": { "type": "string" }
+              }
             }
-          },
-          "additionalProperties": true
+          }
         },
         "distinctiveAssets": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "visual": {
               "type": "object",
+              "additionalProperties": false,
               "properties": {
-                "primaryColor": { "$ref": "#/$defs/ConstrainedHexColor" },
-                "secondaryColors": {
-                  "type": "array",
-                  "items": { "$ref": "#/$defs/HexColor" }
-                },
-                "forbiddenColors": {
-                  "type": "array",
-                  "items": { "$ref": "#/$defs/HexColor" }
-                },
+                "primaryColor": { "$ref": "#/$defs/HexColor" },
+                "secondaryColors": { "type": "array", "items": { "$ref": "#/$defs/HexColor" } },
                 "logoUsage": {
                   "type": "object",
+                  "additionalProperties": false,
                   "properties": {
-                    "minimumClearSpace": { "type": "string" },
-                    "forbiddenBackgrounds": { "type": "array", "items": { "type": "string" } },
-                    "forbiddenModifications": { "type": "array", "items": { "type": "string" } }
-                  },
-                  "additionalProperties": true
+                    "minimumClearSpace": { "type": "string" }
+                  }
                 },
-                "iconography": { "type": "array", "items": { "type": "string" } },
-                "characterAssets": { "type": "array", "items": { "type": "string" } },
+                "iconography": { "$ref": "#/$defs/StringList" },
+                "characterAssets": { "$ref": "#/$defs/StringList" },
                 "photographyStyle": {
                   "type": "object",
+                  "additionalProperties": false,
                   "properties": {
-                    "permitted": { "type": "array", "items": { "type": "string" } },
-                    "forbidden": { "type": "array", "items": { "type": "string" } },
+                    "permitted": { "$ref": "#/$defs/StringList" },
                     "lightingMood": { "type": "string" }
-                  },
-                  "additionalProperties": true
+                  }
                 }
-              },
-              "additionalProperties": true
+              }
             },
             "sonic": {
               "type": "object",
+              "additionalProperties": false,
               "properties": {
-                "sonicLogoURL": { "type": "string" },
-                "permittedGenres": { "type": "array", "items": { "type": "string" } },
-                "forbiddenGenres": { "type": "array", "items": { "type": "string" } },
-                "tempoRange": {
-                  "type": "array",
-                  "items": { "type": "number" },
-                  "minItems": 2,
-                  "maxItems": 2
-                },
+                "sonicLogoURL": { "type": "string", "format": "uri" },
+                "permittedGenres": { "$ref": "#/$defs/StringList" },
                 "instrumentalMood": { "type": "string" }
-              },
-              "additionalProperties": true
+              }
             },
             "linguistic": {
               "type": "object",
+              "additionalProperties": false,
               "properties": {
-                "ownedPhrases": {
-                  "type": "array",
-                  "items": { "$ref": "#/$defs/ConstrainedString" }
-                },
-                "ownedWords": { "type": "array", "items": { "type": "string" } },
-                "forbiddenWords": {
-                  "type": "array",
-                  "items": { "$ref": "#/$defs/ConstrainedString" }
-                },
+                "ownedPhrases": { "$ref": "#/$defs/StringList" },
+                "ownedWords": { "$ref": "#/$defs/StringList" },
                 "typographicVoice": {
                   "type": "object",
+                  "additionalProperties": false,
                   "properties": {
                     "sentenceStructure": { "type": "string" },
                     "punctuationStyle": { "type": "string" },
                     "numeralStyle": { "type": "string" }
-                  },
-                  "additionalProperties": true
+                  }
                 }
-              },
-              "additionalProperties": true
+              }
             }
-          },
-          "additionalProperties": true
-        },
-        "summary": {
-          "type": "object",
-          "required": ["oneLineBrief", "threeAdjectives", "neverDo"],
-          "properties": {
-            "oneLineBrief": { "type": "string", "minLength": 1 },
-            "threeAdjectives": {
-              "type": "array",
-              "items": { "type": "string" },
-              "minItems": 3,
-              "maxItems": 3
-            },
-            "neverDo": {
-              "type": "array",
-              "items": { "type": "string" },
-              "minItems": 1
-            }
-          },
-          "additionalProperties": true
+          }
         }
-      },
-      "additionalProperties": true
+      }
     },
 
-    "NarrativeComponent": {
+    "Narrative": {
       "type": "object",
       "required": ["semiotic", "myth"],
+      "additionalProperties": false,
       "properties": {
-        "_component": { "const": "narrative" },
-        "_version": { "type": "string" },
         "semiotic": {
           "type": "object",
-          "required": ["denotative", "connotative", "layerHierarchy"],
+          "required": ["denotative", "connotative"],
+          "additionalProperties": false,
           "properties": {
             "denotative": {
               "type": "object",
+              "description": "Facts: what rules check against.",
               "required": ["categoryDescriptor"],
+              "additionalProperties": false,
               "properties": {
-                "categoryDescriptor": { "type": "string", "minLength": 1 },
-                "functionalClaims": { "type": "array", "items": { "type": "string" } },
-                "specifications": { "type": "array", "items": { "type": "string" } },
-                "forbiddenClaims": { "type": "array", "items": { "type": "string" } }
-              },
-              "additionalProperties": true
+                "categoryDescriptor": { "$ref": "#/$defs/NonEmptyString" },
+                "specifications": { "$ref": "#/$defs/StringList" },
+                "claims": { "type": "array", "items": { "$ref": "#/$defs/Claim" } }
+              }
             },
             "connotative": {
               "type": "object",
               "required": ["meaningClusters", "emotionalRegister"],
+              "additionalProperties": false,
               "properties": {
-                "meaningClusters": {
-                  "type": "array",
-                  "items": { "type": "string" },
-                  "minItems": 1
-                },
-                "forbiddenMeanings": { "type": "array", "items": { "type": "string" } },
-                "emotionalRegister": { "type": "string", "minLength": 1 },
-                "minimumConnotativeTest": { "type": "string" }
-              },
-              "additionalProperties": true
-            },
-            "layerHierarchy": { "$ref": "#/$defs/LayerHierarchy" }
-          },
-          "additionalProperties": true
+                "meaningClusters": { "type": "array", "items": { "$ref": "#/$defs/NonEmptyString" }, "minItems": 1 },
+                "emotionalRegister": { "$ref": "#/$defs/NonEmptyString" }
+              }
+            }
+          }
         },
         "myth": {
           "type": "object",
-          "required": ["mythStatement", "mythTest"],
+          "required": ["mythStatement"],
+          "additionalProperties": false,
           "properties": {
             "culturalTension": { "type": "string" },
-            "mythStatement": { "type": "string", "minLength": 1 },
+            "mythStatement": { "$ref": "#/$defs/NonEmptyString" },
             "protagonistRole": { "type": "string" },
-            "antagonist": { "type": "string" },
-            "mythTest": { "type": "string", "minLength": 1 },
-            "constraints": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": ["constraint", "severity"],
-                "properties": {
-                  "constraint": { "type": "string" },
-                  "severity": { "$ref": "#/$defs/ConstraintSeverity" },
-                  "rationale": { "type": "string" },
-                  "example": { "type": "string" }
-                },
-                "additionalProperties": true
-              }
-            }
-          },
-          "additionalProperties": true
+            "antagonist": { "type": "string" }
+          }
         },
         "mythEvolution": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "principle": { "type": "string" },
+            "immutableCore": { "type": "string" },
             "modernTensions": {
               "type": "array",
               "items": {
                 "type": "object",
+                "required": ["tension"],
+                "additionalProperties": false,
                 "properties": {
-                  "tension": { "type": "string" },
+                  "tension": { "$ref": "#/$defs/NonEmptyString" },
                   "mythResolution": { "type": "string" },
-                  "permittedFraming": { "type": "array", "items": { "type": "string" } },
-                  "forbiddenFraming": { "type": "array", "items": { "type": "string" } },
-                  "rails": { "type": "array", "items": { "$ref": "#/$defs/Rail" } }
-                },
-                "additionalProperties": true
+                  "permittedFraming": { "$ref": "#/$defs/StringList" },
+                  "rails": { "$ref": "#/$defs/RailList" }
+                }
               }
-            },
-            "immutableCore": { "type": "string" }
-          },
-          "additionalProperties": true
+            }
+          }
         },
         "pillars": {
           "type": "array",
           "items": {
             "type": "object",
             "required": ["name", "coreClaim"],
+            "additionalProperties": false,
             "properties": {
-              "name": { "type": "string" },
+              "name": { "$ref": "#/$defs/NonEmptyString" },
               "description": { "type": "string" },
-              "coreClaim": { "type": "string" },
-              "approvedArcs": { "type": "array", "items": { "type": "string" } },
-              "forbiddenInversions": { "type": "array", "items": { "type": "string" } },
-              "surfaces": { "type": "array", "items": { "type": "string" } },
-              "rails": { "type": "array", "items": { "$ref": "#/$defs/Rail" } }
-            },
-            "additionalProperties": true
+              "coreClaim": { "$ref": "#/$defs/NonEmptyString" },
+              "approvedArcs": { "$ref": "#/$defs/StringList" },
+              "surfaces": { "type": "array", "items": { "$ref": "#/$defs/OutputSurface" }, "uniqueItems": true },
+              "rails": { "$ref": "#/$defs/RailList" }
+            }
           }
         },
         "editorial": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "openingPrinciple": { "type": "string" },
             "structuralApproach": { "type": "string" },
-            "forbiddenStructures": { "type": "array", "items": { "type": "string" } },
-            "referencePool": { "type": "array", "items": { "type": "string" } },
-            "forbiddenReferences": { "type": "array", "items": { "type": "string" } },
+            "referencePool": { "$ref": "#/$defs/StringList" },
             "timeScaleLanguage": { "type": "string" }
-          },
-          "additionalProperties": true
+          }
         },
-        "contentTest": {
-          "type": "object",
-          "required": ["mythTest", "connotativeTest", "toneTest"],
-          "properties": {
-            "mythTest": { "type": "string", "minLength": 1 },
-            "connotativeTest": { "type": "string", "minLength": 1 },
-            "toneTest": { "type": "string", "minLength": 1 }
-          },
-          "additionalProperties": true
-        }
-      },
-      "additionalProperties": true
-    },
-
-    "VoiceComponent": {
-      "type": "object",
-      "required": ["base", "approvedTones", "forbiddenTones", "examples"],
-      "properties": {
-        "_component": { "const": "voice" },
-        "_version": { "type": "string" },
-        "base": {
-          "type": "object",
-          "required": ["sentenceLength", "vocabularyLevel", "humourPermitted", "humourStyle"],
-          "properties": {
-            "sentenceLength": { "$ref": "#/$defs/SentenceLength" },
-            "vocabularyLevel": { "$ref": "#/$defs/Score" },
-            "humourPermitted": { "type": "boolean" },
-            "humourStyle": { "$ref": "#/$defs/HumourStyle" },
-            "permittedDevices": { "type": "array", "items": { "type": "string" } },
-            "forbiddenDevices": { "type": "array", "items": { "type": "string" } },
-            "structuralRules": { "type": "array", "items": { "type": "string" } }
-          },
-          "additionalProperties": true
-        },
-        "approvedTones": {
+        "guidance": {
           "type": "array",
-          "items": { "type": "string" },
-          "minItems": 1
-        },
-        "forbiddenTones": {
-          "type": "array",
-          "items": { "type": "string" },
-          "minItems": 1
-        },
-        "examples": {
-          "type": "array",
+          "description": "Test questions that lack brand-judged examples, so cannot be judged rules yet. Density only; never produces a verdict.",
           "items": {
             "type": "object",
-            "required": ["text", "verdict", "reason"],
+            "required": ["question", "applies_to"],
+            "additionalProperties": false,
             "properties": {
-              "context": { "type": "string" },
-              "text": { "type": "string", "minLength": 1 },
-              "verdict": {
-                "type": "string",
-                "enum": ["approved", "rejected"]
-              },
-              "reason": { "type": "string", "minLength": 1 }
+              "question": { "$ref": "#/$defs/NonEmptyString" },
+              "applies_to": { "$ref": "#/$defs/SurfaceScope" }
+            }
+          }
+        }
+      }
+    },
+
+    "Voice": {
+      "type": "object",
+      "required": ["base", "approvedTones"],
+      "additionalProperties": false,
+      "properties": {
+        "base": {
+          "type": "object",
+          "required": ["vocabularyLevel", "humourStyle"],
+          "additionalProperties": false,
+          "properties": {
+            "vocabularyLevel": { "$ref": "#/$defs/Scale" },
+            "humourStyle": {
+              "type": "object",
+              "required": ["style"],
+              "additionalProperties": false,
+              "properties": {
+                "style": {
+                  "$ref": "#/$defs/NonEmptyString",
+                  "description": "Open vocabulary, e.g. none, dry, warm, absurdist, self_deprecating. none means humour is not permitted."
+                },
+                "frequency": { "type": "string", "description": "Optional qualifier, e.g. sparingly." }
+              }
             },
-            "additionalProperties": true
-          },
-          "minItems": 2
+            "permittedDevices": { "$ref": "#/$defs/StringList" }
+          }
         },
+        "approvedTones": { "type": "array", "items": { "$ref": "#/$defs/NonEmptyString" }, "minItems": 1 },
+        "examples": { "type": "array", "items": { "$ref": "#/$defs/Example" } },
         "contextVariants": {
           "type": "array",
           "items": {
             "type": "object",
             "required": ["surface"],
+            "additionalProperties": false,
             "properties": {
               "surface": { "$ref": "#/$defs/OutputSurface" },
-              "formalityDelta": { "type": "number" },
-              "warmthDelta": { "type": "number" },
+              "formalityDelta": { "$ref": "#/$defs/ScaleDelta" },
+              "warmthDelta": { "$ref": "#/$defs/ScaleDelta" },
               "sentenceLength": { "$ref": "#/$defs/SentenceLength" },
               "openingInstruction": { "type": "string" },
               "closingInstruction": { "type": "string" },
-              "rails": { "type": "array", "items": { "$ref": "#/$defs/Rail" } },
-              "additionalForbidden": { "type": "array", "items": { "type": "string" } },
+              "rails": { "$ref": "#/$defs/RailList" },
               "fallbackInstruction": { "type": "string" }
-            },
-            "additionalProperties": true
+            }
           }
         },
         "rails": {
           "type": "object",
-          "required": ["global"],
+          "additionalProperties": false,
           "properties": {
-            "global": {
-              "type": "array",
-              "items": { "$ref": "#/$defs/Rail" },
-              "minItems": 1
-            },
+            "global": { "$ref": "#/$defs/RailList" },
             "alternatives": {
               "type": "object",
-              "properties": {
-                "whenPricingForbidden": { "type": "array", "items": { "$ref": "#/$defs/Rail" } },
-                "whenUrgencyForbidden": { "type": "array", "items": { "$ref": "#/$defs/Rail" } },
-                "whenComparativeForbidden": { "type": "array", "items": { "$ref": "#/$defs/Rail" } },
-                "whenTrendLanguageForbidden": { "type": "array", "items": { "$ref": "#/$defs/Rail" } },
-                "whenAccessibilityForbidden": { "type": "array", "items": { "$ref": "#/$defs/Rail" } },
-                "whenPromotionForbidden": { "type": "array", "items": { "$ref": "#/$defs/Rail" } }
-              },
-              "additionalProperties": true
+              "description": "Rails to use when something is forbidden, keyed whenXForbidden (e.g. whenPricingForbidden).",
+              "propertyNames": { "pattern": "^when[A-Z][A-Za-z]*Forbidden$" },
+              "additionalProperties": { "$ref": "#/$defs/RailList" }
             }
-          },
-          "additionalProperties": true
+          }
         }
-      },
-      "additionalProperties": true
+      }
     },
 
-    "CommercialComponent": {
+    "Commercial": {
       "type": "object",
-      "required": ["pricing", "claims"],
+      "additionalProperties": false,
       "properties": {
-        "_component": { "const": "commercial" },
-        "_version": { "type": "string" },
         "pricing": {
           "type": "object",
-          "required": ["style", "priceDisplayPermitted", "discountPermitted"],
+          "additionalProperties": false,
           "properties": {
-            "style": { "$ref": "#/$defs/PricingStyle" },
-            "priceDisplayPermitted": { "type": "boolean" },
+            "style": { "type": "string", "description": "Open vocabulary, e.g. opaque, transparent, value_led, simple." },
             "displayFormat": { "type": "string" },
             "surfaceOverrides": {
               "type": "array",
               "items": {
                 "type": "object",
-                "required": ["surface", "style"],
+                "required": ["surface"],
+                "additionalProperties": false,
                 "properties": {
                   "surface": { "$ref": "#/$defs/OutputSurface" },
-                  "style": { "$ref": "#/$defs/PricingStyle" },
+                  "style": { "type": "string" },
                   "format": { "type": "string" }
-                },
-                "additionalProperties": true
+                }
               }
             },
-            "urgencyLanguagePermitted": { "type": "boolean" },
-            "scarcityLanguagePermitted": { "type": "boolean" },
-            "discountPermitted": { "type": "boolean" },
-            "maxDiscountPercent": { "type": "number", "minimum": 0, "maximum": 100 },
-            "permittedLanguage": { "type": "array", "items": { "type": "string" } },
-            "forbiddenLanguage": {
-              "type": "array",
-              "items": { "$ref": "#/$defs/ConstrainedString" }
-            }
-          },
-          "additionalProperties": true
+            "permittedLanguage": { "$ref": "#/$defs/StringList" }
+          }
         },
         "claims": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
-            "approved": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": ["claim"],
-                "properties": {
-                  "claim": { "type": "string" },
-                  "evidenceRequired": { "type": "boolean" },
-                  "evidenceType": { "type": "string" },
-                  "geographicScope": { "type": "array", "items": { "type": "string" } },
-                  "surfaces": {
-                    "oneOf": [
-                      { "type": "string", "const": "all" },
-                      { "type": "array", "items": { "$ref": "#/$defs/OutputSurface" } }
-                    ]
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "forbidden": {
-              "type": "array",
-              "items": { "$ref": "#/$defs/ConstrainedString" }
-            },
-            "comparative": {
-              "type": "object",
-              "properties": {
-                "competitorMentionPermitted": { "type": "boolean" },
-                "comparativeClaimsPermitted": { "type": "boolean" },
-                "permittedCompetitors": { "type": "array", "items": { "type": "string" } },
-                "forbiddenFramings": { "type": "array", "items": { "type": "string" } }
-              },
-              "additionalProperties": true
-            },
             "superlatives": {
               "type": "object",
+              "additionalProperties": false,
               "properties": {
-                "permitted": { "type": "boolean" },
-                "approved": { "type": "array", "items": { "type": "string" } },
-                "forbidden": { "type": "array", "items": { "type": "string" } }
-              },
-              "additionalProperties": true
+                "approved": { "$ref": "#/$defs/StringList" }
+              }
             }
-          },
-          "additionalProperties": true
+          }
         },
         "offers": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
-            "permittedTypes": { "type": "array", "items": { "type": "string" } },
-            "forbiddenTypes": {
-              "type": "array",
-              "items": { "$ref": "#/$defs/ConstrainedString" }
-            },
+            "permittedTypes": { "$ref": "#/$defs/StringList" },
             "communicationRules": {
               "type": "object",
+              "additionalProperties": false,
               "properties": {
-                "urgencyPermitted": { "type": "boolean" },
-                "scarcityPermitted": { "type": "boolean" },
                 "valueFraming": { "type": "string" }
-              },
-              "additionalProperties": true
+              }
             }
-          },
-          "additionalProperties": true
+          }
         },
         "socialProof": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
-            "starRatingsPermitted": { "type": "boolean" },
-            "reviewCountsPermitted": { "type": "boolean" },
-            "customerTestimonialsPermitted": { "type": "boolean" },
             "celebrityEndorsementStyle": { "type": "string" },
-            "permittedAuthoritySignals": { "type": "array", "items": { "type": "string" } },
-            "forbiddenSocialProof": { "type": "array", "items": { "type": "string" } }
-          },
-          "additionalProperties": true
-        },
-        "surfaceRules": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": ["surface"],
-            "properties": {
-              "surface": { "$ref": "#/$defs/OutputSurface" },
-              "pricing": { "type": "object", "additionalProperties": true },
-              "fallback": { "$ref": "#/$defs/FallbackBehaviour" },
-              "alternativeApproach": { "type": "string" },
-              "rails": { "type": "array", "items": { "$ref": "#/$defs/Rail" } }
-            },
-            "additionalProperties": true
+            "permittedAuthoritySignals": { "$ref": "#/$defs/StringList" }
           }
-        },
-        "globalForbiddenTerms": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/ConstrainedString" }
         }
-      },
-      "additionalProperties": true
+      }
     },
 
-    "GovernanceComponent": {
+    "Governance": {
       "type": "object",
-      "required": ["severity", "preflight"],
+      "additionalProperties": false,
       "properties": {
-        "_component": { "const": "governance" },
-        "_version": { "type": "string" },
-        "severity": {
-          "type": "object",
-          "required": ["absolute", "strong", "contextual"],
-          "properties": {
-            "absolute": {
-              "type": "object",
-              "required": ["constraints", "violationResponse"],
-              "properties": {
-                "constraints": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
-                "violationResponse": {
-                  "type": "string",
-                  "enum": ["block_output", "flag_and_block"]
-                }
-              },
-              "additionalProperties": true
-            },
-            "strong": {
-              "type": "object",
-              "required": ["constraints", "violationResponse"],
-              "properties": {
-                "constraints": { "type": "array", "items": { "type": "string" } },
-                "overrideProcess": { "type": "string" },
-                "violationResponse": {
-                  "type": "string",
-                  "enum": ["flag_for_review", "block_output"]
-                }
-              },
-              "additionalProperties": true
-            },
-            "contextual": {
-              "type": "object",
-              "required": ["constraints"],
-              "properties": {
-                "constraints": { "type": "array", "items": { "type": "string" } },
-                "judgmentBounds": { "type": "string" },
-                "violationResponse": {
-                  "type": "string",
-                  "const": "log_for_audit"
-                }
-              },
-              "additionalProperties": true
-            }
-          },
-          "additionalProperties": true
-        },
         "conflictResolution": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "componentPriority": {
               "type": "array",
-              "items": { "type": "string" }
+              "items": { "type": "string", "enum": ["identity", "narrative", "voice", "commercial", "governance"] },
+              "uniqueItems": true
             },
             "knownConflicts": {
               "type": "array",
               "items": {
                 "type": "object",
                 "required": ["scenario", "resolution"],
+                "additionalProperties": false,
                 "properties": {
-                  "scenario": { "type": "string" },
-                  "components": { "type": "array", "items": { "type": "string" } },
-                  "resolution": { "type": "string" },
+                  "scenario": { "$ref": "#/$defs/NonEmptyString" },
+                  "components": { "$ref": "#/$defs/StringList" },
+                  "resolution": { "$ref": "#/$defs/NonEmptyString" },
                   "example": { "type": "string" }
-                },
-                "additionalProperties": true
+                }
               }
             },
             "defaultResolution": { "$ref": "#/$defs/FallbackBehaviour" }
-          },
-          "additionalProperties": true
+          }
         },
-        "surfaceRules": {
+        "situations": { "type": "array", "items": { "$ref": "#/$defs/Situation" } },
+        "surfaces": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["surface", "fallback"],
+            "required": ["surface"],
+            "additionalProperties": false,
             "properties": {
               "surface": { "$ref": "#/$defs/OutputSurface" },
-              "applicableConstraints": {
-                "oneOf": [
-                  { "type": "string", "const": "all" },
-                  { "type": "array", "items": { "type": "string" } }
-                ]
-              },
-              "suspendedConstraints": { "type": "array", "items": { "type": "string" } },
               "objective": { "type": "string" },
-              "primaryRail": { "type": "string" },
-              "rails": { "type": "array", "items": { "$ref": "#/$defs/Rail" } },
+              "primaryRail": { "$ref": "#/$defs/Id", "description": "A rail_id." },
+              "rails": { "$ref": "#/$defs/RailList" },
               "fallback": { "$ref": "#/$defs/FallbackBehaviour" },
               "fallbackContent": { "type": "string" },
               "intentRules": {
@@ -817,70 +733,229 @@
                 "items": {
                   "type": "object",
                   "required": ["intent", "instruction"],
+                  "additionalProperties": false,
                   "properties": {
                     "intent": { "$ref": "#/$defs/UserIntent" },
-                    "instruction": { "type": "string" }
-                  },
-                  "additionalProperties": false
+                    "instruction": { "$ref": "#/$defs/NonEmptyString" }
+                  }
                 }
-              }
-            },
-            "additionalProperties": true
-          }
-        },
-        "overrideProtocol": {
-          "type": "object",
-          "properties": {
-            "authorisedRoles": { "type": "array", "items": { "type": "string" } },
-            "requiredFields": { "type": "array", "items": { "type": "string" } },
-            "maxDurationDays": { "type": "number", "minimum": 1 },
-            "auditLogEndpoint": { "type": "string" }
-          },
-          "additionalProperties": true
-        },
-        "compliance": {
-          "type": "object",
-          "properties": {
-            "violationWebhook": { "type": "string" },
-            "routing": {
-              "type": "object",
-              "properties": {
-                "absolute": { "type": "string" },
-                "strong": { "type": "string" },
-                "contextual": { "type": "string" }
               },
-              "additionalProperties": true
-            },
-            "humanReviewTopics": { "type": "array", "items": { "type": "string" } },
-            "zeroToleranceTerms": { "type": "array", "items": { "type": "string" } },
-            "geographicOverrides": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": ["market"],
-                "properties": {
-                  "market": { "type": "string" },
-                  "additionalConstraints": { "type": "array", "items": { "type": "string" } }
-                },
-                "additionalProperties": true
+              "suspended_rule_ids": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/Id" },
+                "uniqueItems": true,
+                "description": "May reference only contextual rules."
               }
             }
-          },
-          "additionalProperties": true
+          }
         },
-        "preflight": {
+        "override": {
           "type": "object",
-          "required": ["question1", "question2", "question3"],
+          "additionalProperties": false,
           "properties": {
-            "question1": { "type": "string", "minLength": 1 },
-            "question2": { "type": "string", "minLength": 1 },
-            "question3": { "type": "string", "minLength": 1 }
-          },
-          "additionalProperties": true
+            "authorisedRoles": { "$ref": "#/$defs/StringList" },
+            "requiredFields": { "$ref": "#/$defs/StringList" },
+            "maxDurationDays": { "type": "integer", "minimum": 1 },
+            "overrideProcess": { "type": "string" },
+            "judgmentBounds": { "type": "string" }
+          }
+        },
+        "reviewTopics": { "$ref": "#/$defs/StringList" }
+      }
+    },
+    "Situation": {
+      "type": "object",
+      "description": "A circumstance the brand responds to (when, as distinct from where). Activated by the principal as a time-bounded state on the brand, never declared per item by a producer.",
+      "required": ["situation_id", "trigger", "category"],
+      "additionalProperties": false,
+      "properties": {
+        "situation_id": { "type": "string", "pattern": "^sit_[A-Za-z0-9_.:-]{1,124}$" },
+        "trigger": { "$ref": "#/$defs/NonEmptyString" },
+        "category": {
+          "type": "string",
+          "enum": ["crisis", "competitor_action", "accusation", "praise", "partner_request", "other"]
+        },
+        "posture": { "type": "string" },
+        "surfaces": { "type": "array", "items": { "$ref": "#/$defs/OutputSurface" }, "uniqueItems": true },
+        "voice": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "persona": { "type": "string", "enum": ["normal", "restrained", "suspended"] },
+            "formalityDelta": { "$ref": "#/$defs/ScaleDelta" },
+            "warmthDelta": { "$ref": "#/$defs/ScaleDelta" },
+            "instruction": { "type": "string" }
+          }
+        },
+        "rails": { "$ref": "#/$defs/RailList" },
+        "suspended_rule_ids": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Id" },
+          "uniqueItems": true,
+          "description": "May reference only contextual rules."
         }
-      },
-      "additionalProperties": true
-    }
+      }
+    },
 
+    "ParticipantRole": {
+      "type": "string",
+      "enum": ["brand_owner", "brand_team", "agency", "freelancer", "ramoira_facilitator"]
+    },
+    "ParticipantId": { "type": "string", "pattern": "^p_[A-Za-z0-9_.:-]{1,124}$" },
+    "Closeness": {
+      "type": ["number", "null"],
+      "description": "The owner's rated closeness to an archetype. The closeness scale is not fixed by 3.0.0."
+    },
+    "DraftProvenance": {
+      "type": "object",
+      "description": "How the candidate was produced. Outside content_hash. Never a score of the brand. Never in a summary.",
+      "required": ["method"],
+      "additionalProperties": false,
+      "properties": {
+        "method": { "type": "string", "enum": ["archetype_anchored", "questionnaire", "document_import", "manual"] },
+        "instrument_version": { "type": ["string", "null"] },
+        "intake": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string" },
+            "category": { "type": "string" },
+            "description": { "type": "string" },
+            "founded": { "type": ["string", "null"] },
+            "source_documents": { "type": "array", "items": { "type": "string", "format": "uri" } }
+          }
+        },
+        "participants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["participant_id", "role"],
+            "additionalProperties": false,
+            "properties": {
+              "participant_id": { "$ref": "#/$defs/ParticipantId" },
+              "role": { "$ref": "#/$defs/ParticipantRole" }
+            }
+          }
+        },
+        "closeness_ratings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["archetype_id", "closeness"],
+            "additionalProperties": false,
+            "properties": {
+              "archetype_id": { "$ref": "#/$defs/Id" },
+              "closeness": { "$ref": "#/$defs/Closeness" }
+            }
+          }
+        },
+        "anchors": {
+          "type": "array",
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["archetype_id", "closeness"],
+            "additionalProperties": false,
+            "properties": {
+              "archetype_id": { "$ref": "#/$defs/Id" },
+              "closeness": { "$ref": "#/$defs/Closeness" },
+              "exemplars_shown": { "$ref": "#/$defs/StringList" }
+            }
+          }
+        },
+        "delta_answers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["zone_id", "field", "question", "answer", "answered_by"],
+            "additionalProperties": false,
+            "properties": {
+              "zone_id": { "$ref": "#/$defs/Id" },
+              "field": { "$ref": "#/$defs/JsonPointer" },
+              "question": { "$ref": "#/$defs/NonEmptyString" },
+              "answer": { "type": "string" },
+              "answered_by": { "$ref": "#/$defs/ParticipantId" }
+            }
+          }
+        },
+        "fields": {
+          "type": "object",
+          "description": "JSON pointer to inheritance status. unfilled fields are shown at ratification as a thinness warning.",
+          "propertyNames": { "$ref": "#/$defs/JsonPointer" },
+          "additionalProperties": { "type": "string", "enum": ["inherited", "adapted", "authored", "affirmed", "unfilled"] }
+        },
+        "reactions": {
+          "type": "array",
+          "description": "Owner verdicts on elicitation probes. Probe texts are evidence of a judgment, never content.",
+          "items": {
+            "type": "object",
+            "required": ["probe_id", "surface", "text", "reaction", "reason", "answered_by", "captured_at"],
+            "additionalProperties": false,
+            "properties": {
+              "probe_id": { "$ref": "#/$defs/Id" },
+              "surface": { "anyOf": [{ "$ref": "#/$defs/OutputSurface" }, { "$ref": "#/$defs/NonEmptyString" }] },
+              "text": { "$ref": "#/$defs/NonEmptyString" },
+              "reaction": { "type": "string", "enum": ["yes", "close", "no"] },
+              "reason": { "type": ["string", "null"] },
+              "answered_by": { "$ref": "#/$defs/ParticipantId" },
+              "captured_at": { "$ref": "#/$defs/IsoDate" },
+              "resulted_in": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "fields": { "type": "array", "items": { "$ref": "#/$defs/JsonPointer" } },
+                  "example_ids": { "type": "array", "items": { "$ref": "#/$defs/Id" } }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "Archetype": {
+      "type": "object",
+      "description": "Present only when schema_type is archetype. Describes the template and its delta zones. Outside content_hash. Exemplars are brand names only, used as reference points in closeness questions.",
+      "required": ["archetype_id", "name", "exemplars", "delta_zones"],
+      "additionalProperties": false,
+      "properties": {
+        "archetype_id": { "$ref": "#/$defs/Id" },
+        "name": { "$ref": "#/$defs/NonEmptyString" },
+        "tagline": { "type": "string" },
+        "core_insight": { "type": "string" },
+        "exemplars": { "$ref": "#/$defs/StringList" },
+        "not_for": { "$ref": "#/$defs/StringList" },
+        "delta_zones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["zone_id", "label", "question", "impact", "fields"],
+            "additionalProperties": false,
+            "properties": {
+              "zone_id": { "$ref": "#/$defs/Id" },
+              "label": { "$ref": "#/$defs/NonEmptyString" },
+              "question": { "$ref": "#/$defs/NonEmptyString" },
+              "impact": { "type": "string", "enum": ["high", "medium", "low"] },
+              "fields": { "type": "array", "items": { "$ref": "#/$defs/JsonPointer" }, "minItems": 1, "uniqueItems": true },
+              "surfaces": { "type": "array", "items": { "$ref": "#/$defs/OutputSurface" }, "uniqueItems": true },
+              "situation_ids": { "type": "array", "items": { "$ref": "#/$defs/Id" }, "uniqueItems": true },
+              "divergence_signals": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["signal", "delta", "fields"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "signal": { "$ref": "#/$defs/NonEmptyString" },
+                    "delta": { "$ref": "#/$defs/NonEmptyString" },
+                    "fields": { "type": "array", "items": { "$ref": "#/$defs/JsonPointer" }, "minItems": 1 }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

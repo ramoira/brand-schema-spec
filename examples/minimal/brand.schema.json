@@ -1,105 +1,68 @@
 {
-  "meta": {
-    "brandId": "example-brand",
-    "brandName": "Example Brand",
-    "schemaVersion": "2.0.0",
-    "effectiveDate": "2026-01-01",
-    "changelog": []
+  "ramoira": {
+    "spec_version": "3.0.0",
+    "schema_type": "full",
+    "brand_id": "example-brand",
+    "schema_version": "0.1.0",
+    "content_hash": "sha256:7b0cb0c0c543ed2252832a71dc03c15014d2fc152cd2b877b2a58bde3ec0242e",
+    "workflow_state": "draft",
+    "ratification": null,
+    "account_owner_verified": false,
+    "canonical_url": null
   },
-  "identity": {
-    "_component": "identity",
-    "_version": "2.0.0",
-    "prism": {
-      "relationship": {
-        "mode": "We're like you. We just happen to know a bit more about this one thing.",
-        "formality": 5,
-        "warmth": 6,
-        "pronoun": "we",
-        "powerDynamic": "equal"
-      }
-    },
-    "summary": {
-      "oneLineBrief": "One sentence that captures what this brand does and who it does it for.",
-      "threeAdjectives": ["adjective-one", "adjective-two", "adjective-three"],
-      "neverDo": [
-        "The one thing this brand absolutely never does."
-      ]
+  "rules": [
+    {
+      "rule_id": "r_example_forbidden_term",
+      "statement": "Never use the one term this brand forbids.",
+      "check_class": "deterministic_exact",
+      "severity": "absolute",
+      "topic": "identity.distinctiveAssets.linguistic",
+      "surfaces": "all",
+      "markets": "all",
+      "situations": "any",
+      "modality": "text",
+      "visibility": "public",
+      "match": {
+        "terms": [
+          "forbidden-term"
+        ],
+        "mode": "word",
+        "normalization": "casefold_nfkc"
+      },
+      "provenance": "authored",
+      "affirmed": true
     }
+  ],
+  "identity": {
+    "prism": {}
   },
   "narrative": {
-    "_component": "narrative",
-    "_version": "2.0.0",
     "semiotic": {
       "denotative": {
         "categoryDescriptor": "What this brand makes or does, plainly stated."
       },
       "connotative": {
-        "meaningClusters": ["primary meaning territory"],
+        "meaningClusters": [
+          "primary meaning territory"
+        ],
         "emotionalRegister": "How this brand makes people feel."
-      },
-      "layerHierarchy": "balanced"
+      }
     },
     "myth": {
-      "mythStatement": "The belief or stance that defines this brand worldview.",
-      "mythTest": "A question to ask of any content: does it carry the myth?"
+      "mythStatement": "The story the brand tells about the world, in one sentence."
     }
   },
   "voice": {
-    "_component": "voice",
-    "_version": "2.0.0",
     "base": {
-      "sentenceLength": "varied",
-      "vocabularyLevel": 6,
-      "humourPermitted": false,
-      "humourStyle": "none"
-    },
-    "approvedTones": ["tone-one"],
-    "forbiddenTones": ["forbidden-tone-one"],
-    "examples": [
-      {
-        "text": "An example of on-brand writing for this brand.",
-        "verdict": "approved",
-        "reason": "Why this is on-brand."
-      },
-      {
-        "text": "An example of off-brand writing this brand would never use.",
-        "verdict": "rejected",
-        "reason": "Why this fails the brand voice test."
+      "vocabularyLevel": 5,
+      "humourStyle": {
+        "style": "none"
       }
+    },
+    "approvedTones": [
+      "the tone this brand writes in"
     ]
   },
-  "commercial": {
-    "_component": "commercial",
-    "_version": "2.0.0",
-    "pricing": {
-      "style": "transparent",
-      "priceDisplayPermitted": true,
-      "discountPermitted": false
-    },
-    "claims": {}
-  },
-  "governance": {
-    "_component": "governance",
-    "_version": "2.0.0",
-    "severity": {
-      "absolute": {
-        "constraints": [
-          "The one thing this brand absolutely never does under any circumstance."
-        ],
-        "violationResponse": "block_output"
-      },
-      "strong": {
-        "constraints": [],
-        "violationResponse": "flag_for_review"
-      },
-      "contextual": {
-        "constraints": []
-      }
-    },
-    "preflight": {
-      "question1": "A brand-specific question to ask before publishing any content.",
-      "question2": "A second preflight check question.",
-      "question3": "A third preflight check question."
-    }
-  }
+  "commercial": {},
+  "governance": {}
 }

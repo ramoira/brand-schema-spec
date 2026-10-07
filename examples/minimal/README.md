@@ -1,14 +1,10 @@
-# Minimal — Example Schema
+# Minimal — example schema
 
-The smallest valid Ramoira v2.0.0 schema. Every required field is present; no optional fields are included.
+The smallest valid 3.0.0 full schema: one rule, the required layer fields, and its generated summary.
 
-Use this as a starting point for hand-crafting a schema without `ramoira init`.
+1. Copy `brand.schema.json` into your project as `ramoira/brand.schema.json`.
+2. Replace the placeholder values.
+3. `npm run hash -- ramoira/brand.schema.json --write` (or `ramoira validate`).
+4. Validate: `npm run validate -- ramoira/brand.schema.json`.
 
-## Files
-
-- `brand.schema.json` — full schema, validates against `SPEC.schema.json`
-- `brand.schema.summary.json` — summary schema, validates against `SPEC.summary.schema.json`
-
-## Spec
-
-[github.com/ramoira/brand-schema-spec](https://github.com/ramoira/brand-schema-spec)
+For a template with every section present, see [`schemas/`](../../schemas/). For a complete worked example, see [`corvane/`](../corvane/).
