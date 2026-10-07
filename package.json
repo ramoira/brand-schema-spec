@@ -38,7 +38,8 @@
     "test": "node --test validation/test/*.test.ts checker/test/*.test.ts",
     "typecheck": "tsc --noEmit",
     "build": "tsc -p tsconfig.build.json",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "build:validators": "node validation/build-validators.ts"
   },
   "dependencies": {
     "ajv": "^8.17.1",

@@ -432,3 +432,15 @@ describe('JCS (RFC 8785)', () => {
     assert.equal(canonicalize({ '€': 1, '\r': 2, '😀': 3, '1': 4 }), '{"\\r":2,"1":4,"€":1,"😀":3}')
   })
 })
+
+it('the precompiled validators match the JSON Schemas (run npm run build:validators if this fails)', async () => {
+  const { readFileSync } = await import('node:fs')
+  const { generateValidators, GENERATED_PATH } = await import('../build-validators.ts')
+  assert.equal(readFileSync(GENERATED_PATH, 'utf8'), generateValidators())
+})
+
+it('nothing in the validator generates code at runtime', async () => {
+  const { readFileSync } = await import('node:fs')
+  const { GENERATED_PATH } = await import('../build-validators.ts')
+  assert.doesNotMatch(readFileSync(GENERATED_PATH, 'utf8'), /new Function|eval\(/)
+})
