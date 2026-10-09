@@ -1,7 +1,7 @@
 ```
 brand-schema-spec/
 ├── README.md                    what this repository is
-├── SPEC.md                      the 3.0.0 specification (normative)
+├── SPEC.md                      the 3.1.0 specification (normative)
 ├── SPEC.schema.json             JSON Schema: full schemas and archetype templates
 ├── SPEC.summary.schema.json     JSON Schema: public summaries
 ├── record.schema.json           JSON Schema: verdict events and adoption records
@@ -27,5 +27,5 @@ brand-schema-spec/
 │   ├── archetype-template/
 │   └── minimal/
 ├── schemas/                     blank templates
-└── migrations/                  2.0.0-to-3.0.0.md
+└── migrations/                  2.0.0-to-3.0.0.md, 3.0.0-to-3.1.0.md
 ```

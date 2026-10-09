@@ -1,8 +1,8 @@
 {
   "name": "@ramoira/schema",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "private": true,
-  "description": "Ramoira brand schema specification 3.0.0: normative JSON Schemas, the reference validator and the open checker.",
+  "description": "Ramoira brand schema specification 3.1.0: normative JSON Schemas, the reference validator and the open checker.",
   "license": "MIT",
   "type": "module",
   "exports": {

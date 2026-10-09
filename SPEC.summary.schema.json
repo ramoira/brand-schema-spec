@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ramoira.com/schema/v3/SPEC.summary.schema.json",
-  "title": "Ramoira Brand Schema 3.0.0 (public summary)",
+  "title": "Ramoira Brand Schema 3.1.0 (public summary)",
   "description": "Normative JSON Schema for the public summary (schema_type: summary). Includes every public rule and all of identity, narrative and voice, identically at every tier. Excludes by default the commercial and governance layers, private rules and identity.prism.culture.sacredBoundary; the brand can opt any of these in. Never contains draft_provenance. content_hash and ratification identify the full schema the summary was extracted from.",
   "type": "object",
   "required": [

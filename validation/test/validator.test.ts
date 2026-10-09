@@ -347,6 +347,118 @@ describe('invariant 11: promoted examples keep the reacting participant’s role
   })
 })
 
+// A Corvane copy in the 3.0.0 shape: no field added in 3.1.0.
+const at300 = (): Obj => {
+  const doc = corvane()
+  doc.ramoira.spec_version = '3.0.0'
+  const dp = doc.draft_provenance
+  dp.closeness_ratings = dp.closeness_ratings
+    .filter((r: Obj) => r.answered_by === 'p_owner' && r.basis === 'intended')
+    .map(({ archetype_id, closeness }: Obj) => ({ archetype_id, closeness }))
+  dp.reactions = dp.reactions.filter((r: Obj) => r.set_id === undefined)
+  delete dp.contrast_sets
+  delete dp.retests
+  delete dp.competitor_ratings
+  return doc
+}
+const contrastSet = (doc: Obj): Obj => doc.draft_provenance.contrast_sets[0]
+
+describe('3.1.0: version gate', () => {
+  it('a 3.0.0 document stays valid', () => assert.deepEqual(errors(at300()), []))
+  it('a 3.0.0 document cannot carry contrast sets', () => {
+    const doc = at300()
+    doc.draft_provenance.contrast_sets = corvane().draft_provenance.contrast_sets
+    failsSchema(doc, /contrast_sets added in spec 3\.1\.0/)
+  })
+  it('a 3.0.0 document cannot attribute a closeness rating', () => {
+    const doc = at300()
+    doc.draft_provenance.closeness_ratings[0].answered_by = 'p_owner'
+    failsSchema(doc, /answered_by added in spec 3\.1\.0/)
+  })
+  it('a 3.1.0 closeness rating names who rated', () => {
+    const doc = corvane()
+    delete doc.draft_provenance.closeness_ratings[0].answered_by
+    failsSchema(doc, /closeness_ratings\/0 .*answered_by/)
+  })
+  it('changing spec_version does not change content_hash', () => {
+    assert.equal(computeContentHash(at300()), computeContentHash(corvane()))
+  })
+})
+
+describe('invariant 12: the elicitation record is consistent', () => {
+  it('unknown exemplars mean a null closeness', () => {
+    const doc = corvane()
+    doc.draft_provenance.closeness_ratings[0].exemplars_known = false
+    failsInvariant(doc, 12)
+  })
+  it('the same archetype rated twice by one participant on one basis', () => {
+    const doc = corvane()
+    doc.draft_provenance.closeness_ratings.push({ ...doc.draft_provenance.closeness_ratings[0] })
+    failsInvariant(doc, 12)
+  })
+  it('the same rating on another basis or by another participant is fine', () => {
+    assert.deepEqual(errors(corvane()), [])
+  })
+  it('a competitor rating by an unknown participant', () => {
+    const doc = corvane()
+    doc.draft_provenance.competitor_ratings[0].answered_by = 'p_nobody'
+    failsInvariant(doc, 2)
+  })
+  it('best must be one of the set\u2019s probes', () => {
+    const doc = corvane()
+    contrastSet(doc).best = 'probe_elsewhere'
+    failsInvariant(doc, 12)
+  })
+  it('best and worst cannot be the same probe', () => {
+    const doc = corvane()
+    contrastSet(doc).worst = contrastSet(doc).best
+    failsInvariant(doc, 12)
+  })
+  it('none_of_these and a best probe contradict each other', () => {
+    const doc = corvane()
+    contrastSet(doc).none_of_these = true
+    failsInvariant(doc, 12)
+  })
+  it('a set with no best probe must say none of these', () => {
+    const doc = corvane()
+    contrastSet(doc).best = null
+    doc.draft_provenance.reactions = doc.draft_provenance.reactions.filter((r: Obj) => r.probe_id !== 'probe_effort_b')
+    doc.draft_provenance.retests[0].best = null
+    doc.draft_provenance.retests[0].none_of_these = true
+    failsInvariant(doc, 12)
+  })
+  it('the best probe is recorded as a yes reaction', () => {
+    const doc = corvane()
+    doc.draft_provenance.reactions.find((r: Obj) => r.probe_id === 'probe_effort_b').reaction = 'close'
+    failsInvariant(doc, 12)
+  })
+  it('a reaction names an existing set', () => {
+    const doc = corvane()
+    doc.draft_provenance.reactions.find((r: Obj) => r.probe_id === 'probe_effort_a').set_id = 'cs_missing'
+    failsInvariant(doc, 2)
+  })
+  it('set_id is unique', () => {
+    const doc = corvane()
+    doc.draft_provenance.contrast_sets.push({ ...contrastSet(doc) })
+    failsInvariant(doc, 2)
+  })
+  it('a retest is answered by the participant who answered the set', () => {
+    const doc = corvane()
+    doc.draft_provenance.retests[0].answered_by = 'p_team'
+    failsInvariant(doc, 12)
+  })
+  it('a retest names an existing set', () => {
+    const doc = corvane()
+    doc.draft_provenance.retests[0].set_id = 'cs_missing'
+    failsInvariant(doc, 2)
+  })
+  it('a retest that disagrees with the set is valid: agreement is computed, not enforced', () => {
+    const doc = corvane()
+    Object.assign(doc.draft_provenance.retests[0], { best: 'probe_effort_c', worst: 'probe_effort_a' })
+    assert.deepEqual(errors(doc), [])
+  })
+})
+
 describe('verdict record', () => {
   it('a producer self-check is tooling_only', () => {
     const doc = record()

@@ -1,6 +1,6 @@
 # Minimal — example schema
 
-The smallest valid 3.0.0 full schema: one rule, the required layer fields, and its generated summary.
+The smallest valid 3.1.0 full schema: one rule, the required layer fields, and its generated summary.
 
 1. Copy `brand.schema.json` into your project as `ramoira/brand.schema.json`.
 2. Replace the placeholder values.

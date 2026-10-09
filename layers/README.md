@@ -1,6 +1,6 @@
 # Reading guide
 
-One page per part of a 3.0.0 schema. The normative definition is [`SPEC.md`](../SPEC.md) with the JSON Schemas; where a page here disagrees with them, the spec wins.
+One page per part of a 3.x schema. The normative definition is [`SPEC.md`](../SPEC.md) with the JSON Schemas; where a page here disagrees with them, the spec wins.
 
 | Page | Part |
 |---|---|

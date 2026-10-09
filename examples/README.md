@@ -1,6 +1,6 @@
 # Examples
 
-These illustrate the 3.0.0 format. **Every brand here is fictional**, and none of these schemas is ratified. Any resemblance to a real company is unintended.
+These illustrate the 3.1.0 format. **Every brand here is fictional**, and none of these schemas is ratified. Any resemblance to a real company is unintended.
 
 | Folder | What it shows |
 |---|---|

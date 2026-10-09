@@ -6,7 +6,7 @@ An open format for what a brand means, and what it will not say.
 
 A Ramoira brand schema is a structured, versioned, agent-readable statement of a brand: the rules content must follow, and the facts and voice producers write from. Agencies, freelancers, in-house teams and AI systems read it to write on-brand content. A verifier reads it to check content against it.
 
-**3.0.0** is the current version. It is a breaking release; see [`migrations/2.0.0-to-3.0.0.md`](migrations/2.0.0-to-3.0.0.md).
+**3.1.0** is the current version. It adds optional elicitation fields to `draft_provenance` (outside `content_hash`); 3.0.0 documents stay valid, see [`migrations/3.0.0-to-3.1.0.md`](migrations/3.0.0-to-3.1.0.md). 3.0.0 was a breaking release; see [`migrations/2.0.0-to-3.0.0.md`](migrations/2.0.0-to-3.0.0.md).
 
 ## Three things to know
 

@@ -1,6 +1,6 @@
 # Reference validator
 
-Validates 3.0.0 documents: full schemas, archetype templates, summaries, verdict events and adoption records. Requires Node.js 22.18 or later (TypeScript runs directly; no build step).
+Validates 3.1.0 and 3.0.0 documents: full schemas, archetype templates, summaries, verdict events and adoption records. Requires Node.js 22.18 or later (TypeScript runs directly; no build step).
 
 ```bash
 npm install

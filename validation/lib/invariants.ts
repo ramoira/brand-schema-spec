@@ -97,6 +97,12 @@ export function checkInvariants(doc: Obj, kind: SchemaKind): Issue[] {
     issues,
   )
   indexById(located<Obj>(doc.archetype?.delta_zones, '/archetype/delta_zones'), 'zone_id', 'zone_id', issues)
+  const contrastSets = indexById(
+    located<Obj>(provenance?.contrast_sets, '/draft_provenance/contrast_sets'),
+    'set_id',
+    'set_id',
+    issues,
+  )
 
   for (const { value: rule, path } of rules.values()) {
     if (Array.isArray(rule.situations)) {
@@ -238,6 +244,10 @@ export function checkInvariants(doc: Obj, kind: SchemaKind): Issue[] {
         path: `${path}/field`,
       })),
       ...Object.keys(provenance.fields ?? {}).map((p) => ({ value: p, path: '/draft_provenance/fields' })),
+      ...located<Obj>(provenance.contrast_sets, '/draft_provenance/contrast_sets').map(({ value, path }) => ({
+        value: value.field as string,
+        path: `${path}/field`,
+      })),
       ...located<Obj>(provenance.reactions, '/draft_provenance/reactions').flatMap(({ value, path }) =>
         located<string>(value.resulted_in?.fields, `${path}/resulted_in/fields`),
       ),
@@ -301,6 +311,81 @@ export function checkInvariants(doc: Obj, kind: SchemaKind): Issue[] {
   }
   for (const { value: answer, path } of located<Obj>(provenance?.delta_answers, '/draft_provenance/delta_answers')) {
     if (!participants.has(answer.answered_by)) err(2, `${path}/answered_by`, `unknown participant "${answer.answered_by}"`)
+  }
+
+  // ── Invariant 12: the elicitation record is consistent (3.1.0) ───────────
+  const closeness = located<Obj>(provenance?.closeness_ratings, '/draft_provenance/closeness_ratings')
+  const competitors = located<Obj>(provenance?.competitor_ratings, '/draft_provenance/competitor_ratings')
+  const retests = located<Obj>(provenance?.retests, '/draft_provenance/retests')
+  const raters: Located<Obj>[] = [
+    ...closeness.filter(({ value }) => value.answered_by !== undefined),
+    ...competitors,
+    ...contrastSets.values(),
+    ...retests,
+  ]
+  for (const { value, path } of raters) {
+    if (!participants.has(value.answered_by)) err(2, `${path}/answered_by`, `unknown participant "${value.answered_by}"`)
+  }
+  const seen = new Map<string, string>()
+  const once = (key: string, path: string, what: string) => {
+    if (seen.has(key)) err(12, path, `${what} is rated twice (first at ${seen.get(key)})`)
+    else seen.set(key, path)
+  }
+  for (const { value: r, path } of closeness) {
+    if (r.exemplars_known === false && r.closeness !== null) {
+      err(12, `${path}/closeness`, 'exemplars_known is false, so closeness must be null')
+    }
+    once(`c|${r.archetype_id}|${r.answered_by ?? ''}|${r.basis ?? 'intended'}`, path, `archetype "${r.archetype_id}"`)
+  }
+  for (const { value: r, path } of competitors) {
+    if (r.exemplars_known === false && r.closeness !== null) {
+      err(12, `${path}/closeness`, 'exemplars_known is false, so closeness must be null')
+    }
+    once(`k|${r.competitor_name}|${r.archetype_id}|${r.answered_by}`, path, `competitor "${r.competitor_name}" on "${r.archetype_id}"`)
+  }
+  // A choice (in a contrast set or its retest) picks among the set's probes.
+  const checkChoice = (choice: Obj, probes: string[], path: string) => {
+    for (const key of ['best', 'worst'] as const) {
+      if (choice[key] !== null && !probes.includes(choice[key])) {
+        err(12, `${path}/${key}`, `"${choice[key]}" is not one of the set's probe_ids`)
+      }
+    }
+    if (choice.best !== null && choice.best === choice.worst) err(12, `${path}/worst`, 'best and worst are the same probe')
+    if (choice.none_of_these && choice.best !== null) err(12, `${path}/best`, 'none_of_these is true, so best must be null')
+    if (!choice.none_of_these && choice.best === null) err(12, `${path}/best`, 'best is null, so none_of_these must be true')
+  }
+  const setReactions = located<Obj>(provenance?.reactions, '/draft_provenance/reactions').filter(
+    ({ value }) => value.set_id !== undefined,
+  )
+  for (const { value: set, path } of contrastSets.values()) {
+    checkChoice(set, set.probe_ids, path)
+    for (const [key, expected] of [['best', 'yes'], ['worst', 'no']] as const) {
+      if (set[key] === null) continue
+      const reaction = setReactions.find(({ value }) => value.set_id === set.set_id && value.probe_id === set[key])?.value
+      if (!reaction) {
+        err(12, `${path}/${key}`, `no reaction records the ${key} probe "${set[key]}" for set "${set.set_id}"`)
+      } else if (reaction.reaction !== expected || reaction.answered_by !== set.answered_by) {
+        err(12, `${path}/${key}`, `the ${key} probe must be recorded as "${expected}" by ${set.answered_by}`)
+      }
+    }
+  }
+  for (const { value: reaction, path } of setReactions) {
+    const set = contrastSets.get(reaction.set_id)?.value
+    if (!set) err(2, `${path}/set_id`, `unknown set_id "${reaction.set_id}"`)
+    else if (reaction.probe_id !== set.best && reaction.probe_id !== set.worst) {
+      err(12, `${path}/probe_id`, `"${reaction.probe_id}" is neither the best nor the worst probe of set "${set.set_id}"`)
+    }
+  }
+  for (const { value: retest, path } of retests) {
+    const set = contrastSets.get(retest.set_id)?.value
+    if (!set) {
+      err(2, `${path}/set_id`, `unknown set_id "${retest.set_id}"`)
+      continue
+    }
+    checkChoice(retest, set.probe_ids, path)
+    if (retest.answered_by !== set.answered_by) {
+      err(12, `${path}/answered_by`, `a retest is answered by the same participant as its set (${set.answered_by})`)
+    }
   }
   if (provenance) {
     for (const { value: ex, path } of examples.values()) {

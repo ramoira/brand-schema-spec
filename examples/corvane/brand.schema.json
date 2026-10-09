@@ -1,6 +1,6 @@
 {
   "ramoira": {
-    "spec_version": "3.0.0",
+    "spec_version": "3.1.0",
     "schema_type": "full",
     "brand_id": "corvane",
     "schema_version": "1.0.0",
@@ -926,14 +926,41 @@
     "closeness_ratings": [
       {
         "archetype_id": "workshop",
-        "closeness": 0.7
+        "closeness": 0.67,
+        "answered_by": "p_owner",
+        "basis": "intended",
+        "exemplars_known": true
+      },
+      {
+        "archetype_id": "workshop",
+        "closeness": 0.67,
+        "answered_by": "p_team",
+        "basis": "intended",
+        "exemplars_known": true
+      },
+      {
+        "archetype_id": "workshop",
+        "closeness": 0.33,
+        "answered_by": "p_owner",
+        "basis": "current",
+        "exemplars_known": true
       }
     ],
     "anchors": [
       {
         "archetype_id": "workshop",
-        "closeness": 0.7,
+        "closeness": 0.67,
         "exemplars_shown": []
+      }
+    ],
+    "competitor_ratings": [
+      {
+        "competitor_name": "Ferrowick",
+        "archetype_id": "workshop",
+        "closeness": 0.33,
+        "exemplars_known": true,
+        "answered_by": "p_owner",
+        "captured_at": "2026-10-05"
       }
     ],
     "delta_answers": [
@@ -950,6 +977,35 @@
         "question": "How old is the craft you draw on, and how old are you?",
         "answer": "The craft is old. We started in 2014. Say both.",
         "answered_by": "p_owner"
+      }
+    ],
+    "contrast_sets": [
+      {
+        "set_id": "cs_effort",
+        "zone_id": "dz_effort",
+        "field": "/narrative/mythEvolution/modernTensions",
+        "surface": "product_detail_page",
+        "probe_ids": [
+          "probe_effort_a",
+          "probe_effort_b",
+          "probe_effort_c"
+        ],
+        "best": "probe_effort_b",
+        "worst": "probe_effort_a",
+        "none_of_these": false,
+        "reason": "We say what the care takes. We never promise it takes nothing.",
+        "answered_by": "p_owner",
+        "captured_at": "2026-10-05"
+      }
+    ],
+    "retests": [
+      {
+        "set_id": "cs_effort",
+        "best": "probe_effort_b",
+        "worst": "probe_effort_a",
+        "none_of_these": false,
+        "answered_by": "p_owner",
+        "captured_at": "2026-10-05"
       }
     ],
     "fields": {
@@ -974,6 +1030,26 @@
             "ex_pdp_gadget"
           ]
         }
+      },
+      {
+        "probe_id": "probe_effort_a",
+        "set_id": "cs_effort",
+        "surface": "product_detail_page",
+        "text": "Zero effort. Zero fuss. Just perfect results, every time.",
+        "reaction": "no",
+        "reason": "Promises no effort.",
+        "answered_by": "p_owner",
+        "captured_at": "2026-10-05"
+      },
+      {
+        "probe_id": "probe_effort_b",
+        "set_id": "cs_effort",
+        "surface": "product_detail_page",
+        "text": "A minute of oil after each cook. That is the whole ritual.",
+        "reaction": "yes",
+        "reason": "Says exactly what the care takes.",
+        "answered_by": "p_owner",
+        "captured_at": "2026-10-05"
       }
     ]
   }
