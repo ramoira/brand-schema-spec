@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ramoira.com/schema/v3/SPEC.schema.json",
-  "title": "Ramoira Brand Schema 3.0.0 (full and archetype)",
+  "title": "Ramoira Brand Schema 3.1.0 (full and archetype)",
   "description": "Normative JSON Schema for a full brand schema (schema_type: full) and an archetype template (schema_type: archetype). The public summary has its own schema, SPEC.summary.schema.json. Checks that JSON Schema cannot express (unique ids, reference resolution, rubric sufficiency, ratification conditions, content_hash recomputation, scale ranges) are enforced by the reference validator in validation/. See SPEC.md section 9.",
   "type": "object",
   "required": ["ramoira", "rules", "identity", "narrative", "voice", "commercial", "governance"],
@@ -41,10 +41,30 @@
       "else": {
         "not": { "required": ["archetype"] }
       }
+    },
+    {
+      "description": "Version gate. A document that declares 3.0.0 carries none of the draft_provenance fields added in 3.1.0; a 3.1.0 document records who gave each closeness rating.",
+      "if": {
+        "properties": { "ramoira": { "properties": { "spec_version": { "const": "3.0.0" } } } }
+      },
+      "then": {
+        "properties": { "draft_provenance": { "$ref": "#/$defs/DraftProvenanceAt300" } }
+      },
+      "else": {
+        "properties": {
+          "draft_provenance": {
+            "properties": { "closeness_ratings": { "items": { "required": ["answered_by"] } } }
+          }
+        }
+      }
     }
   ],
   "$defs": {
-    "SpecVersion": { "const": "3.0.0" },
+    "SpecVersion": {
+      "type": "string",
+      "enum": ["3.0.0", "3.1.0"],
+      "description": "3.1.0 adds optional elicitation fields to draft_provenance (outside content_hash). A 3.0.0 document stays valid; changing spec_version alone needs no re-ratification."
+    },
     "ContentHash": {
       "type": "string",
       "pattern": "^sha256:[0-9a-f]{64}$",
@@ -804,7 +824,16 @@
     "ParticipantId": { "type": "string", "pattern": "^p_[A-Za-z0-9_.:-]{1,124}$" },
     "Closeness": {
       "type": ["number", "null"],
-      "description": "The owner's rated closeness to an archetype. The closeness scale is not fixed by 3.0.0."
+      "description": "A participant's rated closeness to an archetype, or null when the participant does not know its exemplars. A fact about a judgment, never a score of the brand. The scale and its labels are named by draft_provenance.instrument_version; Ramoira's drafting instrument maps four labels to 1, 0.67, 0.33 and 0."
+    },
+    "ClosenessBasis": {
+      "type": "string",
+      "enum": ["intended", "current"],
+      "description": "intended: how close the brand should be (the standard; the default when absent). current: how close the brand's content sounds today."
+    },
+    "ProbeChoice": {
+      "anyOf": [{ "$ref": "#/$defs/Id" }, { "type": "null" }],
+      "description": "A probe_id from the contrast set, or null."
     },
     "DraftProvenance": {
       "type": "object",
@@ -845,7 +874,10 @@
             "additionalProperties": false,
             "properties": {
               "archetype_id": { "$ref": "#/$defs/Id" },
-              "closeness": { "$ref": "#/$defs/Closeness" }
+              "closeness": { "$ref": "#/$defs/Closeness" },
+              "answered_by": { "$ref": "#/$defs/ParticipantId", "description": "Who rated. Required from 3.1.0: the rater is part of what a closeness rating is." },
+              "basis": { "$ref": "#/$defs/ClosenessBasis" },
+              "exemplars_known": { "type": "boolean", "description": "false when the participant does not know the exemplar brands; closeness is then null." }
             }
           }
         },
@@ -893,6 +925,7 @@
             "additionalProperties": false,
             "properties": {
               "probe_id": { "$ref": "#/$defs/Id" },
+              "set_id": { "$ref": "#/$defs/Id", "description": "The contrast set this reaction came from (3.1.0): its most-like-us probe is recorded as yes, its least-like-us probe as no." },
               "surface": { "anyOf": [{ "$ref": "#/$defs/OutputSurface" }, { "$ref": "#/$defs/NonEmptyString" }] },
               "text": { "$ref": "#/$defs/NonEmptyString" },
               "reaction": { "type": "string", "enum": ["yes", "close", "no"] },
@@ -909,7 +942,75 @@
               }
             }
           }
+        },
+        "contrast_sets": {
+          "type": "array",
+          "description": "3.1.0. Choices among fixed probe lines for one delta zone: the probe most like the brand, the one least like it, or none of these, with the participant's reason. Probe lines are stimuli, never content.",
+          "items": {
+            "type": "object",
+            "required": ["set_id", "zone_id", "field", "surface", "probe_ids", "best", "worst", "none_of_these", "reason", "answered_by", "captured_at"],
+            "additionalProperties": false,
+            "properties": {
+              "set_id": { "$ref": "#/$defs/Id" },
+              "zone_id": { "$ref": "#/$defs/Id" },
+              "field": { "$ref": "#/$defs/JsonPointer" },
+              "surface": { "anyOf": [{ "$ref": "#/$defs/OutputSurface" }, { "$ref": "#/$defs/NonEmptyString" }] },
+              "probe_ids": { "type": "array", "items": { "$ref": "#/$defs/Id" }, "minItems": 2, "uniqueItems": true },
+              "best": { "$ref": "#/$defs/ProbeChoice" },
+              "worst": { "$ref": "#/$defs/ProbeChoice" },
+              "none_of_these": { "type": "boolean" },
+              "reason": { "type": ["string", "null"] },
+              "answered_by": { "$ref": "#/$defs/ParticipantId" },
+              "captured_at": { "$ref": "#/$defs/IsoDate" }
+            }
+          }
+        },
+        "retests": {
+          "type": "array",
+          "description": "3.1.0. A contrast set shown again, reshuffled, to the same participant. Agreement is computed by whoever reads the record; it is never stored here.",
+          "items": {
+            "type": "object",
+            "required": ["set_id", "best", "worst", "none_of_these", "answered_by", "captured_at"],
+            "additionalProperties": false,
+            "properties": {
+              "set_id": { "$ref": "#/$defs/Id" },
+              "best": { "$ref": "#/$defs/ProbeChoice" },
+              "worst": { "$ref": "#/$defs/ProbeChoice" },
+              "none_of_these": { "type": "boolean" },
+              "answered_by": { "$ref": "#/$defs/ParticipantId" },
+              "captured_at": { "$ref": "#/$defs/IsoDate" }
+            }
+          }
+        },
+        "competitor_ratings": {
+          "type": "array",
+          "description": "3.1.0. A participant's placement of a named competitor on the archetypes. A perception recorded by the brand, never a measure of the competitor.",
+          "items": {
+            "type": "object",
+            "required": ["competitor_name", "archetype_id", "closeness", "answered_by", "captured_at"],
+            "additionalProperties": false,
+            "properties": {
+              "competitor_name": { "$ref": "#/$defs/NonEmptyString" },
+              "archetype_id": { "$ref": "#/$defs/Id" },
+              "closeness": { "$ref": "#/$defs/Closeness" },
+              "exemplars_known": { "type": "boolean" },
+              "answered_by": { "$ref": "#/$defs/ParticipantId" },
+              "captured_at": { "$ref": "#/$defs/IsoDate" }
+            }
+          }
         }
+      }
+    },
+    "DraftProvenanceAt300": {
+      "description": "draft_provenance in a document that declares spec_version 3.0.0: none of the fields added in 3.1.0.",
+      "properties": {
+        "closeness_ratings": {
+          "items": { "properties": { "answered_by": false, "basis": false, "exemplars_known": false } }
+        },
+        "reactions": { "items": { "properties": { "set_id": false } } },
+        "contrast_sets": false,
+        "retests": false,
+        "competitor_ratings": false
       }
     },
 

@@ -1,7 +1,22 @@
 # Changelog
 
-## Unreleased
+## 3.1.0
 
+Minor. 3.0.0 documents stay valid. See `migrations/3.0.0-to-3.1.0.md`.
+
+**Elicitation record in `draft_provenance`** (outside `content_hash`; never in a summary)
+- `closeness_ratings[]` gains `answered_by` (required in 3.1.0: the rater is part of what a closeness rating is), `basis` (`intended` or `current`) and `exemplars_known`. `closeness` keeps its type, `number | null`; its description now says what it is: a fact about a judgment, never a score of the brand.
+- New `contrast_sets[]`: choices among fixed probe lines for one delta zone (most like us, least like us, or none of these), with the participant's reason.
+- New `retests[]`: a contrast set shown again to the same participant. Agreement is computed by whoever reads the record, never stored.
+- New `competitor_ratings[]`: a participant's placement of a named competitor on the archetypes, recorded as the brand's perception, never as a measure of the competitor.
+- `reactions[]` gains `set_id`, linking a reaction to its contrast set.
+- `anchors` may be empty: archetypes are reference points, not a complete map of brand meaning.
+
+**Validation**
+- `spec_version` accepts `"3.0.0"` and `"3.1.0"`. A document that declares 3.0.0 cannot carry a 3.1.0 field, so a declared version is always true.
+- New invariant 12: the elicitation record is consistent (SPEC.md section 12). Invariant 2 also covers `set_id`.
+
+**Tooling** (no format change)
 - The open checker, `@ramoira/schema/checker`: `checkItem(schema, item, context)` checks one content item against a 3.0.0 schema and returns a verdict event in the `record.schema.json` format. Exact and structural rules run deterministically; judged rules run only through a judge the caller supplies, and are `void` unless the judge quotes the item and cites the rule's own rubric. No option selects, skips or tunes rules. Results are always `tooling_only`; a candidate schema or a public summary gives `not_certifiable`. See `checker/README.md`. No change to the format.
 - The validator is installable as a package, `@ramoira/schema`, from GitHub (`npm install github:ramoira/brand-schema-spec#<commit>`): it builds to `dist/` on install and exports `validateDocument`, `computeContentHash`, `extractSummary` and the three JSON Schemas. No change to the format.
 

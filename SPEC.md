@@ -1,8 +1,8 @@
 # Ramoira Brand Schema Specification
 
-**Version 3.0.0**
+**Version 3.1.0**
 
-3.0.0 is a breaking release. Upgrading from 2.0.0: see [`migrations/2.0.0-to-3.0.0.md`](migrations/2.0.0-to-3.0.0.md).
+3.1.0 adds optional elicitation fields to `draft_provenance`, outside `content_hash` (section 7). A 3.0.0 document stays valid; see [`migrations/3.0.0-to-3.1.0.md`](migrations/3.0.0-to-3.1.0.md). 3.0.0 was a breaking release; upgrading from 2.0.0: see [`migrations/2.0.0-to-3.0.0.md`](migrations/2.0.0-to-3.0.0.md).
 
 ---
 
@@ -91,7 +91,7 @@ Compute it with `npm run hash -- <file> --write`.
 
 ```json
 "ramoira": {
-  "spec_version":           "3.0.0",
+  "spec_version":           "3.1.0",
   "schema_type":            "full",
   "brand_id":               "corvane",
   "schema_version":         "1.0.0",
@@ -106,7 +106,7 @@ Compute it with `npm run hash -- <file> --write`.
 
 | Field | Meaning | Constraint |
 |---|---|---|
-| `spec_version` | The spec version the file follows | `"3.0.0"` |
+| `spec_version` | The spec version the file follows | `"3.1.0"` or `"3.0.0"`. A 3.0.0 document carries none of the fields 3.1.0 added. |
 | `schema_type` | `full`, `summary` or `archetype` | `archetype` ⇒ `brand_id`, `ratification` and `canonical_url` are `null` |
 | `brand_id` | The brand's slug | |
 | `schema_version` | A human label only | Versioning truth is `content_hash` |
@@ -215,11 +215,27 @@ How the candidate was produced. Outside `content_hash`. Never a score of the bra
   "instrument_version": "…",
   "intake": { "name": "…", "category": "…", "description": "…", "founded": "2014", "source_documents": [] },
   "participants": [ { "participant_id": "p_owner", "role": "brand_owner" } ],
-  "closeness_ratings": [ { "archetype_id": "…", "closeness": 0.7 } ],
-  "anchors": [ { "archetype_id": "…", "closeness": 0.7, "exemplars_shown": [] } ],
+  "closeness_ratings": [
+    { "archetype_id": "…", "closeness": 0.67, "answered_by": "p_owner", "basis": "intended", "exemplars_known": true }
+  ],
+  "anchors": [ { "archetype_id": "…", "closeness": 0.67, "exemplars_shown": [] } ],
+  "competitor_ratings": [
+    { "competitor_name": "…", "archetype_id": "…", "closeness": 0.33, "exemplars_known": true,
+      "answered_by": "p_owner", "captured_at": "2026-10-05" }
+  ],
   "delta_answers": [
     { "zone_id": "dz_effort", "field": "/narrative/mythEvolution/modernTensions",
       "question": "…", "answer": "…", "answered_by": "p_owner" }
+  ],
+  "contrast_sets": [
+    { "set_id": "cs_effort", "zone_id": "dz_effort", "field": "/narrative/mythEvolution/modernTensions",
+      "surface": "product_detail_page", "probe_ids": ["probe_effort_a", "probe_effort_b", "probe_effort_c"],
+      "best": "probe_effort_b", "worst": "probe_effort_a", "none_of_these": false,
+      "reason": "…", "answered_by": "p_owner", "captured_at": "2026-10-05" }
+  ],
+  "retests": [
+    { "set_id": "cs_effort", "best": "probe_effort_b", "worst": "probe_effort_a", "none_of_these": false,
+      "answered_by": "p_owner", "captured_at": "2026-10-05" }
   ],
   "fields": { "/narrative/mythEvolution/modernTensions": "adapted", "/identity/distinctiveAssets/sonic/sonicLogoURL": "unfilled" },
   "reactions": [
@@ -234,7 +250,11 @@ How the candidate was produced. Outside `content_hash`. Never a score of the bra
 |---|---|
 | `method` | `archetype_anchored`, `questionnaire`, `document_import` or `manual` |
 | `participants` | Who took part, and in what role: `brand_owner`, `brand_team`, `agency`, `freelancer`, `ramoira_facilitator` |
-| `closeness_ratings`, `anchors` | The owner's rated closeness to archetypes; up to two anchors seeded the draft. The closeness scale is not fixed by 3.0.0. |
+| `closeness_ratings` | Each participant's rated closeness to archetypes: a fact about a judgment, never a score of the brand. From 3.1.0 each rating names who rated (`answered_by`, required), whether it is the standard or today's content (`basis`: `intended`, the default, or `current`), and whether the participant knew the exemplars (`exemplars_known: false` with `closeness: null`). The scale and its labels are named by `instrument_version`; Ramoira's drafting instrument maps four labels to 1, 0.67, 0.33 and 0. |
+| `anchors` | Up to two archetypes the draft was seeded from, at what closeness. A draft may have none: archetypes are reference points, not a complete map of brand meaning. |
+| `competitor_ratings` | (3.1.0) A participant's placement of a named competitor on the archetypes. A perception the brand records, never a measure of the competitor. |
+| `contrast_sets` | (3.1.0) Choices among fixed probe lines for one delta zone: the probe most like the brand (`best`), least like it (`worst`), or `none_of_these`, with the participant's reason. The chosen probes are also recorded in `reactions` (best as `yes`, worst as `no`, with the set's `set_id`). Probe lines are stimuli, never content. |
+| `retests` | (3.1.0) A contrast set shown again to the same participant. How often retests agree is computed by whoever reads the record; it is never stored. |
 | `delta_answers` | Answers that adapted the template, each tied to the field it changed (a JSON pointer) and to who answered |
 | `fields` | JSON pointer → `inherited`, `adapted`, `authored`, `affirmed` or `unfilled`. `unfilled` fields are shown at ratification as thinness. |
 | `reactions` | The owner's verdicts on elicitation probes, and what each changed |
@@ -448,7 +468,7 @@ The validator detects the document kind, runs the JSON Schema for it, then enfor
 **Invariants.**
 
 1. `ramoira`, and every object the spec defines, is closed: no result-bearing field can be added anywhere.
-2. `rule_id`, `example_id`, `rail_id`, `claim_id`, `situation_id`, `participant_id` and `zone_id` are unique; every reference resolves (rubric examples and rails, rule situations, suspended rules, `primaryRail`, participants, promoted examples).
+2. `rule_id`, `example_id`, `rail_id`, `claim_id`, `situation_id`, `participant_id`, `zone_id` and `set_id` are unique; every reference resolves (rubric examples and rails, rule situations, suspended rules, `primaryRail`, participants, promoted examples, contrast sets named by reactions and retests).
 3. Check-class requirements (section 6.2) hold. A `judged_bounded` rule without both an approved and a rejected example, or a rail with both an example and an anti-example, is invalid.
 4. `schema_type: archetype` ⇒ `brand_id`, `ratification` and `canonical_url` are `null`, and only an archetype carries the `archetype` block.
 5. `ratification` non-null ⇒ `ratified_hash == content_hash`; no rule is `inherited` and unaffirmed; every rubric example is judged by `brand_owner` or `brand_team`.
@@ -458,6 +478,7 @@ The validator detects the document kind, runs the JSON Schema for it, then enfor
 9. In an archetype template, every delta-zone field is a valid v3 JSON pointer and every situation it names exists in `governance.situations`.
 10. Context-variant and situation deltas keep `formality` and `warmth` within 0–10.
 11. An example promoted from a reaction is `judged_by` the role of the participant who reacted.
+12. The elicitation record is consistent (3.1.0): `exemplars_known: false` ⇒ `closeness: null`; no participant rates the same archetype twice on one basis, or the same competitor on one archetype twice; in a contrast set or retest, `best` and `worst` are among the set's `probe_ids` and differ, and `none_of_these` holds exactly when `best` is null; each chosen probe is recorded as a reaction in that set (`best` as `yes`, `worst` as `no`) by the participant who answered it, and no other reaction names the set; a retest is answered by the participant who answered its set.
 
 The validator also warns (without failing) on thinness (`unfilled` fields) and on `draft_provenance` pointers that name no v3 field.
 
@@ -489,9 +510,9 @@ Adoption records (`$defs/Adoption`) are the brand's act of adopting a producer-r
 
 ---
 
-## 14. What 3.0.0 deliberately does not contain
+## 14. What the spec deliberately does not contain
 
-- **Results of any kind** in a schema: certification, confidence, conformance rate, expiry, density score, archetype coherence.
+- **Results of any kind** in a schema: certification, confidence, conformance rate, expiry, density score, archetype coherence, retest agreement or anchor fit.
 - **Archetype taglines or scores inside brand meaning.** The anchor is provenance, not identity. Personality dimension scores are not part of a brand schema.
 - **A ratified summary of the schema's own content.** A short brief can be derived on export; it is not stored, so it cannot drift from what it summarises.
 - **Integration plumbing:** webhooks, routing addresses, audit endpoints.
@@ -509,7 +530,9 @@ This spec follows semantic versioning.
 | New required field added | minor | 3.0.0 → 3.1.0 |
 | Field removed, renamed, or type changed | major | 3.0.0 → 4.0.0 |
 
-There is one version axis: `spec_version`. A schema's own version is its `content_hash`.
+There is one version axis: `spec_version`. A schema's own version is its `content_hash`. `spec_version` sits outside the hash, so moving a document from 3.0.0 to 3.1.0 needs no re-ratification.
+
+3.1.0 is a minor release because a 3.1.0 closeness rating must name who rated. Its other additions are optional. A validator for 3.1.0 accepts 3.0.0 documents, and refuses a document that declares 3.0.0 but carries a field added in 3.1.0, so a declared version is always true.
 
 Migration guides are in [`migrations/`](migrations/).
 

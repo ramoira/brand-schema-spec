@@ -1,4 +1,4 @@
-// Reference open checker for Ramoira brand schema 3.0.0.
+// Reference open checker for Ramoira brand schema 3.x (3.0.0 and 3.1.0).
 //
 //   checkItem(schema, item, context?) → { event, findingsVerdict, notes, outOfScope }
 //
@@ -129,12 +129,12 @@ export async function checkItem(schema: unknown, item: Item, context: CheckConte
     throw new CheckError(
       validation.kind === 'archetype'
         ? 'this is an archetype template; content is checked against a brand schema'
-        : 'expected a 3.0.0 brand schema (full or summary)',
+        : 'expected a 3.x brand schema (full or summary)',
     )
   }
   if (!validation.valid) {
     const first = validation.issues.find((i) => i.level === 'error')
-    throw new CheckError(`the schema is not valid 3.0.0 (${first?.path}: ${first?.message}); run the validator first`)
+    throw new CheckError(`the schema is not valid 3.x (${first?.path}: ${first?.message}); run the validator first`)
   }
   if (typeof item?.text !== 'string') throw new CheckError('item.text must be a string')
   if (!OUTPUT_SURFACES.includes(item.surface)) {

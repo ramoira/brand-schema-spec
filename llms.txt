@@ -1,11 +1,12 @@
 # Ramoira Schema Specification
 
-Open format for brand meaning in the agent web. Version 3.0.0. A schema carries rules (each with an id, check class and severity) and five layers of facts and voice; it never carries results such as certification or confidence scores.
+Open format for brand meaning in the agent web. Version 3.1.0. A schema carries rules (each with an id, check class and severity) and five layers of facts and voice; it never carries results such as certification or confidence scores.
 
 ## Primary documents
 
 - [Specification](SPEC.md): the format, the rule registry, the summary, validation invariants, the verification record
 - [Migration 2.0.0 → 3.0.0](migrations/2.0.0-to-3.0.0.md)
+- [Migration 3.0.0 → 3.1.0](migrations/3.0.0-to-3.1.0.md)
 
 ## JSON Schemas
 

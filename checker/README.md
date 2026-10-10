@@ -1,6 +1,6 @@
 # Open checker
 
-Checks one content item against one 3.0.0 brand schema and returns a **verdict event** in the open record format ([`record.schema.json`](../record.schema.json)). It follows the [Verification Protocol](../SPEC.md#13-the-verification-record)'s mechanics. Free to use, for a brand checking its producers' work or a producer checking its own.
+Checks one content item against one 3.x brand schema and returns a **verdict event** in the open record format ([`record.schema.json`](../record.schema.json)). It follows the [Verification Protocol](../SPEC.md#13-the-verification-record)'s mechanics. Free to use, for a brand checking its producers' work or a producer checking its own.
 
 ```ts
 import { checkItem } from '@ramoira/schema/checker'
