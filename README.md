@@ -24,6 +24,7 @@ A Ramoira brand schema is a structured, versioned, agent-readable statement of a
 | [`record.schema.json`](record.schema.json) | JSON Schema: verdict events and adoption records |
 | [`validation/`](validation/) | Reference validator, `content_hash` tool and summary extractor |
 | [`checker/`](checker/) | Open checker: one content item against one schema, as a verdict event |
+| [`drafting/DRAFTING.md`](drafting/DRAFTING.md) | Drafting protocol for coding agents: how an agent drafts a candidate schema with a brand's owner |
 | [`layers/`](layers/) | Reading guide, one page per layer plus the rule registry |
 | [`examples/`](examples/) | Worked examples (fictional brands) |
 | [`schemas/`](schemas/) | Blank templates |
@@ -81,6 +82,8 @@ Returns a verdict event in the [`record.schema.json`](record.schema.json) format
 ## CLI
 
 The Ramoira CLI drafts, validates and publishes schemas: [github.com/ramoira/cli](https://github.com/ramoira/cli).
+
+To draft with a coding agent (Claude Code, Codex, Copilot, Cursor, Windsurf and others), give it [`drafting/DRAFTING.md`](drafting/DRAFTING.md): *"Read DRAFTING.md and draft our brand schema."* It is self-contained and needs no account.
 
 ## License
 

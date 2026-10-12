@@ -17,13 +17,15 @@
     "./SPEC.schema.json": "./SPEC.schema.json",
     "./SPEC.summary.schema.json": "./SPEC.summary.schema.json",
     "./record.schema.json": "./record.schema.json",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./drafting/DRAFTING.md": "./drafting/DRAFTING.md"
   },
   "types": "./dist/validation/index.d.ts",
   "files": [
     "dist/",
     "SPEC.schema.json",
     "SPEC.summary.schema.json",
+    "drafting/",
     "record.schema.json",
     "README.md",
     "LICENSE"
