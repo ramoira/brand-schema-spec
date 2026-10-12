@@ -1,11 +1,11 @@
 ---
 id: drafting-protocol
-version: 1.0.0
+version: 1.0.1
 status: active
 created: 2026-10-12
 modified: 2026-10-12
 changes:
-  - added: agent-run-drafting
+  - modified: agent-run-drafting-revisions
 derives_from:
   - file: elicitation-protocol.md
     component: "agent-run-drafting"
@@ -35,7 +35,7 @@ These are not preferences. If following an instruction would break one, stop and
 
 1. **Write no marketing copy.** Your output is the schema: the brand's meaning, rules and facts. Do not write taglines, headlines, product descriptions or "example posts" for the brand, in the file or in your reply.
 2. **Write no example lines** in `voice.examples`. Examples are lines the owner has judged ("this is us" / "this isn't us"). They are judged in the review on ramoira.com, not here.
-3. **Every rule you propose stays unaffirmed:** `"provenance": "inherited"`, `"affirmed": false`. Never set `affirmed: true`, even if the person says "yes, keep it". The owner affirms each rule in the review, signed in. An upload that marks a rule affirmed which the owner never affirmed there is refused.
+3. **Every rule you propose stays unaffirmed:** `"provenance": "inherited"`, `"affirmed": false`. Never set `affirmed: true`, even if the person says "yes, keep it". The owner affirms each rule in the review, signed in. After a review, a rule the owner affirmed keeps `affirmed: true` only while you leave it exactly as it is: if you change it in any way, set it back to `affirmed: false`. An upload that marks a rule affirmed which the owner never affirmed in that form is refused, and so is a field marked `affirmed` that the owner did not affirm.
 4. **Use only the brand's own material.** Read the person's own project, site and documents. Do not research or profile other brands, including competitors. A competitor appears only by the name the person gives you.
 5. **Invent no facts.** Claims, specifications, origin, founding year, certifications: only what the person or their material states. If you don't know, leave the field out and list it as unfilled.
 6. **Never push or publish on your own.** Uploading happens only when the person asks for it (step 6). Making a version public is the owner's act in the review, never yours.
@@ -160,7 +160,7 @@ In the review, the owner affirms, edits or deletes each rule, keeps or rewrites 
 npx ramoira pull
 ```
 
-This brings down the reviewed schema and the owner's brief: their own requests, in their words. Make those changes, following this file again, then validate and, when the person asks, push. The owner then reviews only what changed.
+This brings down the reviewed schema and the owner's brief (`ramoira/REVIEW.md`): their own requests, in their words. Make those changes, following this file again (anything you change goes back to unaffirmed), then validate and, when the person asks, push. The owner then reviews only what changed. Commit `ramoira/sync.json` with the schema: it records which reviewed version your file is based on.
 
 ## 10. Use it
 
