@@ -1,11 +1,11 @@
 ---
 id: drafting-protocol
-version: 1.0.1
+version: 1.1.0
 status: active
 created: 2026-10-12
-modified: 2026-10-12
+modified: 2026-10-13
 changes:
-  - modified: agent-run-drafting-revisions
+  - added: background-and-offline-reference
 derives_from:
   - file: elicitation-protocol.md
     component: "agent-run-drafting"
@@ -17,9 +17,26 @@ derives_from:
 
 **For the agent.** You are helping the founder or owner of a brand draft its brand schema: one file, `ramoira/brand.schema.json`, that says what the brand means, so that you and every other AI tool write in its voice and keep its rules. Follow this file from top to bottom. It is self-contained: you need nothing else from Ramoira to draft, and no account.
 
-**For the person.** Ask your agent: *"Read ramoira/DRAFTING.md and draft our brand schema."* (or point it at `https://ramoira.com/drafting.md`). It reads your project and anything you give it, asks what it can't find, and writes the file. You decide everything that matters later, in the review on ramoira.com.
+**For the person.** Ask your agent: *"Read ramoira/DRAFTING.md and draft our brand schema."* It reads your project and anything you give it, asks what it can't find, and writes the file. You decide everything that matters later, in the review on ramoira.com.
 
 What you produce is a **candidate**: the brand's draft, not ratified. Nothing in it is approved, certified or scored.
+
+## What this is, and why
+
+**Ramoira** is an open format for brand meaning, and a free service around it: a validator, a self-check for content, and a place where a brand's owner reviews their schema and shares a public summary. The format and the tools are open source; drafting, checking your own content and publishing are free.
+
+**A brand schema** is one JSON file in the project, `ramoira/brand.schema.json`. It holds what a brand means: what it makes and believes, how it sounds, which claims it may make, and the rules every piece of its content must keep, each with a severity. People and AI tools read it before they write.
+
+**Why a schema, rather than a style guide or a long prompt:**
+
+- **One source for every tool.** Claude Code, Cursor, Copilot, a chat assistant and a freelancer all read the same file, instead of a prompt pasted into each tool that drifts apart over time.
+- **Rules that can be checked.** "Never say *lifetime warranty*" is a rule with the exact words to look for. `ramoira check` runs the brand's rules over a draft and quotes what breaks them, so a page can be checked before it ships, not only read.
+- **The owner's decisions, kept apart from proposals.** Each rule records whether the owner affirmed it. What an agent proposes stays a proposal until the owner reviews it, so nobody mistakes a guess for the brand's position.
+- **Versioned like code.** Every version has a fingerprint (`content_hash`) of its meaning. Anyone can say which version a page was written against, and changes go through review, like a pull request.
+- **Private where it should be.** The full schema stays private; a public summary (rules marked public, voice, meaning) is what other tools and writers fetch.
+- **Open.** The format is public and the validator is open source, so the file is the brand's, not locked to Ramoira or to one model.
+
+It does not make content good by itself, and it certifies nothing: it makes what the brand wants explicit, shared and checkable.
 
 ---
 
@@ -27,7 +44,8 @@ What you produce is a **candidate**: the brand's draft, not ratified. Nothing in
 
 - **Who you are working with.** This version is for a brand's **owner or founder**, working on their own brand. Ask once: *"Is this your brand, and are you its owner or founder?"* If not, say that this version is for owners, and that the owner will need to review the result.
 - **What you need.** The project folder, and anything the person gives you: their website, a pitch deck, a brand document, product pages. Nothing else.
-- **The format.** The spec is public: `https://github.com/ramoira/brand-schema-spec` (`SPEC.md`, and `SPEC.schema.json` for the exact shape). `examples/corvane/brand.schema.json` there shows a complete file for a fictional brand. Use it for **structure only**; never copy its content.
+- **The format, offline.** `ramoira init` puts the spec next to this file: `ramoira/spec/SPEC.md` (what every field means), `ramoira/spec/SPEC.schema.json` (the exact shape) and `ramoira/spec/example.schema.json` (the smallest valid file, for a fictional brand). Use the example for **structure only**; never copy its content. If those files are missing and you have web access, the same files are at `https://github.com/ramoira/brand-schema-spec`.
+- **No web access?** Everything here works without it, except reading the person's website. Then ask the person to paste the pages that matter (home, about, a product page) into the chat or into a file in the project. `npx ramoira` needs the npm registry once; if that is blocked too, ask the person to run the commands.
 
 ## 2. Rules you must keep
 
@@ -43,7 +61,7 @@ These are not preferences. If following an instruction would break one, stop and
 
 ## 3. Gather
 
-Read before you ask. In the project, look at: the README, landing and marketing pages, UI copy (buttons, empty states, errors, onboarding), emails and notifications, any docs or brand notes. Ask the person for their website and any brand documents, and read those.
+Read before you ask. In the project, look at: the README, landing and marketing pages, UI copy (buttons, empty states, errors, onboarding), emails and notifications, any docs or brand notes. Ask the person for their website and any brand documents, and read those. If you cannot open a web page, ask them to paste its text.
 
 Note for each thing you learn where it came from, so you can tell the person.
 
