@@ -18,7 +18,9 @@
     "./SPEC.summary.schema.json": "./SPEC.summary.schema.json",
     "./record.schema.json": "./record.schema.json",
     "./package.json": "./package.json",
-    "./drafting/DRAFTING.md": "./drafting/DRAFTING.md"
+    "./drafting/DRAFTING.md": "./drafting/DRAFTING.md",
+    "./SPEC.md": "./SPEC.md",
+    "./examples/minimal/brand.schema.json": "./examples/minimal/brand.schema.json"
   },
   "types": "./dist/validation/index.d.ts",
   "files": [
@@ -28,7 +30,9 @@
     "drafting/",
     "record.schema.json",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "SPEC.md",
+    "examples/minimal/brand.schema.json"
   ],
   "engines": {
     "node": ">=20.10"
