@@ -2,7 +2,7 @@
 // Each issue names the invariant it enforces so failures are traceable.
 
 import { computeContentHash } from './hash.ts'
-import { pointerResolvesInSchema } from './pointer.ts'
+import { parsePointer, pointerResolvesInSchema, resolveInDocument } from './pointer.ts'
 import { specSchema } from './schemas.ts'
 
 export type Level = 'error' | 'warning'
@@ -83,12 +83,31 @@ export function checkInvariants(doc: Obj, kind: SchemaKind): Issue[] {
   const railList: Located<Obj>[] = []
   collectRails(doc, '', railList)
   const rails = indexById(railList, 'rail_id', 'rail_id', issues)
-  indexById(
+  const claims = indexById(
     located<Obj>(doc.narrative?.semiotic?.denotative?.claims, '/narrative/semiotic/denotative/claims'),
     'claim_id',
     'claim_id',
     issues,
   )
+  const pillars = indexById(located<Obj>(doc.narrative?.pillars, '/narrative/pillars'), 'pillar_id', 'pillar_id', issues)
+  const terms = indexById(located<Obj>(doc.voice?.terms, '/voice/terms'), 'term_id', 'term_id', issues)
+  // 3.2.0: claim, pillar and term ids share one namespace, so an id in a
+  // rule's protects names exactly one thing.
+  const protectable = new Map<string, { kind: string; path: string }>()
+  for (const [kind, map] of [
+    ['claim', claims],
+    ['pillar', pillars],
+    ['term', terms],
+  ] as const) {
+    for (const [id, item] of map) {
+      const prior = protectable.get(id)
+      if (prior) {
+        err(2, item.path, `${kind} id "${id}" is also a ${prior.kind} id (first at ${prior.path}); claim, pillar and term ids share one namespace`)
+      } else {
+        protectable.set(id, { kind, path: item.path })
+      }
+    }
+  }
   const situations = indexById(located<Obj>(governance.situations, '/governance/situations'), 'situation_id', 'situation_id', issues)
   const participants = indexById(
     located<Obj>(provenance?.participants, '/draft_provenance/participants'),
@@ -117,6 +136,14 @@ export function checkInvariants(doc: Obj, kind: SchemaKind): Issue[] {
     })
     ;(rubric.rail_refs ?? []).forEach((ref: string, i: number) => {
       if (!rails.has(ref)) missingRef(2, `${path}/rubric/rail_refs/${i}`, `unknown rail_id "${ref}"`)
+    })
+    ;(rubric.term_refs ?? []).forEach((ref: string, i: number) => {
+      if (!terms.has(ref)) missingRef(2, `${path}/rubric/term_refs/${i}`, `unknown term_id "${ref}"`)
+    })
+  }
+  for (const { value: term, path } of terms.values()) {
+    ;(term.example_refs ?? []).forEach((ref: string, i: number) => {
+      if (!examples.has(ref)) missingRef(2, `${path}/example_refs/${i}`, `unknown example_id "${ref}"`)
     })
   }
 
@@ -171,6 +198,18 @@ export function checkInvariants(doc: Obj, kind: SchemaKind): Issue[] {
             5,
             `${path}/rubric/example_refs/${i}`,
             `rubric example "${ref}" is judged_by ${ex.judged_by}; in a ratified schema rubric examples must be judged by brand_owner or brand_team`,
+          )
+        }
+      })
+    }
+    for (const { value: term, path } of terms.values()) {
+      ;(term.example_refs ?? []).forEach((ref: string, i: number) => {
+        const ex = examples.get(ref)?.value
+        if (ex && !BRAND_JUDGES.has(ex.judged_by)) {
+          err(
+            5,
+            `${path}/example_refs/${i}`,
+            `governed term example "${ref}" is judged_by ${ex.judged_by}; in a ratified schema it must be judged by brand_owner or brand_team`,
           )
         }
       })
@@ -392,6 +431,70 @@ export function checkInvariants(doc: Obj, kind: SchemaKind): Issue[] {
       if (ex.source === 'owner_reaction' && !promoted.has(ex.example_id)) {
         warn(11, path, `example "${ex.example_id}" has source owner_reaction but no reaction links to it`)
       }
+    }
+  }
+
+  // ── Invariant 13: what a rule protects is a fact or principle (3.2.0) ───
+  // An id names a claim, pillar or term; a pointer names held content in the
+  // layers where facts and principles live. Never a rule, rail, example,
+  // situation, voice expression material, governance or process metadata.
+  const PROTECTABLE: string[][] = [
+    ['identity', 'prism', 'culture'],
+    ['identity', 'distinctiveAssets'],
+    ['narrative', 'semiotic', 'denotative'],
+    ['narrative', 'myth'],
+    ['narrative', 'mythEvolution'],
+    ['narrative', 'pillars'],
+    ['commercial'],
+  ]
+  for (const { value: rule, path } of rules.values()) {
+    ;(rule.protects ?? []).forEach((entry: string, i: number) => {
+      const p = `${path}/protects/${i}`
+      if (!entry.startsWith('/')) {
+        if (protectable.has(entry)) return
+        if (rules.has(entry) || rails.has(entry) || examples.has(entry) || situations.has(entry)) {
+          err(13, p, `"${entry}" is a rule, rail, example or situation; a rule protects a fact or principle (a claim, pillar or term)`)
+        } else {
+          missingRef(13, p, `unknown claim_id, pillar_id or term_id "${entry}"`)
+        }
+        return
+      }
+      let segs: string[]
+      try {
+        segs = parsePointer(entry)
+      } catch {
+        err(13, p, `"${entry}" is neither an id nor a JSON pointer`)
+        return
+      }
+      const allowed = PROTECTABLE.some((prefix) => prefix.every((seg, k) => segs[k] === seg))
+      if (!allowed || segs.includes('rails')) {
+        err(
+          13,
+          p,
+          `"${entry}" is not a fact or principle (pointers may name identity.prism.culture, identity.distinctiveAssets, narrative.semiotic.denotative, narrative.myth, narrative.mythEvolution, narrative.pillars or commercial, never a rail)`,
+        )
+      } else if (resolveInDocument(doc, segs) === undefined) {
+        missingRef(13, p, `"${entry}" does not resolve in this schema`)
+      }
+    })
+  }
+
+  // ── Invariant 14: affirmations are well-formed authority claims (3.2.0) ──
+  // The validator checks the claim's form; whether the participant held the
+  // authority is the Ratification Protocol's question.
+  const HASHED = new Set(['rules', 'identity', 'narrative', 'voice', 'commercial', 'governance'])
+  for (const { value: a, path } of located<Obj>(provenance?.affirmations, '/draft_provenance/affirmations')) {
+    if (a.rule_id !== undefined && !rules.has(a.rule_id)) err(14, `${path}/rule_id`, `unknown rule_id "${a.rule_id}"`)
+    if (a.field !== undefined) {
+      const head = parsePointer(a.field)[0]
+      if (!HASHED.has(head) || !pointerResolvesInSchema(specSchema, a.field)) {
+        err(14, `${path}/field`, `"${a.field}" is not a field of brand meaning (the rules or the five layers)`)
+      }
+    }
+    const who = participants.get(a.answered_by)?.value
+    if (!who) err(2, `${path}/answered_by`, `unknown participant "${a.answered_by}"`)
+    else if (!BRAND_JUDGES.has(who.role)) {
+      err(14, `${path}/answered_by`, `affirmed by ${who.role}; only brand_owner or brand_team can affirm`)
     }
   }
 

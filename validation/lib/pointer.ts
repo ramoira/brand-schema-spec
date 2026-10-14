@@ -57,3 +57,22 @@ function walk(root: Schema, schema: Schema, segs: string[], depth: number): bool
   }
   return false
 }
+
+// Resolves an RFC 6901 pointer against a *document* (3.2.0, invariant 13): a
+// rule protects something the schema actually holds, not merely a field the
+// format defines. Returns undefined when any segment is missing.
+export function resolveInDocument(doc: unknown, segs: string[]): unknown {
+  let node: unknown = doc
+  for (const seg of segs) {
+    if (Array.isArray(node)) {
+      if (!/^(0|[1-9][0-9]*)$/.test(seg)) return undefined
+      node = node[Number(seg)]
+    } else if (node && typeof node === 'object') {
+      if (!Object.hasOwn(node, seg)) return undefined
+      node = (node as Record<string, unknown>)[seg]
+    } else {
+      return undefined
+    }
+  }
+  return node
+}

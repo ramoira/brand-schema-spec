@@ -1,8 +1,26 @@
+---
+id: brand-schema-specification
+version: 3.2.0
+status: active
+created: 2026-10-07
+modified: 2026-10-14
+changes:
+  - added: rule-protects
+  - added: governed-terms
+  - added: pillar-ids
+  - added: affirmations-record
+derives_from:
+  - file: brand-schema-spec.md
+    component: "spec-3-2-0-protects-terms-affirmations; derives-from-schema-structure-protocol; draft-provenance-3-1-0-approved; spec-3-1-0-implemented-invariant-12"
+    role: primary
+    at_commit: 8abc20a5f4b36063722c701c64bca29f59b378c5
+    at_version: "1.1.1"
+---
 # Ramoira Brand Schema Specification
 
-**Version 3.1.0**
+**Version 3.2.0**
 
-3.1.0 adds optional elicitation fields to `draft_provenance`, outside `content_hash` (section 7). A 3.0.0 document stays valid; see [`migrations/3.0.0-to-3.1.0.md`](migrations/3.0.0-to-3.1.0.md). 3.0.0 was a breaking release; upgrading from 2.0.0: see [`migrations/2.0.0-to-3.0.0.md`](migrations/2.0.0-to-3.0.0.md).
+3.2.0 lets a rule say what it protects (section 6.5), adds governed terms (section 8.7) and pillar ids, and records who affirmed what (section 7). All optional; 3.0.0 and 3.1.0 documents stay valid; see [`migrations/3.1.0-to-3.2.0.md`](migrations/3.1.0-to-3.2.0.md). 3.1.0 added optional elicitation fields to `draft_provenance`; see [`migrations/3.0.0-to-3.1.0.md`](migrations/3.0.0-to-3.1.0.md). 3.0.0 was a breaking release; upgrading from 2.0.0: see [`migrations/2.0.0-to-3.0.0.md`](migrations/2.0.0-to-3.0.0.md).
 
 ---
 
@@ -91,7 +109,7 @@ Compute it with `npm run hash -- <file> --write`.
 
 ```json
 "ramoira": {
-  "spec_version":           "3.1.0",
+  "spec_version":           "3.2.0",
   "schema_type":            "full",
   "brand_id":               "corvane",
   "schema_version":         "1.0.0",
@@ -106,7 +124,7 @@ Compute it with `npm run hash -- <file> --write`.
 
 | Field | Meaning | Constraint |
 |---|---|---|
-| `spec_version` | The spec version the file follows | `"3.1.0"` or `"3.0.0"`. A 3.0.0 document carries none of the fields 3.1.0 added. |
+| `spec_version` | The spec version the file follows | `"3.2.0"`, `"3.1.0"` or `"3.0.0"`. A document carries none of the fields added after the version it declares. |
 | `schema_type` | `full`, `summary` or `archetype` | `archetype` ⇒ `brand_id`, `ratification` and `canonical_url` are `null` |
 | `brand_id` | The brand's slug | |
 | `schema_version` | A human label only | Versioning truth is `content_hash` |
@@ -162,8 +180,11 @@ Every prohibition and requirement lives once, here. Layers do not repeat them.
 | `match` / `predicate` / `rubric` | Exactly one, by check class (6.2) |
 | `provenance` | `authored` (the brand wrote it), `adapted` (edited from a template) or `inherited` (taken from a template unchanged) |
 | `affirmed` | Whether the brand has affirmed the rule. A schema cannot be ratified while any rule is `inherited` and not `affirmed`. |
+| `protects` | (3.2.0, optional) What the rule exists to protect (section 6.5) |
 
-All fields except `rationale` are required, so two schemas that mean the same thing hash the same.
+All fields except `rationale` and `protects` are required, so two schemas that mean the same thing hash the same. `protects`, when present, has at least one entry, so "protects nothing" has one encoding: absent.
+
+A `judged_bounded` rule's rubric may also carry `term_refs` (3.2.0): the governed terms (section 8.7) its question depends on.
 
 ### 6.2 Check classes
 
@@ -203,6 +224,23 @@ Severity is the only enforcement setting. The response follows from it and is no
 
 Every v2 list of forbidden things (forbidden words, claims, tones, devices, framings, structures, references, zero-tolerance terms, severity-registry strings, per-surface `additionalForbidden`, the `*Permitted: false` flags) becomes rules. The field-by-field table is in the migration guide.
 
+### 6.5 What a rule protects (3.2.0)
+
+`protects` names the facts or principles a rule exists to protect: the structured form of `rationale`.
+
+```json
+"protects": ["pl_better_with_use", "t_tool", "/identity/prism/culture/originNarrative"]
+```
+
+Each entry is one of:
+
+- a `claim_id` (an approved claim), a `pillar_id` (a narrative pillar) or a `term_id` (a governed term). These three share one namespace, so an id names exactly one thing;
+- a JSON pointer to content the schema holds under `identity.prism.culture`, `identity.distinctiveAssets`, `narrative.semiotic.denotative`, `narrative.myth`, `narrative.mythEvolution`, `narrative.pillars` or `commercial`, never through a rail.
+
+Never a rule, rail, example, situation, `voice` expression material, `governance`, or process metadata (invariant 13).
+
+**It explains; it never decides.** No check reads `protects`. A finding cites the rule it ran; what the rule protects is read from the schema at that `content_hash`. A principle never receives a verdict of its own, and a clean pass on every rule protecting it is conformance, not evidence the principle is faithfully expressed. `protects` is meaning: it sits inside `content_hash`.
+
 ---
 
 ## 7. Draft provenance — `draft_provenance`
@@ -215,6 +253,10 @@ How the candidate was produced. Outside `content_hash`. Never a score of the bra
   "instrument_version": "…",
   "intake": { "name": "…", "category": "…", "description": "…", "founded": "2014", "source_documents": [] },
   "participants": [ { "participant_id": "p_owner", "role": "brand_owner" } ],
+  "affirmations": [
+    { "rule_id": "r_not_a_gadget", "answered_by": "p_owner", "captured_at": "2026-10-05" },
+    { "field": "/narrative/pillars", "answered_by": "p_owner", "captured_at": "2026-10-05" }
+  ],
   "closeness_ratings": [
     { "archetype_id": "…", "closeness": 0.67, "answered_by": "p_owner", "basis": "intended", "exemplars_known": true }
   ],
@@ -250,6 +292,7 @@ How the candidate was produced. Outside `content_hash`. Never a score of the bra
 |---|---|
 | `method` | `archetype_anchored`, `questionnaire`, `document_import` or `manual` |
 | `participants` | Who took part, and in what role: `brand_owner`, `brand_team`, `agency`, `freelancer`, `ramoira_facilitator` |
+| `affirmations` | (3.2.0) Who affirmed a rule (`rule_id`) or a field of brand meaning (`field`, a pointer into the rules or the five layers), and when. Each names a participant whose role is `brand_owner` or `brand_team` (invariant 14). A well-formed claim of authority, not proof of it: the authoritative record of affirmations is the verifier's, and an upload claiming an affirmation the owner never made is refused. |
 | `closeness_ratings` | Each participant's rated closeness to archetypes: a fact about a judgment, never a score of the brand. From 3.1.0 each rating names who rated (`answered_by`, required), whether it is the standard or today's content (`basis`: `intended`, the default, or `current`), and whether the participant knew the exemplars (`exemplars_known: false` with `closeness: null`). The scale and its labels are named by `instrument_version`; Ramoira's drafting instrument maps four labels to 1, 0.67, 0.33 and 0. |
 | `anchors` | Up to two archetypes the draft was seeded from, at what closeness. A draft may have none: archetypes are reference points, not a complete map of brand meaning. |
 | `competitor_ratings` | (3.1.0) A participant's placement of a named competitor on the archetypes. A perception the brand records, never a measure of the competitor. |
@@ -292,7 +335,7 @@ Layers carry facts and density. They hold no prohibitions: those are rules.
 | `semiotic.connotative.{meaningClusters, emotionalRegister}` | Density | Both required |
 | `myth.{culturalTension, mythStatement, protagonistRole, antagonist}` | Density | `mythStatement` required |
 | `mythEvolution.{principle, immutableCore, modernTensions[].{tension, mythResolution, permittedFraming, rails}}` | Density | |
-| `pillars[].{name, description, coreClaim, approvedArcs, surfaces, rails}` | Density | |
+| `pillars[].{pillar_id, name, description, coreClaim, approvedArcs, surfaces, rails}` | Density (principles) | `pillar_id` (3.2.0, optional) lets a rule say it protects the pillar |
 | `editorial.{openingPrinciple, structuralApproach, referencePool, timeScaleLanguage}` | Density | |
 | `guidance[]` | Density | `{question, applies_to}`: test questions that have no brand-judged examples yet, so cannot be judged rules. They never produce a verdict. |
 
@@ -307,6 +350,7 @@ Layers carry facts and density. They hold no prohibitions: those are rules.
 | `examples[]` | Rubric material and density | See below |
 | `contextVariants[].{surface, formalityDelta, warmthDelta, sentenceLength, openingInstruction, closingInstruction, rails, fallbackInstruction}` | Density | Deltas move along the shared scales and must keep the result within 0–10 |
 | `rails.{global, alternatives.when…Forbidden}` | Density; rubric material when a rail has both `example` and `antiExample` | |
+| `terms[]` | Governed terms (3.2.0) | Section 8.7 |
 
 **The example object** is where the brand's own judgment enters the schema:
 
@@ -367,6 +411,27 @@ Integration plumbing (webhooks, routing addresses, audit endpoints) is not brand
 - Even values sit between their neighbours' anchors.
 - Deltas (`formalityDelta`, `warmthDelta`) move along the same scale and must keep the result within 0–10.
 - A rule written against a scale ("social formality never below 3") is a `judged_bounded` rule whose rubric is the anchor text plus at least one brand-judged example on each side of the line.
+
+### 8.7 Governed terms (3.2.0)
+
+Words the brand uses in its own sense. A judged rule ("never sound pushy") and a producer both interpret through the brand's words; a governed term fixes what a word means for this brand, the way the anchored scales (8.6) fix what a number means.
+
+```json
+"terms": [
+  {
+    "term_id": "t_tool",
+    "term": "tool",
+    "definition": "Something you learn and that gets better the more you use it.",
+    "scope_note": "Used of the pans and of cooking with them. Never of a feature that removes effort; that is a gadget.",
+    "example_refs": ["ex_pdp_seasoning", "ex_pdp_gadget"]
+  }
+]
+```
+
+- The definition is the brand's own, never a framework's glossary entry.
+- `example_refs` name `voice.examples` showing the term used and misused. In a ratified schema each must be judged by `brand_owner` or `brand_team` (invariant 5).
+- A rubric names the terms its question depends on with `term_refs` (section 6.1). A rule may name a term in `protects`.
+- Terms sit in `voice`, inside `content_hash`, and in the public summary.
 
 ---
 
@@ -445,6 +510,7 @@ An archetype template is the same format as a brand schema, filled at archetype 
 | `rules` with `visibility: public` | Always |
 | `identity`, `narrative`, `voice` | Always, in full, including rejected examples, context variants, rails, myth evolution and pillars |
 | `identity.prism.culture.sacredBoundary` | Only if `summary_opt_in` includes `sacred_boundary` |
+| A public rule's `protects` entries pointing into `commercial` or `sacredBoundary` | Only if that material is opted in; otherwise the entry is dropped (the rule stays) |
 | `commercial`, `governance` | Only if `summary_opt_in` includes them |
 | Rules with `visibility: private` | Never (change the rule's visibility to publish it) |
 | `draft_provenance` | Never |
@@ -468,10 +534,10 @@ The validator detects the document kind, runs the JSON Schema for it, then enfor
 **Invariants.**
 
 1. `ramoira`, and every object the spec defines, is closed: no result-bearing field can be added anywhere.
-2. `rule_id`, `example_id`, `rail_id`, `claim_id`, `situation_id`, `participant_id`, `zone_id` and `set_id` are unique; every reference resolves (rubric examples and rails, rule situations, suspended rules, `primaryRail`, participants, promoted examples, contrast sets named by reactions and retests).
+2. `rule_id`, `example_id`, `rail_id`, `claim_id`, `pillar_id`, `term_id`, `situation_id`, `participant_id`, `zone_id` and `set_id` are unique, and claim, pillar and term ids share one namespace; every reference resolves (rubric examples, rails and terms, terms' examples, rule situations, suspended rules, `primaryRail`, participants, promoted examples, contrast sets named by reactions and retests).
 3. Check-class requirements (section 6.2) hold. A `judged_bounded` rule without both an approved and a rejected example, or a rail with both an example and an anti-example, is invalid.
 4. `schema_type: archetype` ⇒ `brand_id`, `ratification` and `canonical_url` are `null`, and only an archetype carries the `archetype` block.
-5. `ratification` non-null ⇒ `ratified_hash == content_hash`; no rule is `inherited` and unaffirmed; every rubric example is judged by `brand_owner` or `brand_team`.
+5. `ratification` non-null ⇒ `ratified_hash == content_hash`; no rule is `inherited` and unaffirmed; every rubric example, and every example a governed term cites, is judged by `brand_owner` or `brand_team`.
 6. `suspended_rule_ids` (surfaces and situations) reference only `contextual` rules.
 7. A summary contains no private rule, no `commercial` or `governance` layer and no `sacredBoundary` unless opted in, and never `draft_provenance`.
 8. `content_hash` recomputes (full and archetype).
@@ -479,6 +545,9 @@ The validator detects the document kind, runs the JSON Schema for it, then enfor
 10. Context-variant and situation deltas keep `formality` and `warmth` within 0–10.
 11. An example promoted from a reaction is `judged_by` the role of the participant who reacted.
 12. The elicitation record is consistent (3.1.0): `exemplars_known: false` ⇒ `closeness: null`; no participant rates the same archetype twice on one basis, or the same competitor on one archetype twice; in a contrast set or retest, `best` and `worst` are among the set's `probe_ids` and differ, and `none_of_these` holds exactly when `best` is null; each chosen probe is recorded as a reaction in that set (`best` as `yes`, `worst` as `no`) by the participant who answered it, and no other reaction names the set; a retest is answered by the participant who answered its set.
+
+13. What a rule `protects` is a fact or principle (3.2.0): each id names a claim, pillar or term; each pointer resolves to content the schema holds in one of the seven places in section 6.5, never through a rail.
+14. Affirmations are well-formed authority claims (3.2.0): each names an existing rule or a field of brand meaning, and a participant whose role is `brand_owner` or `brand_team`. Whether that participant held the authority is decided by the ratification process, not the validator.
 
 The validator also warns (without failing) on thinness (`unfilled` fields) and on `draft_provenance` pointers that name no v3 field.
 
@@ -526,13 +595,15 @@ This spec follows semantic versioning.
 
 | Change | Bump | Example |
 |---|---|---|
-| New optional field added | patch | 3.0.0 → 3.0.1 |
-| New required field added | minor | 3.0.0 → 3.1.0 |
+| New optional field outside `content_hash`, no new invariant | patch | 3.0.0 → 3.0.1 |
+| New required field, a new optional field inside `content_hash`, or a new invariant | minor | 3.1.0 → 3.2.0 |
 | Field removed, renamed, or type changed | major | 3.0.0 → 4.0.0 |
 
 There is one version axis: `spec_version`. A schema's own version is its `content_hash`. `spec_version` sits outside the hash, so moving a document from 3.0.0 to 3.1.0 needs no re-ratification.
 
 3.1.0 is a minor release because a 3.1.0 closeness rating must name who rated. Its other additions are optional. A validator for 3.1.0 accepts 3.0.0 documents, and refuses a document that declares 3.0.0 but carries a field added in 3.1.0, so a declared version is always true.
+
+3.2.0 is a minor release because its fields add to brand meaning, inside `content_hash`, and come with invariants 13 and 14. All its fields are optional; a 3.2.0 validator accepts 3.0.0 and 3.1.0 documents and refuses a document that declares an earlier version but carries a 3.2.0 field. Changing `spec_version` alone needs no re-ratification; adding what a rule protects, a pillar id or a governed term to a ratified schema is a new version.
 
 Migration guides are in [`migrations/`](migrations/).
 

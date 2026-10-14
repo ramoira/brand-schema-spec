@@ -347,9 +347,9 @@ describe('invariant 11: promoted examples keep the reacting participant’s role
   })
 })
 
-// A Corvane copy in the 3.0.0 shape: no field added in 3.1.0.
+// A Corvane copy in the 3.0.0 shape: no field added in 3.1.0 or 3.2.0.
 const at300 = (): Obj => {
-  const doc = corvane()
+  const doc = at310()
   doc.ramoira.spec_version = '3.0.0'
   const dp = doc.draft_provenance
   dp.closeness_ratings = dp.closeness_ratings
@@ -381,7 +381,7 @@ describe('3.1.0: version gate', () => {
     failsSchema(doc, /closeness_ratings\/0 .*answered_by/)
   })
   it('changing spec_version does not change content_hash', () => {
-    assert.equal(computeContentHash(at300()), computeContentHash(corvane()))
+    assert.equal(computeContentHash(at300()), computeContentHash(at310()))
   })
 })
 
@@ -555,4 +555,157 @@ it('nothing in the validator generates code at runtime', async () => {
   const { readFileSync } = await import('node:fs')
   const { GENERATED_PATH } = await import('../build-validators.ts')
   assert.doesNotMatch(readFileSync(GENERATED_PATH, 'utf8'), /new Function|eval\(/)
+})
+
+// ── 3.2.0: what a rule protects, governed terms, affirmations ──────────────
+
+// Corvane in the 3.1.0 shape: none of the fields added in 3.2.0.
+const at310 = (): Obj => {
+  const doc = corvane()
+  doc.ramoira.spec_version = '3.1.0'
+  for (const r of doc.rules) {
+    delete r.protects
+    if (r.rubric) delete r.rubric.term_refs
+  }
+  for (const p of doc.narrative.pillars) delete p.pillar_id
+  delete doc.voice.terms
+  delete doc.draft_provenance.affirmations
+  return rehash(doc)
+}
+
+describe('3.2.0: version gate', () => {
+  it('a 3.1.0 document without the 3.2.0 fields stays valid', () => assert.deepEqual(errors(at310()), []))
+  it('a 3.1.0 document cannot say what a rule protects', () => {
+    const doc = at310()
+    rule(doc, 'r_warranty_wording').protects = ['c_warranty']
+    failsSchema(doc, /protects added in spec 3\.2\.0/)
+  })
+  it('a 3.1.0 document cannot hold governed terms', () => {
+    const doc = at310()
+    doc.voice.terms = corvane().voice.terms
+    failsSchema(doc, /terms added in spec 3\.2\.0/)
+  })
+  it('a 3.1.0 document cannot record affirmations', () => {
+    const doc = at310()
+    doc.draft_provenance.affirmations = corvane().draft_provenance.affirmations
+    failsSchema(doc, /affirmations added in spec 3\.2\.0/)
+  })
+  it('protects has one encoding for "nothing": absent, never empty', () => {
+    const doc = corvane()
+    rule(doc, 'r_warranty_wording').protects = []
+    failsSchema(doc, /protects/)
+  })
+  it('an affirmation names a rule or a field, not both', () => {
+    const doc = corvane()
+    doc.draft_provenance.affirmations[0].field = '/rules/0'
+    failsSchema(doc)
+  })
+})
+
+describe('invariant 13: a rule protects a fact or principle', () => {
+  const protecting = (entry: string): Obj => {
+    const doc = corvane()
+    rule(doc, 'r_warranty_wording').protects = [entry]
+    return rehash(doc)
+  }
+  it('claims, pillars, terms and pointers to held facts and principles resolve', () => {
+    for (const entry of ['c_warranty', 'pl_honest_work', 't_tool', '/identity/prism/culture/coreValues/2', '/narrative/mythEvolution/immutableCore', '/commercial/pricing']) {
+      assert.deepEqual(errors(protecting(entry)), [], entry)
+    }
+  })
+  it('not a rule', () => failsInvariant(protecting('r_no_urgency'), 13))
+  it('not a rail or an example', () => {
+    failsInvariant(protecting('rail_patina'), 13)
+    failsInvariant(protecting('ex_pdp_gadget'), 13)
+  })
+  it('an unknown id', () => failsInvariant(protecting('c_nothing'), 13))
+  it('not voice expression material', () => failsInvariant(protecting('/voice/approvedTones'), 13))
+  it('not governance', () => failsInvariant(protecting('/governance/situations'), 13))
+  it('not a rail inside a pillar', () => failsInvariant(protecting('/narrative/pillars/0/rails/0'), 13))
+  it('a pointer must name something the schema holds', () => failsInvariant(protecting('/narrative/pillars/9'), 13))
+  it('claim, pillar and term ids share one namespace', () => {
+    const doc = corvane()
+    doc.narrative.pillars[1].pillar_id = 'c_warranty'
+    failsInvariant(rehash(doc), 2)
+  })
+  it('protects is meaning: inside content_hash', () => {
+    const doc = corvane()
+    rule(doc, 'r_warranty_wording').protects = ['c_warranty', 'pl_honest_work']
+    failsInvariant(doc, 8)
+  })
+})
+
+describe('3.2.0: governed terms', () => {
+  it('an unknown term in a rubric', () => {
+    const doc = corvane()
+    rule(doc, 'r_not_a_gadget').rubric.term_refs = ['t_none']
+    failsInvariant(rehash(doc), 2)
+  })
+  it('an unknown example in a term', () => {
+    const doc = corvane()
+    doc.voice.terms[0].example_refs = ['ex_none']
+    failsInvariant(rehash(doc), 2)
+  })
+  it('in a ratified schema a term cites only brand-judged examples', () => {
+    const doc = corvane()
+    doc.voice.examples.push({ ...doc.voice.examples[0], example_id: 'ex_agency_tool', judged_by: 'agency', source: 'authored' })
+    doc.voice.terms[0].example_refs = ['ex_agency_tool']
+    rehash(doc)
+    doc.ramoira.ratification = {
+      ratification_id: 'rat_1',
+      ratified_hash: doc.ramoira.content_hash,
+      ratified_at: '2026-10-14T10:00:00Z',
+      ratifier_role: 'founder',
+    }
+    failsInvariant(doc, 5)
+  })
+})
+
+describe('invariant 14: affirmations are well-formed authority claims', () => {
+  it('only brand_owner or brand_team affirm', () => {
+    const doc = corvane()
+    doc.draft_provenance.affirmations[0].answered_by = 'p_facilitator'
+    failsInvariant(doc, 14)
+  })
+  it('an unknown rule', () => {
+    const doc = corvane()
+    doc.draft_provenance.affirmations[0].rule_id = 'r_none'
+    failsInvariant(doc, 14)
+  })
+  it('a field of brand meaning, not process metadata', () => {
+    const doc = corvane()
+    doc.draft_provenance.affirmations[1].field = '/draft_provenance/participants'
+    failsInvariant(doc, 14)
+  })
+  it('an unknown participant', () => {
+    const doc = corvane()
+    doc.draft_provenance.affirmations[0].answered_by = 'p_nobody'
+    failsInvariant(doc, 2)
+  })
+  it('affirmations are outside content_hash', () => {
+    const doc = corvane()
+    delete doc.draft_provenance.affirmations
+    assert.equal(computeContentHash(doc), computeContentHash(corvane()))
+  })
+})
+
+describe('3.2.0: the summary and what rules protect', () => {
+  it('drops protects entries into excluded material, keeps the rule', () => {
+    const doc = corvane()
+    rule(doc, 'r_no_invented_heritage').protects = ['/identity/prism/culture/sacredBoundary', 'pl_honest_work']
+    rule(doc, 'r_warranty_wording').protects = ['/commercial/pricing']
+    rehash(doc)
+    const summary = extractSummary(doc)
+    assert.deepEqual(rule(summary, 'r_no_invented_heritage').protects, ['pl_honest_work'])
+    assert.equal(rule(summary, 'r_warranty_wording').protects, undefined)
+    assert.ok(rule(summary, 'r_warranty_wording'), 'the rule itself stays')
+    assert.deepEqual(errors(summary), [])
+  })
+  it('keeps them when the brand opts the material in', () => {
+    const doc = corvane()
+    rule(doc, 'r_no_invented_heritage').protects = ['/identity/prism/culture/sacredBoundary']
+    doc.ramoira.summary_opt_in = ['sacred_boundary']
+    rehash(doc)
+    assert.deepEqual(rule(extractSummary(doc), 'r_no_invented_heritage').protects, ['/identity/prism/culture/sacredBoundary'])
+  })
 })

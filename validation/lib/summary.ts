@@ -16,9 +16,24 @@ export function extractSummary(full: Obj): Obj {
     delete identity.prism.culture.sacredBoundary
   }
 
+  // A public rule keeps its place, but not a pointer into material the summary
+  // excludes (3.2.0, invariant 7): what it protects there stays private too.
+  const excluded = (entry: string): boolean =>
+    (entry === '/commercial' || entry.startsWith('/commercial/')) ? !optIn.has('commercial')
+      : (entry === '/identity/prism/culture/sacredBoundary' || entry.startsWith('/identity/prism/culture/sacredBoundary/'))
+        ? !optIn.has('sacred_boundary')
+        : false
+  const publicRules = clone((full.rules ?? []).filter((r: Obj) => r.visibility === 'public')).map((r: Obj) => {
+    if (!Array.isArray(r.protects)) return r
+    const kept = r.protects.filter((entry: string) => !excluded(entry))
+    if (kept.length > 0) r.protects = kept
+    else delete r.protects
+    return r
+  })
+
   const summary: Obj = {
     ramoira: { ...clone(full.ramoira), schema_type: 'summary', summary_opt_in: [...optIn] },
-    rules: clone((full.rules ?? []).filter((r: Obj) => r.visibility === 'public')),
+    rules: publicRules,
     identity,
     narrative: clone(full.narrative),
     voice: clone(full.voice),

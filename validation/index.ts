@@ -1,4 +1,4 @@
-// Reference validator for Ramoira brand schema 3.1.0 (and 3.0.0 documents).
+// Reference validator for Ramoira brand schema 3.2.0 (and 3.0.0 and 3.1.0 documents).
 //
 //   validateDocument(doc) → { kind, issues }
 //
@@ -34,6 +34,11 @@ export function detectKind(doc: unknown): DocumentKind | null {
   return type === 'full' || type === 'archetype' || type === 'summary' ? type : null
 }
 
+function gateMessage(schemaPath: string): string {
+  const version = schemaPath.includes('Pre320') ? '3.2.0' : '3.1.0'
+  return `added in spec ${version}: set ramoira.spec_version to "${version}" to use it`
+}
+
 function fromAjv(errors: ErrorObject[] | null | undefined): Issue[] {
   const all = errors ?? []
   // An if/then failure always comes with the specific errors that caused it; keep only those.
@@ -42,10 +47,10 @@ function fromAjv(errors: ErrorObject[] | null | undefined): Issue[] {
     level: 'error' as const,
     invariant: null,
     path: e.instancePath || '/',
-    // The spec's only false subschemas are the version gate (SPEC.schema.json, DraftProvenanceAt300).
+    // The spec's only false subschemas are the version gates (SPEC.schema.json: DraftProvenanceAt300, Pre320).
     message:
       e.keyword === 'false schema'
-        ? 'added in spec 3.1.0: set ramoira.spec_version to "3.1.0" to use it'
+        ? gateMessage(e.schemaPath)
         : `${e.message ?? 'invalid'}${e.params && Object.keys(e.params).length ? ` ${JSON.stringify(e.params)}` : ''}`,
   }))
 }
