@@ -1,6 +1,6 @@
 # Examples
 
-These illustrate the 3.1.0 format. **Every brand here is fictional**, and none of these schemas is ratified. Any resemblance to a real company is unintended.
+These illustrate the 3.x format: Corvane is a 3.2.0 schema; the minimal example and the archetype template stay at 3.1.0, which a 3.2.0 validator accepts. **Every brand here is fictional**, and none of these schemas is ratified. Any resemblance to a real company is unintended.
 
 | Folder | What it shows |
 |---|---|

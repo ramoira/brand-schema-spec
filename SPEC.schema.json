@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ramoira.com/schema/v3/SPEC.schema.json",
-  "title": "Ramoira Brand Schema 3.1.0 (full and archetype)",
+  "title": "Ramoira Brand Schema 3.2.0 (full and archetype)",
   "description": "Normative JSON Schema for a full brand schema (schema_type: full) and an archetype template (schema_type: archetype). The public summary has its own schema, SPEC.summary.schema.json. Checks that JSON Schema cannot express (unique ids, reference resolution, rubric sufficiency, ratification conditions, content_hash recomputation, scale ranges) are enforced by the reference validator in validation/. See SPEC.md section 9.",
   "type": "object",
   "required": ["ramoira", "rules", "identity", "narrative", "voice", "commercial", "governance"],
@@ -57,13 +57,20 @@
           }
         }
       }
+    },
+    {
+      "description": "Version gate (3.2.0). A document that declares 3.0.0 or 3.1.0 carries none of the fields added in 3.2.0: rules[].protects, rubric.term_refs, narrative.pillars[].pillar_id, voice.terms, draft_provenance.affirmations.",
+      "if": {
+        "properties": { "ramoira": { "properties": { "spec_version": { "enum": ["3.0.0", "3.1.0"] } } } }
+      },
+      "then": { "$ref": "#/$defs/Pre320" }
     }
   ],
   "$defs": {
     "SpecVersion": {
       "type": "string",
-      "enum": ["3.0.0", "3.1.0"],
-      "description": "3.1.0 adds optional elicitation fields to draft_provenance (outside content_hash). A 3.0.0 document stays valid; changing spec_version alone needs no re-ratification."
+      "enum": ["3.0.0", "3.1.0", "3.2.0"],
+      "description": "3.1.0 adds optional elicitation fields to draft_provenance (outside content_hash). 3.2.0 adds what a rule protects, governed terms, pillar ids and the record of affirmations. Earlier documents stay valid; changing spec_version alone needs no re-ratification."
     },
     "ContentHash": {
       "type": "string",
@@ -239,7 +246,14 @@
         "predicate": { "$ref": "#/$defs/Predicate" },
         "rubric": { "$ref": "#/$defs/Rubric" },
         "provenance": { "type": "string", "enum": ["authored", "adapted", "inherited"] },
-        "affirmed": { "type": "boolean" }
+        "affirmed": { "type": "boolean" },
+        "protects": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/NonEmptyString" },
+          "description": "3.2.0. What the rule exists to protect: a claim_id, pillar_id or term_id, or a JSON pointer to a fact or principle (section 6.5). Explains the rule; no check reads it. Absent means the rule states nothing it protects."
+        }
       },
       "allOf": [
         {
@@ -286,7 +300,14 @@
       "properties": {
         "question": { "type": ["string", "null"] },
         "example_refs": { "type": "array", "items": { "$ref": "#/$defs/Id" }, "uniqueItems": true },
-        "rail_refs": { "type": "array", "items": { "$ref": "#/$defs/Id" }, "uniqueItems": true }
+        "rail_refs": { "type": "array", "items": { "$ref": "#/$defs/Id" }, "uniqueItems": true },
+        "term_refs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Id" },
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "3.2.0. Governed terms (voice.terms) the rubric's question depends on."
+        }
       },
       "anyOf": [
         { "properties": { "example_refs": { "minItems": 2 } } },
@@ -294,6 +315,24 @@
       ]
     },
 
+    "GovernedTerm": {
+      "type": "object",
+      "required": ["term_id", "term", "definition"],
+      "additionalProperties": false,
+      "properties": {
+        "term_id": { "$ref": "#/$defs/Id" },
+        "term": { "$ref": "#/$defs/NonEmptyString" },
+        "definition": { "$ref": "#/$defs/NonEmptyString", "description": "The brand's own definition, never a framework's glossary entry." },
+        "scope_note": { "$ref": "#/$defs/NonEmptyString", "description": "Where the definition applies and where it does not." },
+        "example_refs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Id" },
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "voice.examples showing the term used and misused. In a ratified schema each must be judged by brand_owner or brand_team."
+        }
+      }
+    },
     "Rail": {
       "type": "object",
       "required": ["rail_id", "context", "instruction"],
@@ -543,6 +582,7 @@
             "required": ["name", "coreClaim"],
             "additionalProperties": false,
             "properties": {
+              "pillar_id": { "$ref": "#/$defs/Id", "description": "3.2.0. A stable identifier, so a rule can say it protects this pillar." },
               "name": { "$ref": "#/$defs/NonEmptyString" },
               "description": { "type": "string" },
               "coreClaim": { "$ref": "#/$defs/NonEmptyString" },
@@ -606,6 +646,12 @@
         },
         "approvedTones": { "type": "array", "items": { "$ref": "#/$defs/NonEmptyString" }, "minItems": 1 },
         "examples": { "type": "array", "items": { "$ref": "#/$defs/Example" } },
+        "terms": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/GovernedTerm" },
+          "description": "3.2.0. Words the brand uses in its own sense, with the brand's own definitions (section 8.7)."
+        },
         "contextVariants": {
           "type": "array",
           "items": {
@@ -866,6 +912,25 @@
             }
           }
         },
+        "affirmations": {
+          "type": "array",
+          "description": "3.2.0. Who affirmed a rule or field, and when: the field-level address of an affirmation. A copy for the file's reader; the authoritative record is Ramoira's. A well-formed claim, not proof of authority.",
+          "items": {
+            "type": "object",
+            "required": ["answered_by", "captured_at"],
+            "additionalProperties": false,
+            "properties": {
+              "rule_id": { "$ref": "#/$defs/Id" },
+              "field": { "$ref": "#/$defs/JsonPointer" },
+              "answered_by": { "$ref": "#/$defs/ParticipantId" },
+              "captured_at": { "$ref": "#/$defs/IsoDate" }
+            },
+            "oneOf": [
+              { "required": ["rule_id"], "not": { "required": ["field"] } },
+              { "required": ["field"], "not": { "required": ["rule_id"] } }
+            ]
+          }
+        },
         "closeness_ratings": {
           "type": "array",
           "items": {
@@ -999,6 +1064,15 @@
             }
           }
         }
+      }
+    },
+    "Pre320": {
+      "description": "A document that declares spec_version 3.0.0 or 3.1.0: none of the fields added in 3.2.0.",
+      "properties": {
+        "rules": { "items": { "properties": { "protects": false, "rubric": { "properties": { "term_refs": false } } } } },
+        "narrative": { "properties": { "pillars": { "items": { "properties": { "pillar_id": false } } } } },
+        "voice": { "properties": { "terms": false } },
+        "draft_provenance": { "properties": { "affirmations": false } }
       }
     },
     "DraftProvenanceAt300": {

@@ -1,4 +1,5 @@
-// Reference open checker for Ramoira brand schema 3.x (3.0.0 and 3.1.0).
+// Reference open checker for Ramoira brand schema 3.x (3.0.0, 3.1.0 and 3.2.0).
+// A rule's protects and term_refs explain it; no check here reads them.
 //
 //   checkItem(schema, item, context?) → { event, findingsVerdict, notes, outOfScope }
 //

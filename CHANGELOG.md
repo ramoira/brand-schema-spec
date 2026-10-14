@@ -1,5 +1,23 @@
 # Changelog
 
+## 3.2.0
+
+Minor. 3.0.0 and 3.1.0 documents stay valid. See `migrations/3.1.0-to-3.2.0.md`.
+
+**What a rule protects, and what its words mean** (inside `content_hash`)
+- `rules[].protects`: the facts or principles a rule exists to protect, by `claim_id`, `pillar_id`, `term_id` or JSON pointer. Explains the rule; no check reads it.
+- `voice.terms[]`: governed terms, the brand's own definitions of words it uses in its own sense, with a scope note and brand-judged examples. `rules[].rubric.term_refs` names the terms a judged rule depends on.
+- `narrative.pillars[].pillar_id`: a stable identifier for a pillar.
+
+**The address of an affirmation** (outside `content_hash`)
+- `draft_provenance.affirmations[]`: who affirmed a rule or a field of brand meaning, and when.
+
+**Validation**
+- `spec_version` accepts `"3.2.0"`. A document that declares an earlier version cannot carry a 3.2.0 field.
+- New invariants 13 (what a rule protects is a fact or principle) and 14 (affirmations are well-formed authority claims). Invariant 2 covers the new ids, which share one namespace with claims; invariant 5 covers examples cited by governed terms.
+- The summary drops a public rule's `protects` entries that point into excluded material.
+- Versioning (SPEC.md section 15): a new optional field inside `content_hash`, or a new invariant, is a minor release.
+
 ## 3.1.0
 
 Minor. 3.0.0 documents stay valid. See `migrations/3.0.0-to-3.1.0.md`.

@@ -1,10 +1,10 @@
 {
   "ramoira": {
-    "spec_version": "3.1.0",
+    "spec_version": "3.2.0",
     "schema_type": "summary",
     "brand_id": "corvane",
     "schema_version": "1.0.0",
-    "content_hash": "sha256:eaed480d372bcbef2cee6798f2d142003dfcdb71585f64da08cda7b6c486f863",
+    "content_hash": "sha256:eed5c5f5102e2db46821d481259cc2884329bbff95bb30ac026b73db3a9808c2",
     "workflow_state": "in_review",
     "ratification": null,
     "account_owner_verified": false,
@@ -58,7 +58,10 @@
         "normalization": "casefold_nfkc"
       },
       "provenance": "authored",
-      "affirmed": true
+      "affirmed": true,
+      "protects": [
+        "c_warranty"
+      ]
     },
     {
       "rule_id": "r_claims_approved",
@@ -191,10 +194,17 @@
           "ex_pdp_seasoning",
           "ex_pdp_gadget"
         ],
-        "rail_refs": []
+        "rail_refs": [],
+        "term_refs": [
+          "t_tool"
+        ]
       },
       "provenance": "authored",
-      "affirmed": true
+      "affirmed": true,
+      "protects": [
+        "pl_better_with_use",
+        "t_tool"
+      ]
     },
     {
       "rule_id": "r_no_invented_heritage",
@@ -219,7 +229,10 @@
         ]
       },
       "provenance": "authored",
-      "affirmed": true
+      "affirmed": true,
+      "protects": [
+        "/identity/prism/culture/originNarrative"
+      ]
     },
     {
       "rule_id": "r_social_formality_floor",
@@ -468,6 +481,7 @@
     },
     "pillars": [
       {
+        "pillar_id": "pl_better_with_use",
         "name": "Better with use",
         "description": "The pan improves as the seasoning builds.",
         "coreClaim": "The hundredth egg slides better than the first.",
@@ -491,6 +505,7 @@
         ]
       },
       {
+        "pillar_id": "pl_honest_work",
         "name": "Honest about the work",
         "description": "Say what the pan asks of you.",
         "coreClaim": "A minute of care after each cook. That is the whole deal.",
@@ -601,6 +616,18 @@
         "judged_by": "brand_owner",
         "source": "authored",
         "captured_at": "2026-10-05"
+      }
+    ],
+    "terms": [
+      {
+        "term_id": "t_tool",
+        "term": "tool",
+        "definition": "Something you learn and that gets better the more you use it. A Corvane pan is a tool: it asks a minute of care and repays it over years.",
+        "scope_note": "Used of the pans and of cooking with them. Never of a feature that removes effort; that is a gadget.",
+        "example_refs": [
+          "ex_pdp_seasoning",
+          "ex_pdp_gadget"
+        ]
       }
     ],
     "contextVariants": [
