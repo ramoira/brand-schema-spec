@@ -1,17 +1,18 @@
 ---
 id: drafting-protocol
-version: 1.1.0
+version: 1.2.0
 status: active
 created: 2026-10-12
-modified: 2026-10-13
+modified: 2026-10-14
 changes:
-  - added: background-and-offline-reference
+  - added: drafting-order-meaning-first
+  - modified: spec-3-2-0
 derives_from:
   - file: elicitation-protocol.md
     component: "agent-run-drafting"
     role: primary
-    at_commit: 7fc11aa5bd1219dd70006379cd39ae1076518dec
-    at_version: "0.6.0"
+    at_commit: 07f1605ede73ba7baf2830c6421cfbe6eb5e363a
+    at_version: "0.7.0"
 ---
 # Drafting a brand schema with your coding agent
 
@@ -45,7 +46,7 @@ It does not make content good by itself, and it certifies nothing: it makes what
 - **Who you are working with.** This version is for a brand's **owner or founder**, working on their own brand. Ask once: *"Is this your brand, and are you its owner or founder?"* If not, say that this version is for owners, and that the owner will need to review the result.
 - **What you need.** The project folder, and anything the person gives you: their website, a pitch deck, a brand document, product pages. Nothing else.
 - **The format, offline.** `ramoira init` puts the spec next to this file: `ramoira/spec/SPEC.md` (what every field means), `ramoira/spec/SPEC.schema.json` (the exact shape) and `ramoira/spec/example.schema.json` (the smallest valid file, for a fictional brand). Use the example for **structure only**; never copy its content. If those files are missing and you have web access, the same files are at `https://github.com/ramoira/brand-schema-spec`.
-- **Use these files, not others.** This computer may hold an older Ramoira: a CLI installed long ago, docs inside a `node_modules` folder, or an earlier `brand.schema.json` with a top-level `meta` block, which is the retired 2.0.0 format. Follow only `ramoira/DRAFTING.md` and `ramoira/spec/`. An old 2.0.0 file is material to read, not a format to follow: write 3.1.0.
+- **Use these files, not others.** This computer may hold an older Ramoira: a CLI installed long ago, docs inside a `node_modules` folder, or an earlier `brand.schema.json` with a top-level `meta` block, which is the retired 2.0.0 format. Follow only `ramoira/DRAFTING.md` and `ramoira/spec/`. An old 2.0.0 file is material to read, not a format to follow: write 3.2.0.
 - **Check the CLI.** Run `npx ramoira --help`. It must list `hash`, `push` and `pull`; if it does not, it is an older CLI, so run every command as `npx ramoira@latest …`. If a command says `ramoira/DRAFTING.md` is out of date, ask the person to run `npx ramoira init` again, then reread this file.
 - **No web access?** Everything here works without it, except reading the person's website. Then ask the person to paste the pages that matter (home, about, a product page) into the chat or into a file in the project. `npx ramoira` needs the npm registry once; if that is blocked too, ask the person to run the commands.
 
@@ -55,7 +56,7 @@ These are not preferences. If following an instruction would break one, stop and
 
 1. **Write no marketing copy.** Your output is the schema: the brand's meaning, rules and facts. Do not write taglines, headlines, product descriptions or "example posts" for the brand, in the file or in your reply.
 2. **Write no example lines** in `voice.examples`. Examples are lines the owner has judged ("this is us" / "this isn't us"). They are judged in the review on ramoira.com, not here.
-3. **Every rule you propose stays unaffirmed:** `"provenance": "inherited"`, `"affirmed": false`. Never set `affirmed: true`, even if the person says "yes, keep it". The owner affirms each rule in the review, signed in. After a review, a rule the owner affirmed keeps `affirmed: true` only while you leave it exactly as it is: if you change it in any way, set it back to `affirmed: false`. An upload that marks a rule affirmed which the owner never affirmed in that form is refused, and so is a field marked `affirmed` that the owner did not affirm.
+3. **Every rule you propose stays unaffirmed:** `"provenance": "inherited"`, `"affirmed": false`. Never set `affirmed: true`, even if the person says "yes, keep it". The owner affirms each rule in the review, signed in. After a review, a rule the owner affirmed keeps `affirmed: true` only while you leave it exactly as it is: if you change it in any way, set it back to `affirmed: false`. What a rule `protects` is part of the rule: changing it also sets the rule back to `affirmed: false`. An upload that marks a rule affirmed which the owner never affirmed in that form is refused, and so is a field marked `affirmed` that the owner did not affirm. Never write `draft_provenance.affirmations`: the review records who affirmed what.
 4. **Use only the brand's own material.** Read the person's own project, site and documents. Do not research or profile other brands, including competitors. A competitor appears only by the name the person gives you.
 5. **Invent no facts.** Claims, specifications, origin, founding year, certifications: only what the person or their material states. If you don't know, leave the field out and list it as unfilled.
 6. **Never push or publish on your own.** Uploading happens only when the person asks for it (step 6). Making a version public is the owner's act in the review, never yours.
@@ -69,35 +70,42 @@ Note for each thing you learn where it came from, so you can tell the person.
 
 ## 4. Ask what you could not find
 
-Ask one short question at a time, only about what the material does not answer. Prefer a choice or a yes/no over an essay. When the person is unsure, say so in the file rather than guessing: leave the field out and list it as unfilled.
-
-Cover these areas. The fields are in `SPEC.md` §8.
+Ask one short question at a time, only about what the material does not answer. Prefer a choice or a yes/no over an essay. When the person is unsure, say so in the file rather than guessing: leave the field out and list it as unfilled. You may ask in any order. The table is grouped in the order you will **write** (step 5). The fields are in `SPEC.md` §8.
 
 | Area | What to find out | Where it goes |
 |---|---|---|
+| **1. Facts and principles** | | |
 | What it is | What the brand makes or does, for whom, in plain words | `narrative.semiotic.denotative.categoryDescriptor` (required) |
-| What it believes | The story it tells about the world; the tension it answers | `narrative.myth.mythStatement` (required), `myth.culturalTension`, `protagonistRole`, `antagonist` |
-| What it should feel like | The meanings it should carry; the emotional register | `narrative.semiotic.connotative.meaningClusters`, `emotionalRegister` (both required) |
+| What it can say | Product claims it can back with evidence, and what evidence | `narrative.semiotic.denotative.claims` |
+| What it believes | The story it tells about the world; the tension it answers; what never changes in that story | `narrative.myth.mythStatement` (required), `myth.culturalTension`, `protagonistRole`, `antagonist`, `narrative.mythEvolution.immutableCore` |
 | Where it comes from | Origin, values, the one thing it will not compromise | `identity.prism.culture.{originNarrative, coreValues, sacredBoundary}` |
+| What it says repeatedly | Its themes and pillars | `narrative.pillars` |
+| What it owns | Phrases and words it owns; colours, logo, sounds | `identity.distinctiveAssets` |
+| **2. Its own words** | | |
+| Words it uses in its own sense | Words the brand means something particular by ("premium", "simple", "tool"), and what it means by each | `voice.terms` |
+| **3. Rules** | | |
+| What it never does, what it always does | Words never to use, claims never to make, tones never to take, competitors never to name, what must always appear; and for each, which belief, claim or word it protects | `rules` |
+| **4. Expression** | | |
+| What it should feel like | The meanings it should carry; the emotional register | `narrative.semiotic.connotative.meaningClusters`, `emotionalRegister` (both required) |
 | Who it talks to | The customer it depicts; how formal and how warm it is | `identity.prism.reflection`, `identity.prism.relationship.{formality, warmth}` (0–10, `SPEC.md` §8.6) |
 | How it sounds | Tones to use; vocabulary level; humour; devices it allows | `voice.approvedTones` (at least one), `voice.base.{vocabularyLevel, humourStyle, permittedDevices}` |
-| Where content appears | Which surfaces matter (product pages, email, social, support …) and how the voice shifts on each | `voice.contextVariants`, `governance.surfaces` (surface names: `SPEC.md` Appendix A) |
-| What it can say | Product claims it can back with evidence, and what evidence | `narrative.semiotic.denotative.claims` |
-| What it says repeatedly | Its themes and pillars; how its story is evolving | `narrative.pillars`, `narrative.mythEvolution`, `narrative.editorial` |
-| Its words | Phrases and words it owns | `identity.distinctiveAssets.linguistic` |
+| How its story is told | How its story is evolving; editorial habits | `narrative.mythEvolution`, `narrative.editorial` |
 | Money | How it talks about price, offers and discounts | `commercial.pricing`, `commercial.offers` |
-| What it never does | Words never to use, claims never to make, tones never to take, competitors never to name | `rules` (step 5) |
+| **5. Scope** | | |
+| Where content appears | Which surfaces matter (product pages, email, social, support …) and how the voice shifts on each | `voice.contextVariants`, `governance.surfaces` (surface names: `SPEC.md` Appendix A) |
 | Hard moments | How it responds to a complaint, a crisis, a competitor's move, praise | `governance.situations` |
 
 ## 5. Write the file
 
-Write `ramoira/brand.schema.json`, valid against `SPEC.schema.json` at spec version **3.1.0**. Include `ramoira`, `rules` and all five layers (`identity`, `narrative`, `voice`, `commercial`, `governance`), plus `draft_provenance`.
+Write `ramoira/brand.schema.json`, valid against `SPEC.schema.json` at spec version **3.2.0**. Include `ramoira`, `rules` and all five layers (`identity`, `narrative`, `voice`, `commercial`, `governance`), plus `draft_provenance`.
+
+**Write in this order: meaning first, then the rules that protect it, then what writers work from.** A rule exists to protect something the brand means; write that meaning before the rule, so each rule can say what it protects. The file lists `rules` first because checks cite them; that is layout, not order of importance. Present it to the person in the same order (step 7).
 
 **The `ramoira` block:**
 
 ```json
 "ramoira": {
-  "spec_version": "3.1.0",
+  "spec_version": "3.2.0",
   "schema_type": "full",
   "brand_id": null,
   "schema_version": "0.1.0",
@@ -111,8 +119,21 @@ Write `ramoira/brand.schema.json`, valid against `SPEC.schema.json` at spec vers
 
 Set `brand_id` to the brand's slug on ramoira.com if the person has one (lowercase letters, digits and hyphens); otherwise leave it `null`. Leave `content_hash` for step 6 to fill in.
 
-**Rules.** Every "never" and "must" becomes one rule in `rules` (`SPEC.md` §6), with every field present except the optional `rationale`.
+**1. Facts and principles.** What the brand is, what it can claim, what it believes, where it comes from, what it says repeatedly, what it owns (table, group 1). Give each claim a `claim_id` and each pillar a `pillar_id` (lowercase, e.g. `c_warranty`, `pl_better_with_use`), so rules can point at them. Claims, pillars and terms share one set of ids: never reuse one.
 
+**2. Its own words.** For each word the brand uses in its own sense, a governed term:
+
+```json
+"terms": [
+  { "term_id": "t_simple", "term": "simple", "definition": "…in the brand's own words…", "scope_note": "…where it applies, and where it does not…" }
+]
+```
+
+Take the definition from the person's material or answers, never from a dictionary or a branding framework. Leave out `example_refs`: examples are the owner's to judge.
+
+**3. Rules.** Every "never" and "must" becomes one rule in `rules` (`SPEC.md` §6), with every field present except the optional `rationale` and `protects`.
+
+- Say what each rule protects, wherever you can: `"protects": ["c_warranty"]`, a `pillar_id`, a `term_id`, or a pointer such as `"/identity/prism/culture/sacredBoundary"` (allowed places: `SPEC.md` §6.5). A belief is never itself a rule, and not every belief needs one. Leave `protects` out when you cannot say, and list that rule for the person as one that protects nothing (step 7).
 - Use `deterministic_exact` for words, phrases and claims never to use: `match.terms`, `mode` (`word`, `phrase` or `substring`), `normalization: "casefold_nfkc"`.
 - Use `deterministic_structural` only with these predicates: `claim_must_be_approved`, `max_number`, `required_phrase_on_surface`, `max_character_count`, `max_sentence_words`, `self_reference_form`.
 - Do **not** write `judged_bounded` rules: they need examples the owner has judged. Write the test as a question in `narrative.guidance` instead (`{"question": "…", "applies_to": "all"}`).
@@ -120,12 +141,16 @@ Set `brand_id` to the brand's slug on ramoira.com if the person has one (lowerca
 - Visibility: `private` for `commercial.*` and `governance.*` topics, `public` otherwise.
 - Always `"provenance": "inherited", "affirmed": false` (section 2, rule 3), except a rule the person dictated word for word, which is `"provenance": "authored", "affirmed": false`.
 
+**4. Expression.** How it should feel, who it talks to, how it sounds, how its story is told, how it talks about money (table, group 4). No example lines (section 2, rule 2).
+
+**5. Scope.** The surfaces that matter and how the voice shifts on each; the hard moments it responds to (table, group 5).
+
 **`draft_provenance`:**
 
 ```json
 "draft_provenance": {
   "method": "document_import",
-  "instrument_version": "ramoira-drafting-1.0.0",
+  "instrument_version": "ramoira-drafting-1.2.0",
   "intake": { "name": "…", "category": "…", "description": "…", "source_documents": ["file:README.md", "https://…"] },
   "participants": [ { "participant_id": "p_owner", "role": "brand_owner" } ],
   "fields": { "/narrative/myth/mythStatement": "authored", "/voice/contextVariants": "inherited", "/narrative/semiotic/denotative/specifications": "unfilled" }
@@ -152,10 +177,12 @@ If you cannot run commands, ask the person to run these and paste the output.
 
 ## 7. Show the person
 
-Give a short, plain summary, no copy:
+Give a short, plain summary, no copy, in the order you wrote it:
 
 - what you found, and where (their README, their site, their answers);
-- the rules you proposed, one line each;
+- the beliefs, claims and words you recorded;
+- the rules you proposed, one line each, grouped under what each protects;
+- any rule that protects nothing, asking what it is for, so the owner can keep or delete it;
 - what is unfilled, and why;
 - that every rule and field waits for their review, signed in on ramoira.com.
 

@@ -18,6 +18,9 @@ Minor. 3.0.0 and 3.1.0 documents stay valid. See `migrations/3.1.0-to-3.2.0.md`.
 - The summary drops a public rule's `protects` entries that point into excluded material.
 - Versioning (SPEC.md section 15): a new optional field inside `content_hash`, or a new invariant, is a minor release.
 
+**Drafting** (no format change)
+- `drafting/DRAFTING.md` 1.2.0: agents write spec 3.2.0, and write in the order authority runs: facts and principles (with `claim_id` and `pillar_id`), the brand's own words (governed terms), rules saying what they protect, expression, scope. A rule that protects nothing is shown to the owner. Agents write no affirmations.
+
 ## 3.1.0
 
 Minor. 3.0.0 documents stay valid. See `migrations/3.0.0-to-3.1.0.md`.
